@@ -361,15 +361,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
     </div>
     <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-        <span style="font-size:11px;color:#8888aa">🎁 Reward</span>
+        <span style="font-size:11px;color:#8888aa" id="io-reward-lbl">🎁 Reward</span>
         <span style="font-size:14px;font-weight:800;color:var(--g)" id="io-r">+10 SANS</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:6px 0">
-        <span style="font-size:11px;color:#8888aa">🎟 Tickets</span>
+        <span style="font-size:11px;color:#8888aa" id="io-ticket-lbl">🎟 Tickets</span>
         <span style="font-size:12px;font-weight:700;color:var(--gold)" id="io-t2">+0.1</span>
       </div>
     </div>
-    <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.7">
+    <div id="io-instructions" style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.7">
       ⏱ A <b style="color:#fff">15-second ad</b> will appear<br>
       ✅ After 15s, close the ad with <b style="color:var(--g)">✕</b><br>
       🏆 Then tap <b style="color:var(--g)">Claim Reward ✓</b><br>
@@ -437,13 +437,13 @@ var POOLS=[
 // LANGS
 var L={
 en:{tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],ms:'Earn & Win Real Prizes',et:'Earn SANS',ed:'Watch ads & complete tasks to earn free tokens',bt:'Buy SANS',bd:'Purchase tokens in presale for more tickets',rt:'Prize Draws',rd:'Win USDT/BNB with your tickets',bll:'Your Balance',tl:'raffle tickets',tapI:'Tap → watch short ad → earn +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS per tap',sb:'🎁 1 Free Spin!',sbu:'Free spin used',srl:'Remaining:',sw:'You won!',sl:'Day Streak!',ss:'Keep going for bigger rewards!',ci:'Claim Daily Reward',cid:'✅ Already claimed today',tt:'Tasks',ts:'Complete tasks to earn SANS',rd2:'Invite friends: you +30, they +20 SANS!',lt:'Weekly Top 3 Bonus Tickets',rh:'100 SANS = 1 🎟 · Pool fills → winner drawn → USDT/BNB sent!',rtl:'Your Tickets',wl:'Prize Wallet (BSC)',yt:'YOU',day:'Day',go:'Go →',you:'YOU',
-ioTitle:'Watch Ad & Earn!',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
+ioTitle:'Watch Ad & Earn!',ioRewardLbl:'🎁 Reward',ioTicketLbl:'🎟 Tickets',adInstr:'<b style="color:#fff">15-second ad</b> will appear<br>✅ After 15s close with <b style="color:#00ff9d">✕</b><br>🏆 Tap <b style="color:#00ff9d">Claim Reward ✓</b><br>🚫 <b style="color:#ff6666">Do NOT touch during the ad</b>',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
 tasks:[{id:'tg',i:'📱',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 tr:{tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],ms:'Kazan & Gerçek Ödüller Kazan',et:'SANS Kazan',ed:'Reklam izle ve görev tamamla, ücretsiz token kazan',bt:'SANS Satın Al',bd:'Presale\'den token satın al, daha fazla bilet kazan',rt:'Çekilişler',rd:'Biletlerinle USDT/BNB kazan',bll:'Bakiyeniz',tl:'çekiliş bileti',tapI:'Dokun → kısa reklam izle → +10 SANS kazan · 100 SANS = 1 🎟',tapR:'+10 SANS / dokunuş',sb:'🎁 1 Ücretsiz Spin!',sbu:'Ücretsiz spin kullanıldı',srl:'Kalan:',sw:'Kazandın!',sl:'Gün Serisi!',ss:'Devam et, daha büyük ödüller seni bekliyor!',ci:'Günlük Ödülü Al',cid:'✅ Bugün alındı',tt:'Görevler',ts:'Görevleri tamamla, SANS kazan',rd2:'Arkadaşını davet et: sen +30, o +20 SANS!',lt:'Haftalık İlk 3 Bonus Bilet',rh:'100 SANS = 1 🎟 · Havuz dolar → kazanan seçilir → USDT/BNB gönderilir!',rtl:'Biletleriniz',wl:'Ödül Cüzdanı (BSC)',yt:'SEN',day:'Gün',go:'Git →',you:'SEN',
-ioTitle:'Reklam İzle & Kazan!',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
+ioTitle:'Reklam İzle & Kazan!',ioRewardLbl:'🎁 Ödül',ioTicketLbl:'🎟 Bilet',adInstr:'<b style="color:#fff">15 saniyelik reklam</b> gösterilecek<br>✅ 15 saniye sonra <b style="color:#00ff9d">✕</b> ile kapat<br>🏆 <b style="color:#00ff9d">Ödülü Al ✓</b> butonuna bas<br>🚫 <b style="color:#ff6666">Reklam sırasında hiçbir şeye dokunma</b>',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
 tasks:[{id:'tg',i:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'YouTube Videomuzu İzle',d:'SANS nasıl çalışır?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 ru:{tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],ms:'Зарабатывай & Выигрывай призы',et:'Заработать SANS',ed:'Смотри рекламу и выполняй задания',bt:'Купить SANS',bd:'Купи токены на пресейле — больше билетов',rt:'Розыгрыши',rd:'Выигрывай USDT/BNB своими билетами',bll:'Ваш баланс',tl:'билетов',tapI:'Нажми → смотри рекламу → получи +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS за нажатие',sb:'🎁 1 Бесплатный спин!',sbu:'Бесплатный спин использован',srl:'Осталось:',sw:'Ты выиграл!',sl:'Дней подряд!',ss:'Продолжай для больших наград!',ci:'Получить дневной бонус',cid:'✅ Уже получено',tt:'Задания',ts:'Выполняй задания — зарабатывай SANS',rd2:'Пригласи друга: ты +30, он +20 SANS!',lt:'Топ-3 недели — бонусные билеты',rh:'100 SANS = 1 🎟 · Пул заполнен → выбирается победитель → USDT/BNB отправляется!',rtl:'Ваши билеты',wl:'Кошелёк для призов (BSC)',yt:'ТЫ',day:'День',go:'Перейти →',you:'ТЫ',
-ioTitle:'Смотри рекламу и зарабатывай!',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
+ioTitle:'Смотри рекламу и зарабатывай!',ioRewardLbl:'🎁 Награда',ioTicketLbl:'🎟 Билеты',adInstr:'Появится <b style="color:#fff">реклама на 15 секунд</b><br>✅ Через 15с закрой с <b style="color:#00ff9d">✕</b><br>🏆 Нажми <b style="color:#00ff9d">Получить награду ✓</b><br>🚫 <b style="color:#ff6666">Не трогай ничего во время рекламы</b>',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
 tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Официальные объявления',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Подписаться на YouTube',d:'Уведомления о розыгрышах',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Посмотреть наше видео',d:'Как работает SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]}
 };
 // Other langs default to EN
@@ -548,6 +548,10 @@ function applyLang(){
   document.getElementById('tb-tick-lbl').textContent=lang.tl;
   // INFO OVERLAY
   document.getElementById('io-t').textContent=lang.ioTitle||'Watch Ad & Earn!';
+  var ioInstr=document.getElementById('io-instructions');
+  if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
+  var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
+  var ioTL=document.getElementById('io-ticket-lbl'); if(ioTL) ioTL.textContent=lang.ioTicketLbl||'🎟 Tickets';
   // WIN OVERLAY
   var wt=document.getElementById('w-title'); if(wt) wt.textContent=lang.winTitle||'YOU EARNED';
   var ws=document.getElementById('w-sub'); if(ws) ws.textContent=lang.winSub||'Added to your balance!';
@@ -611,6 +615,12 @@ function showInfo(s,l,cb){
   document.getElementById('io-r').textContent=l;
   document.getElementById('io-t2').textContent='+'+(s/TICK).toFixed(2)+' 🎟';
   document.getElementById('ovInfo').classList.add('on');
+  var ioInstr=document.getElementById('io-instructions');
+  if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
+  var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
+  var ioTL=document.getElementById('io-ticket-lbl'); if(ioTL) ioTL.textContent=lang.ioTicketLbl||'🎟 Tickets';
+  var ioT=document.getElementById('io-t');
+  if(ioT) ioT.textContent=lang.ioTitle||'Watch Ad & Earn!';
   var c=5,btn=document.getElementById('iBtn');
   btn.textContent='▶ Starting in 5s';
   clearInterval(infoCountInt);
