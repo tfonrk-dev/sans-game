@@ -333,19 +333,42 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
     <!-- RAFFLE -->
     <div class="pane" id="pRaffle" style="justify-content:flex-start;padding-top:8px">
       <div class="raffle-scroll">
+        <!-- Bilgiler -->
         <div class="info-strip" style="margin-bottom:8px" id="raffle-how">100 SANS = 1 🎟 · Pool fills up → winner drawn automatically → USDT/BNB sent to wallet!</div>
+
+        <!-- BSC Wallet + Bilet Çevirme -->
+        <div style="background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.15);border-radius:14px;padding:12px;margin-bottom:10px">
+          <div style="font-size:12px;font-weight:700;color:#0099ff;margin-bottom:8px" id="wallet-lbl">💼 BSC Wallet</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input class="wallet-input" id="walletIn" placeholder="0x... BSC wallet address"/>
+            <button class="btn-xs" onclick="saveWallet()" id="walletSaveBtn">Save</button>
+          </div>
+          <div id="walletMsg" style="font-size:10px;margin-top:3px;min-height:14px"></div>
+        </div>
+
+        <!-- SANS → Bilet dönüşümü -->
+        <div style="background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.12);border-radius:14px;padding:12px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div>
+              <div style="font-size:10px;color:#8888aa" id="cv-bal-lbl">Available SANS</div>
+              <div style="font-size:18px;font-weight:800;color:#00ff9d"><span id="cvSans">0</span> SANS</div>
+            </div>
+            <div style="font-size:20px;color:#555">→</div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:#8888aa" id="cv-tick-lbl">Your Tickets</div>
+              <div style="font-size:18px;font-weight:800;color:#ffaa00"><span id="cvTickets">0</span> 🎟</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#8888aa;margin-bottom:8px" id="cv-rate">100 SANS = 1 ticket</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="number" id="convertAmt" placeholder="100" min="100" step="100" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none"/>
+            <button onclick="convertToTickets()" style="background:linear-gradient(135deg,#00ff9d,#00cc7a);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer" id="convertBtn">Convert</button>
+          </div>
+          <div style="font-size:10px;color:#8888aa;margin-top:5px" id="cv-hint">Enter multiples of 100 SANS</div>
+        </div>
+
+        <!-- Çekiliş Havuzları -->
         <div id="rafflePools"></div>
-        <div class="ticket-box">
-          <div style="font-size:10px;color:#8888aa" id="rt-lbl">Your Tickets</div>
-          <div class="ticket-count" id="rafTickets">0</div>
-          <div style="font-size:10px;color:#8888aa"><span id="rafBal">0</span> SANS = <span id="rafCalc">0</span> 🎟</div>
-        </div>
-        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:6px" id="wallet-lbl">Prize Wallet (BSC)</div>
-        <div class="wallet-row">
-          <input class="wallet-input" id="walletIn" placeholder="0x... your BSC wallet address"/>
-          <button class="btn-xs" onclick="saveWallet()">Save</button>
-        </div>
-        <div id="walletMsg" style="font-size:10px;color:#8888aa;margin-top:5px"></div>
       </div>
     </div>
   </div>
@@ -437,13 +460,13 @@ var POOLS=[
 // LANGS
 var L={
 en:{tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],ms:'Earn & Win Real Prizes',et:'Earn SANS',ed:'Watch ads & complete tasks to earn free tokens',bt:'Buy SANS',bd:'Purchase tokens in presale for more tickets',rt:'Prize Draws',rd:'Win USDT/BNB with your tickets',bll:'Your Balance',tl:'raffle tickets',tapI:'Tap → watch short ad → earn +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS per tap',sb:'🎁 1 Free Spin!',sbu:'Free spin used',srl:'Remaining:',sw:'You won!',sl:'Day Streak!',ss:'Keep going for bigger rewards!',ci:'Claim Daily Reward',cid:'✅ Already claimed today',tt:'Tasks',ts:'Complete tasks to earn SANS',rd2:'Invite friends: you +30, they +20 SANS!',lt:'Weekly Top 3 Bonus Tickets',rh:'100 SANS = 1 🎟 · Pool fills → winner drawn → USDT/BNB sent!',rtl:'Your Tickets',wl:'Prize Wallet (BSC)',yt:'YOU',day:'Day',go:'Go →',you:'YOU',
-ioTitle:'Watch Ad & Earn!',ioRewardLbl:'🎁 Reward',ioTicketLbl:'🎟 Tickets',adInstr:'<b style="color:#fff">15-second ad</b> will appear<br>✅ After 15s close with <b style="color:#00ff9d">✕</b><br>🏆 Tap <b style="color:#00ff9d">Claim Reward ✓</b><br>🚫 <b style="color:#ff6666">Do NOT touch during the ad</b>',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
+ioTitle:'Watch Ad & Earn!',ioRewardLbl:'🎁 Reward',ioTicketLbl:'🎟 Tickets',cvBalLbl:'Available SANS',cvTickLbl:'Your Tickets',cvRate:'100 SANS = 1 ticket',cvHint:'Enter multiples of 100',cvBtn:'Convert',joinBtn2:'Join Draw',noWallet:'Save BSC wallet first',noTickets:'No tickets! Convert SANS first',joinSuccess:'You are in! Good luck! 🍀',joinSucMsg:'🎟 Added to draw!',walletSaveOk:'✅ Wallet saved!',walletSaveFail:'❌ Invalid BSC address',adInstr:'<b style="color:#fff">15-second ad</b> will appear<br>✅ After 15s close with <b style="color:#00ff9d">✕</b><br>🏆 Tap <b style="color:#00ff9d">Claim Reward ✓</b><br>🚫 <b style="color:#ff6666">Do NOT touch during the ad</b>',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
 tasks:[{id:'tg',i:'📱',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 tr:{tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],ms:'Kazan & Gerçek Ödüller Kazan',et:'SANS Kazan',ed:'Reklam izle ve görev tamamla, ücretsiz token kazan',bt:'SANS Satın Al',bd:'Presale\'den token satın al, daha fazla bilet kazan',rt:'Çekilişler',rd:'Biletlerinle USDT/BNB kazan',bll:'Bakiyeniz',tl:'çekiliş bileti',tapI:'Dokun → kısa reklam izle → +10 SANS kazan · 100 SANS = 1 🎟',tapR:'+10 SANS / dokunuş',sb:'🎁 1 Ücretsiz Spin!',sbu:'Ücretsiz spin kullanıldı',srl:'Kalan:',sw:'Kazandın!',sl:'Gün Serisi!',ss:'Devam et, daha büyük ödüller seni bekliyor!',ci:'Günlük Ödülü Al',cid:'✅ Bugün alındı',tt:'Görevler',ts:'Görevleri tamamla, SANS kazan',rd2:'Arkadaşını davet et: sen +30, o +20 SANS!',lt:'Haftalık İlk 3 Bonus Bilet',rh:'100 SANS = 1 🎟 · Havuz dolar → kazanan seçilir → USDT/BNB gönderilir!',rtl:'Biletleriniz',wl:'Ödül Cüzdanı (BSC)',yt:'SEN',day:'Gün',go:'Git →',you:'SEN',
-ioTitle:'Reklam İzle & Kazan!',ioRewardLbl:'🎁 Ödül',ioTicketLbl:'🎟 Bilet',adInstr:'<b style="color:#fff">15 saniyelik reklam</b> gösterilecek<br>✅ 15 saniye sonra <b style="color:#00ff9d">✕</b> ile kapat<br>🏆 <b style="color:#00ff9d">Ödülü Al ✓</b> butonuna bas<br>🚫 <b style="color:#ff6666">Reklam sırasında hiçbir şeye dokunma</b>',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
+ioTitle:'Reklam İzle & Kazan!',ioRewardLbl:'🎁 Ödül',ioTicketLbl:'🎟 Bilet',cvBalLbl:'Mevcut SANS',cvTickLbl:'Biletleriniz',cvRate:'100 SANS = 1 bilet',cvHint:'100un katlari girin',cvBtn:'Dönüştür',joinBtn2:'Bu Çekilişe Katıl',noWallet:'Önce BSC cüzdanını kaydet',noTickets:'Bilet yok! Önce SANS dönüştür',joinSuccess:'Katıldınız! Bol şans! 🍀',joinSucMsg:'🎟 Çekilişe eklendi!',walletSaveOk:'✅ Cüzdan kaydedildi!',walletSaveFail:'❌ Geçersiz BSC adresi',adInstr:'<b style="color:#fff">15 saniyelik reklam</b> gösterilecek<br>✅ 15 saniye sonra <b style="color:#00ff9d">✕</b> ile kapat<br>🏆 <b style="color:#00ff9d">Ödülü Al ✓</b> butonuna bas<br>🚫 <b style="color:#ff6666">Reklam sırasında hiçbir şeye dokunma</b>',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
 tasks:[{id:'tg',i:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'YouTube Videomuzu İzle',d:'SANS nasıl çalışır?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 ru:{tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],ms:'Зарабатывай & Выигрывай призы',et:'Заработать SANS',ed:'Смотри рекламу и выполняй задания',bt:'Купить SANS',bd:'Купи токены на пресейле — больше билетов',rt:'Розыгрыши',rd:'Выигрывай USDT/BNB своими билетами',bll:'Ваш баланс',tl:'билетов',tapI:'Нажми → смотри рекламу → получи +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS за нажатие',sb:'🎁 1 Бесплатный спин!',sbu:'Бесплатный спин использован',srl:'Осталось:',sw:'Ты выиграл!',sl:'Дней подряд!',ss:'Продолжай для больших наград!',ci:'Получить дневной бонус',cid:'✅ Уже получено',tt:'Задания',ts:'Выполняй задания — зарабатывай SANS',rd2:'Пригласи друга: ты +30, он +20 SANS!',lt:'Топ-3 недели — бонусные билеты',rh:'100 SANS = 1 🎟 · Пул заполнен → выбирается победитель → USDT/BNB отправляется!',rtl:'Ваши билеты',wl:'Кошелёк для призов (BSC)',yt:'ТЫ',day:'День',go:'Перейти →',you:'ТЫ',
-ioTitle:'Смотри рекламу и зарабатывай!',ioRewardLbl:'🎁 Награда',ioTicketLbl:'🎟 Билеты',adInstr:'Появится <b style="color:#fff">реклама на 15 секунд</b><br>✅ Через 15с закрой с <b style="color:#00ff9d">✕</b><br>🏆 Нажми <b style="color:#00ff9d">Получить награду ✓</b><br>🚫 <b style="color:#ff6666">Не трогай ничего во время рекламы</b>',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
+ioTitle:'Смотри рекламу и зарабатывай!',ioRewardLbl:'🎁 Награда',ioTicketLbl:'🎟 Билеты',cvBalLbl:'Доступно SANS',cvTickLbl:'Ваши билеты',cvRate:'100 SANS = 1 билет',cvHint:'Введите кратное 100',cvBtn:'Конвертировать',joinBtn2:'Участвовать',noWallet:'Сначала сохрани кошелёк',noTickets:'Нет билетов! Конвертируй SANS',joinSuccess:'Ты участвуешь! Удачи! 🍀',joinSucMsg:'🎟 Добавлен в розыгрыш!',walletSaveOk:'✅ Кошелёк сохранён!',walletSaveFail:'❌ Неверный BSC адрес',adInstr:'Появится <b style="color:#fff">реклама на 15 секунд</b><br>✅ Через 15с закрой с <b style="color:#00ff9d">✕</b><br>🏆 Нажми <b style="color:#00ff9d">Получить награду ✓</b><br>🚫 <b style="color:#ff6666">Не трогай ничего во время рекламы</b>',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
 tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Официальные объявления',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Подписаться на YouTube',d:'Уведомления о розыгрышах',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Посмотреть наше видео',d:'Как работает SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]}
 };
 // Other langs default to EN
@@ -452,7 +475,7 @@ tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Офиц
 var tg=window.Telegram&&window.Telegram.WebApp;
 if(tg)tg.expand();
 var db=window.supabase.createClient(SB_URL,SB_KEY);
-var user=null,ud={balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null};
+var user=null,ud={balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null,tickets:0};
 var spinning=false,lang=L.en,selLang='en';
 var adCb=null,adTimerInt=null,infoCb=null,infoCountInt=null,curR={s:10,l:'+10 SANS'};
 
@@ -565,7 +588,7 @@ function applyLang(){
 
 // UI
 function updateUI(){
-  var b=ud.balance||0,t=tk(b);
+  var b=ud.balance||0,t=ud.tickets||0;
   document.getElementById('balEl').textContent=b.toLocaleString()+' SANS';
   document.getElementById('tickEl').textContent=t;
   document.getElementById('tTotal').textContent=b.toLocaleString();
@@ -575,9 +598,8 @@ function updateUI(){
   document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
   document.getElementById('mBal').textContent=b.toLocaleString();
   document.getElementById('mTickets').textContent=t;
-  document.getElementById('rafTickets').textContent=t;
-  document.getElementById('rafBal').textContent=b.toLocaleString();
-  document.getElementById('rafCalc').textContent=t;
+  var cvS=document.getElementById('cvSans'); if(cvS) cvS.textContent=b.toLocaleString();
+  var cvT=document.getElementById('cvTickets'); if(cvT) cvT.textContent=ud.tickets||0;
   if(ud.referral_code)document.getElementById('refLink').textContent='https://t.me/sanslicekilisbot?startapp='+ud.referral_code;
   renderDays();renderTasks();renderPools();
 }
@@ -588,7 +610,7 @@ async function loadUser(){
   var uname=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)?(tg.initDataUnsafe.user.username||'Player'):'Player';
   var res=await db.from('users').select('*').eq('telegram_id',tid).maybeSingle();
   if(!res.data){
-    var ins=await db.from('users').insert({telegram_id:tid,username:uname,balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null}).select().maybeSingle();
+    var ins=await db.from('users').insert({telegram_id:tid,username:uname,balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null,tickets:0}).select().maybeSingle();
     if(ins.data)ud=ins.data;
   } else {
     ud=res.data;
@@ -872,7 +894,7 @@ function renderPools(){
   var poolLbl=lang.poolLbl||'Prize Pool';
   var poolSize=lang.poolSize||'Pool size';
   var poolFull=lang.poolFull||'more needed';
-  var joinBtn=lang.joinBtn||'Join Draw';
+  var joinBtn=lang.joinBtn2||lang.joinBtn||'Join Draw';
   var html='';
   for(var pi=0;pi<POOLS.length;pi++){
     var pool=POOLS[pi];
@@ -892,7 +914,7 @@ function renderPools(){
     if(canJoin){
       html+='<button class="pool-join-btn" data-id="'+pool.id+'" style="width:100%;background:linear-gradient(135deg,'+pool.color+',#0099ff);color:#000;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer">'+joinBtn+'</button>';
     } else if(!ud.wallet){
-      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+( lang.saveWalletFirst||'Save your BSC wallet first')+'</div>';
+      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+( lang.saveWalletFirst||'Save your BSC wallet address first')+'</div>';
     } else {
       html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+(lang.needTickets||'Need at least 1 ticket (100 SANS)')+'</div>';
     }
@@ -906,19 +928,41 @@ function renderPools(){
   }
 }
 function joinPool(poolId){
-  if(!ud.wallet){toast('⚠️ Save your BSC wallet first!');return;}
-  var t=tk(ud.balance||0);
-  if(t<1){toast('⚠️ Need at least 1 ticket!');return;}
-  toast('🎟 You are in the draw! Good luck!');
+  if(!ud.wallet){ toast('⚠️ '+(lang.noWallet||'Save BSC wallet first')); return; }
+  var t=ud.tickets||0;
+  if(t<1){ toast('⚠️ '+(lang.noTickets||'No tickets! Convert SANS first')); return; }
+  // 1 bilet harca
+  save({tickets:t-1});
+  document.getElementById('cvTickets').textContent=ud.tickets||0;
+  toast((lang.joinSucMsg||'🎟 Added to draw!'));
+  renderPools();
 }
 
 // WALLET
+function convertToTickets(){
+  var amt=parseInt(document.getElementById('convertAmt').value)||0;
+  if(amt<100||amt%100!==0){ toast(lang.cvHint||'Enter multiples of 100'); return; }
+  if(ud.balance<amt){ toast('Not enough SANS!'); return; }
+  var newTickets=Math.floor(amt/100);
+  save({balance:ud.balance-amt,tickets:(ud.tickets||0)+newTickets});
+  document.getElementById('cvSans').textContent=(ud.balance||0).toLocaleString();
+  document.getElementById('cvTickets').textContent=ud.tickets||0;
+  document.getElementById('convertAmt').value='';
+  toast('🎟 +'+newTickets+' '+(lang.cvTickLbl||'tickets')+'!');
+  renderPools();
+}
+
 function saveWallet(){
   var w=document.getElementById('walletIn').value.trim();
-  if(!w.startsWith('0x')||w.length!==42){document.getElementById('walletMsg').textContent='❌ Invalid BSC address';document.getElementById('walletMsg').style.color='#ff4444';return;}
+  var msg=document.getElementById('walletMsg');
+  if(!w.startsWith('0x')||w.length!==42){
+    msg.textContent=lang.walletSaveFail||'❌ Invalid BSC address';
+    msg.style.color='#ff4444';return;
+  }
   save({wallet:w});
-  document.getElementById('walletMsg').textContent='✅ Wallet saved!';
-  document.getElementById('walletMsg').style.color='#00ff9d';
+  msg.textContent=lang.walletSaveOk||'✅ Wallet saved!';
+  msg.style.color='#00ff9d';
+  renderPools();
 }
 
 // START
