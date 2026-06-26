@@ -198,6 +198,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
 
 <!-- MENU SCREEN -->
 <div class="screen hidden" id="sMenu">
+  <div style="position:absolute;top:max(env(safe-area-inset-top),12px);right:14px">
+    <button onclick="changeLang()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer">🌍 Language</button>
+  </div>
   <div class="brand" style="font-size:40px;margin-bottom:2px">SANS</div>
   <div class="brand-sub" id="m-sub">Earn & Win Real Prizes</div>
   <div class="menu-bal">
@@ -418,15 +421,29 @@ var SB_KEY='sb_publishable_-tcKpWWZ39F0SEAYMR_7HQ_kUfCj7VO';
 var TICK=100;
 var CI_R=[10,12,14,16,18,20,25];
 var PRIZES=[{l:'10',v:10,c:'#0a2010'},{l:'15',v:15,c:'#102010'},{l:'20',v:20,c:'#0a1020'},{l:'50',v:50,c:'#1a0a20'},{l:'10',v:10,c:'#0a1520'},{l:'30',v:30,c:'#200a0a'},{l:'15',v:15,c:'#0a2020'},{l:'25',v:25,c:'#0a0a20'}];
-var POOLS=[{id:'p5',prize:'5 USDT',target:500,color:'#00ff9d'},{id:'p10',prize:'10 USDT',target:1000,color:'#0099ff'},{id:'p50',prize:'50 USDT',target:5000,color:'#ffaa00'}];
+var POOLS=[
+  {id:'p1',prize:'1 USDT',target:100,color:'#00ff9d'},
+  {id:'p2',prize:'2 USDT',target:200,color:'#00dd88'},
+  {id:'p3',prize:'3 USDT',target:300,color:'#00bbff'},
+  {id:'p5',prize:'5 USDT',target:500,color:'#0099ff'},
+  {id:'p10',prize:'10 USDT',target:1000,color:'#4488ff'},
+  {id:'p15',prize:'15 USDT',target:1500,color:'#6644ff'},
+  {id:'p20',prize:'20 USDT',target:2000,color:'#aa44ff'},
+  {id:'p25',prize:'25 USDT',target:2500,color:'#cc44bb'},
+  {id:'p50',prize:'50 USDT',target:5000,color:'#ffaa00'},
+  {id:'p100',prize:'100 USDT',target:10000,color:'#ff6600'},
+];
 
 // LANGS
 var L={
 en:{tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],ms:'Earn & Win Real Prizes',et:'Earn SANS',ed:'Watch ads & complete tasks to earn free tokens',bt:'Buy SANS',bd:'Purchase tokens in presale for more tickets',rt:'Prize Draws',rd:'Win USDT/BNB with your tickets',bll:'Your Balance',tl:'raffle tickets',tapI:'Tap → watch short ad → earn +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS per tap',sb:'🎁 1 Free Spin!',sbu:'Free spin used',srl:'Remaining:',sw:'You won!',sl:'Day Streak!',ss:'Keep going for bigger rewards!',ci:'Claim Daily Reward',cid:'✅ Already claimed today',tt:'Tasks',ts:'Complete tasks to earn SANS',rd2:'Invite friends: you +30, they +20 SANS!',lt:'Weekly Top 3 Bonus Tickets',rh:'100 SANS = 1 🎟 · Pool fills → winner drawn → USDT/BNB sent!',rtl:'Your Tickets',wl:'Prize Wallet (BSC)',yt:'YOU',day:'Day',go:'Go →',you:'YOU',
+ioTitle:'Watch Ad & Earn!',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
 tasks:[{id:'tg',i:'📱',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 tr:{tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],ms:'Kazan & Gerçek Ödüller Kazan',et:'SANS Kazan',ed:'Reklam izle ve görev tamamla, ücretsiz token kazan',bt:'SANS Satın Al',bd:'Presale\'den token satın al, daha fazla bilet kazan',rt:'Çekilişler',rd:'Biletlerinle USDT/BNB kazan',bll:'Bakiyeniz',tl:'çekiliş bileti',tapI:'Dokun → kısa reklam izle → +10 SANS kazan · 100 SANS = 1 🎟',tapR:'+10 SANS / dokunuş',sb:'🎁 1 Ücretsiz Spin!',sbu:'Ücretsiz spin kullanıldı',srl:'Kalan:',sw:'Kazandın!',sl:'Gün Serisi!',ss:'Devam et, daha büyük ödüller seni bekliyor!',ci:'Günlük Ödülü Al',cid:'✅ Bugün alındı',tt:'Görevler',ts:'Görevleri tamamla, SANS kazan',rd2:'Arkadaşını davet et: sen +30, o +20 SANS!',lt:'Haftalık İlk 3 Bonus Bilet',rh:'100 SANS = 1 🎟 · Havuz dolar → kazanan seçilir → USDT/BNB gönderilir!',rtl:'Biletleriniz',wl:'Ödül Cüzdanı (BSC)',yt:'SEN',day:'Gün',go:'Git →',you:'SEN',
+ioTitle:'Reklam İzle & Kazan!',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
 tasks:[{id:'tg',i:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'YouTube Videomuzu İzle',d:'SANS nasıl çalışır?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
 ru:{tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],ms:'Зарабатывай & Выигрывай призы',et:'Заработать SANS',ed:'Смотри рекламу и выполняй задания',bt:'Купить SANS',bd:'Купи токены на пресейле — больше билетов',rt:'Розыгрыши',rd:'Выигрывай USDT/BNB своими билетами',bll:'Ваш баланс',tl:'билетов',tapI:'Нажми → смотри рекламу → получи +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS за нажатие',sb:'🎁 1 Бесплатный спин!',sbu:'Бесплатный спин использован',srl:'Осталось:',sw:'Ты выиграл!',sl:'Дней подряд!',ss:'Продолжай для больших наград!',ci:'Получить дневной бонус',cid:'✅ Уже получено',tt:'Задания',ts:'Выполняй задания — зарабатывай SANS',rd2:'Пригласи друга: ты +30, он +20 SANS!',lt:'Топ-3 недели — бонусные билеты',rh:'100 SANS = 1 🎟 · Пул заполнен → выбирается победитель → USDT/BNB отправляется!',rtl:'Ваши билеты',wl:'Кошелёк для призов (BSC)',yt:'ТЫ',day:'День',go:'Перейти →',you:'ТЫ',
+ioTitle:'Смотри рекламу и зарабатывай!',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
 tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Официальные объявления',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Подписаться на YouTube',d:'Уведомления о розыгрышах',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Посмотреть наше видео',d:'Как работает SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]}
 };
 // Other langs default to EN
@@ -472,6 +489,11 @@ function goEarn(){
   applyLang();updateUI();
 }
 function goBuy(){window.open('https://sanslicekilis.com/#presale','_blank');}
+function changeLang(){
+  document.getElementById('sMenu').classList.add('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('sLang').classList.remove('hidden');
+}
 function backToMenu(){
   document.getElementById('app').classList.add('hidden');
   document.getElementById('sMenu').classList.remove('hidden');
@@ -496,19 +518,44 @@ function goPane(name){
 // LANG APPLY
 function applyLang(){
   var tabs=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
-  for(var i=0;i<tabs.length;i++)document.getElementById(tabs[i]).textContent=lang.tabs[i];
-  document.getElementById('tap-info').innerHTML='Tap → watch short ad → earn <b>+10 SANS</b> · 100 SANS = 1 🎟';
+  for(var i=0;i<tabs.length;i++) document.getElementById(tabs[i]).textContent=lang.tabs[i];
+  // TAP
+  document.getElementById('tap-info').innerHTML=lang.tapI;
   document.getElementById('tap-r').textContent=lang.tapR;
+  document.getElementById('ts-sans').textContent='SANS';
+  document.getElementById('ts-tick').textContent=lang.tl;
+  // SPIN
   document.getElementById('spinIL').textContent=lang.srl;
+  document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
+  var sb=document.getElementById('spinBtn');
+  if(sb&&!sb.disabled) sb.textContent=lang.spinBtnTxt||'🎡 SPIN';
+  // CHECKIN
   document.getElementById('streakL').textContent=lang.sl;
   document.getElementById('streakS').textContent=lang.ss;
+  var cb=document.getElementById('ciBtn');
+  if(cb&&!cb.disabled) cb.textContent=lang.ci;
+  // TASKS
   document.getElementById('ref-desc').textContent=lang.rd2;
+  // RANK
   document.getElementById('lb-weekly').textContent=lang.lt;
+  var myRY=document.getElementById('myRY');
+  if(myRY) myRY.textContent=lang.you;
+  // RAFFLE
   document.getElementById('raffle-how').textContent=lang.rh;
   document.getElementById('rt-lbl').textContent=lang.rtl;
   document.getElementById('wallet-lbl').textContent=lang.wl;
+  // NAV
   document.getElementById('tb-tick-lbl').textContent=lang.tl;
-  document.getElementById('myRY').textContent=lang.you;
+  // INFO OVERLAY
+  document.getElementById('io-t').textContent=lang.ioTitle||'Watch Ad & Earn!';
+  // WIN OVERLAY
+  var wt=document.getElementById('w-title'); if(wt) wt.textContent=lang.winTitle||'YOU EARNED';
+  var ws=document.getElementById('w-sub'); if(ws) ws.textContent=lang.winSub||'Added to your balance!';
+  var wtl=document.getElementById('w-total-lbl'); if(wtl) wtl.textContent=lang.winTotalLbl||'Total SANS';
+  var wtkl=document.getElementById('w-tick-lbl'); if(wtkl) wtkl.textContent=lang.tl;
+  // AD OVERLAY
+  var adJoinBtn=document.getElementById('joinRaffleBtn');
+  // RAFFLE join
   renderTasks();renderDays();renderPools();
 }
 
@@ -812,17 +859,47 @@ async function loadLB(){
 function renderPools(){
   var b=ud.balance||0,t=tk(b);
   var el=document.getElementById('rafflePools');if(!el)return;
-  el.innerHTML=POOLS.map(function(pool){
+  var poolLbl=lang.poolLbl||'Prize Pool';
+  var poolSize=lang.poolSize||'Pool size';
+  var poolFull=lang.poolFull||'more needed';
+  var joinBtn=lang.joinBtn||'Join Draw';
+  var html='';
+  for(var pi=0;pi<POOLS.length;pi++){
+    var pool=POOLS[pi];
     var pct=Math.min(100,Math.round((t/pool.target)*100));
-    return '<div class="pool-card">'+
-      '<div class="pool-top">'+
-      '<div><div style="font-size:10px;color:#8888aa;text-transform:uppercase;letter-spacing:1px">Prize Pool</div><div class="pool-prize">'+pool.prize+'</div></div>'+
-      '<div style="text-align:right"><div style="font-size:9px;color:#8888aa">Pool size</div><div style="font-size:13px;font-weight:700">'+pool.target+' 🎟</div></div>'+
-      '</div>'+
-      '<div class="pool-pb"><div class="pool-pf" style="width:'+pct+'%;background:linear-gradient(90deg,'+pool.color+',#0099ff)"></div></div>'+
-      '<div class="pool-info"><span>'+pct+'% · '+Math.min(t,pool.target)+'/'+pool.target+'</span><span style="color:'+pool.color+'">'+Math.max(0,pool.target-t)+' more needed</span></div>'+
-      '</div>';
-  }).join('');
+    var canJoin=t>=1&&!!ud.wallet;
+    var myT=Math.min(t,pool.target);
+    html+='<div class="pool-card">';
+    html+='<div class="pool-top">';
+    html+='<div><div style="font-size:9px;color:#8888aa;text-transform:uppercase;letter-spacing:1px">'+poolLbl+'</div>';
+    html+='<div class="pool-prize">'+pool.prize+'</div></div>';
+    html+='<div style="text-align:right"><div style="font-size:9px;color:#8888aa">'+poolSize+'</div>';
+    html+='<div style="font-size:12px;font-weight:700">'+pool.target+' tickets</div></div></div>';
+    html+='<div class="pool-pb"><div class="pool-pf" style="width:'+pct+'%;background:linear-gradient(90deg,'+pool.color+',#0099ff)"></div></div>';
+    html+='<div class="pool-info" style="margin-bottom:8px">';
+    html+='<span>'+pct+'% &middot; '+myT+'/'+pool.target+'</span>';
+    html+='<span style="color:'+pool.color+'">'+Math.max(0,pool.target-t)+' '+poolFull+'</span></div>';
+    if(canJoin){
+      html+='<button class="pool-join-btn" data-id="'+pool.id+'" style="width:100%;background:linear-gradient(135deg,'+pool.color+',#0099ff);color:#000;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer">'+joinBtn+'</button>';
+    } else if(!ud.wallet){
+      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+( lang.saveWalletFirst||'Save your BSC wallet first')+'</div>';
+    } else {
+      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+(lang.needTickets||'Need at least 1 ticket (100 SANS)')+'</div>';
+    }
+    html+='</div>';
+  }
+  el.innerHTML=html;
+  // Event listener ekle
+  var btns=el.querySelectorAll('.pool-join-btn');
+  for(var bi=0;bi<btns.length;bi++){
+    btns[bi].onclick=function(){ joinPool(this.dataset.id); };
+  }
+}
+function joinPool(poolId){
+  if(!ud.wallet){toast('⚠️ Save your BSC wallet first!');return;}
+  var t=tk(ud.balance||0);
+  if(t<1){toast('⚠️ Need at least 1 ticket!');return;}
+  toast('🎟 You are in the draw! Good luck!');
 }
 
 // WALLET
