@@ -3,1057 +3,542 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#060612"/>
-<title>SANS Token — Earn & Win</title>
+<title>SANS</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="//libtl.com/sdk.js" data-zone="10975774" data-sdk="show_10975774"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Segoe UI',sans-serif}
-body{background:#060612;color:#fff;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
-.lang-screen,.menu-screen,.welcome{padding-top:max(24px,env(safe-area-inset-top))}
-.nav{padding-top:max(10px,env(safe-area-inset-top))}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--g:#00ff9d;--gb:#00cc7a;--blue:#0099ff;--gold:#ffaa00;--bg:#07071a;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08)}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 
-/* LANGUAGE SCREEN */
-.lang-screen{position:fixed;inset:0;background:linear-gradient(160deg,#060612 0%,#0d0d2e 50%,#060612 100%);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
-.lang-logo{font-size:64px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;margin-bottom:4px}
-.lang-tagline{font-size:13px;color:#8888aa;margin-bottom:32px;text-align:center}
-.lang-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:16px;text-align:center;letter-spacing:1px}
-.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:340px;margin-bottom:24px}
-.lang-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.2s}
-.lang-btn:active{transform:scale(0.95)}
-.lang-btn.selected{background:rgba(0,255,157,0.12);border-color:#00ff9d;box-shadow:0 0 16px rgba(0,255,157,0.2)}
-.lang-btn .flag{font-size:24px;margin-bottom:4px}
-.lang-btn .lname{font-size:12px;font-weight:600;color:#ccc}
-.lang-btn.selected .lname{color:#00ff9d}
-.lang-confirm{width:100%;max-width:340px;background:linear-gradient(135deg,#00ff9d,#00cc7a);color:#000;border:none;border-radius:16px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:0.5px}
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:10;padding:env(safe-area-inset-top,16px) 16px env(safe-area-inset-bottom,16px)}
+.screen.hidden{display:none}
+
+/* LANG SCREEN */
+.brand{font-size:52px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:4px}
+.brand-sub{font-size:12px;color:#8888aa;margin-bottom:24px;text-align:center}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:320px;margin-bottom:20px}
+.lb{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
+.lb:active{transform:scale(0.95)}
+.lb.sel{background:rgba(0,255,157,0.1);border-color:var(--g)}
+.lb .fl{font-size:22px;margin-bottom:3px}
+.lb .ln{font-size:11px;font-weight:600;color:#aaa}
+.lb.sel .ln{color:var(--g)}
+.btn-main{width:100%;max-width:320px;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer}
 
 /* MENU SCREEN */
-.menu-screen{position:fixed;inset:0;background:linear-gradient(160deg,#060612 0%,#0d0d2e 50%,#060612 100%);z-index:998;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-.menu-logo{font-size:56px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;margin-bottom:6px}
-.menu-sub{font-size:13px;color:#8888aa;margin-bottom:8px;text-align:center}
-.menu-balance{background:rgba(0,255,157,0.08);border:1px solid rgba(0,255,157,0.2);border-radius:16px;padding:16px 24px;margin-bottom:32px;text-align:center;width:100%;max-width:320px}
-.menu-bal-label{font-size:11px;color:#8888aa;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
-.menu-bal-amount{font-size:28px;font-weight:900;color:#00ff9d}
-.menu-bal-tickets{font-size:12px;color:#8888aa;margin-top:4px}
-.menu-cards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px}
-.menu-card{border-radius:20px;padding:22px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.menu-card:active{transform:scale(0.97)}
-.menu-card.earn{background:linear-gradient(135deg,#0d2d1a,#0d1a2d);border:1px solid rgba(0,255,157,0.3)}
-.menu-card.buy{background:linear-gradient(135deg,#1a0d2d,#0d0d2d);border:1px solid rgba(153,0,255,0.3)}
-.menu-card-icon{font-size:36px;margin-bottom:10px}
-.menu-card-title{font-size:18px;font-weight:800;margin-bottom:6px}
-.menu-card.earn .menu-card-title{color:#00ff9d}
-.menu-card.buy .menu-card-title{color:#aa44ff}
-.menu-card-desc{font-size:12px;color:#8888aa;line-height:1.6}
-.menu-card-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:22px;opacity:0.5}
-.menu-raffle{background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.2);border-radius:16px;padding:14px;width:100%;max-width:340px;margin-top:4px;text-align:center;cursor:pointer}
-.menu-raffle-title{font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:4px}
-.menu-raffle-desc{font-size:11px;color:#8888aa}
+.menu-bal{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.15);border-radius:16px;padding:14px 20px;margin-bottom:20px;text-align:center;width:100%;max-width:320px}
+.menu-bal-lbl{font-size:10px;color:#8888aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.menu-bal-amt{font-size:26px;font-weight:900;color:var(--g)}
+.menu-bal-tickets{font-size:11px;color:#8888aa;margin-top:3px}
+.menu-cards{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-bottom:12px}
+.mc{border-radius:18px;padding:18px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.mc:active{transform:scale(0.97)}
+.mc.earn{background:linear-gradient(135deg,#0a2518,#070d1f);border:1px solid rgba(0,255,157,0.2)}
+.mc.buy{background:linear-gradient(135deg,#150a20,#070d1f);border:1px solid rgba(153,68,255,0.2)}
+.mc.raffle{background:linear-gradient(135deg,#1a1200,#070d1f);border:1px solid rgba(255,170,0,0.2)}
+.mc-ico{font-size:32px;min-width:40px;text-align:center}
+.mc-info{flex:1}
+.mc-title{font-size:15px;font-weight:800;margin-bottom:3px}
+.mc.earn .mc-title{color:var(--g)}
+.mc.buy .mc-title{color:#aa44ff}
+.mc.raffle .mc-title{color:var(--gold)}
+.mc-desc{font-size:11px;color:#8888aa;line-height:1.4}
+.mc-arr{font-size:18px;color:#555}
 
-/* NAV */
-.nav{background:rgba(6,6,18,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.nav-logo{font-size:18px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-right{display:flex;align-items:center;gap:8px}
-.nav-bal{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.2);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#00ff9d}
-.nav-bal-sub{font-size:9px;color:#00ff9d;opacity:0.6;text-align:right;margin-top:1px}
-.back-btn{background:rgba(255,255,255,0.08);border:none;color:#aaa;border-radius:10px;padding:6px 12px;font-size:12px;cursor:pointer}
+/* MAIN APP */
+.app{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg)}
+.app.hidden{display:none}
+
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:max(env(safe-area-inset-top),10px) 14px 10px;background:rgba(7,7,26,0.95);border-bottom:1px solid var(--border);flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:8px}
+.tb-back{background:var(--card);border:1px solid var(--border);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer}
+.tb-logo{font-size:16px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tb-bal{text-align:right}
+.tb-bal-amt{font-size:13px;font-weight:800;color:var(--g)}
+.tb-bal-tickets{font-size:10px;color:#8888aa}
 
 /* TABS */
-.tabs{display:flex;background:rgba(13,13,30,0.8);border-bottom:1px solid rgba(255,255,255,0.06)}
-.tab{flex:1;padding:12px 4px;text-align:center;font-size:10px;font-weight:600;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}
-.tab.on{color:#00ff9d;border-bottom-color:#00ff9d}
+.tabs{display:flex;background:rgba(7,7,26,0.9);border-bottom:1px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:9px 2px;text-align:center;font-size:9px;font-weight:700;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.3px}
+.tab.on{color:var(--g);border-bottom-color:var(--g)}
 
-/* PAGES */
-.page{display:none;padding:16px;min-height:calc(100vh - 100px)}
-.page.on{display:block}
+/* CONTENT AREA - single screen fit */
+.content{flex:1;overflow:hidden;position:relative}
+.pane{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+.pane.on{display:flex}
 
-/* SECTION HEADER */
-.sec-head{margin-bottom:16px}
-.sec-title{font-size:20px;font-weight:800;margin-bottom:4px}
-.sec-sub{font-size:12px;color:#8888aa;line-height:1.5}
+/* TAP PANE */
+.tap-stats{display:flex;gap:8px;width:100%;margin-bottom:12px}
+.stat-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.stat-val{font-size:16px;font-weight:800;color:var(--g)}
+.stat-lbl{font-size:9px;color:#8888aa;margin-top:1px;text-transform:uppercase;letter-spacing:0.5px}
+.info-strip{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.1);border-radius:10px;padding:9px 12px;font-size:11px;color:#aaa;line-height:1.5;width:100%;margin-bottom:12px}
+.info-strip b{color:#fff}
+.tap-btn{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(0,255,157,0.18),rgba(0,255,157,0.02));border:2px solid rgba(0,255,157,0.25);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.08s;box-shadow:0 0 30px rgba(0,255,157,0.08);margin-bottom:10px}
+.tap-btn:active{transform:scale(0.88)}
+.tap-logo{font-size:40px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tap-lbl{font-size:9px;color:rgba(0,255,157,0.4);margin-top:3px;letter-spacing:1px}
+.tap-reward{font-size:12px;color:var(--g);font-weight:700}
 
-/* INFO CARD */
-.info-card{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.15);border-radius:16px;padding:14px;margin-bottom:16px}
-.info-card.purple{background:rgba(153,68,255,0.06);border-color:rgba(153,68,255,0.2)}
-.info-card.gold{background:rgba(255,170,0,0.06);border-color:rgba(255,170,0,0.2)}
-.info-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
-.info-row:last-child{margin-bottom:0}
-.info-icon{font-size:16px;min-width:20px}
-.info-text{font-size:12px;color:#aaa;line-height:1.5}
-.info-text b{color:#fff}
+/* SPIN PANE */
+.spin-badge{background:rgba(0,255,157,0.08);border:1px solid rgba(0,255,157,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--g);font-weight:700;margin-bottom:8px}
+.wheel-wrap{position:relative;width:220px;height:220px;margin-bottom:6px}
+.w-arr{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:20px;filter:drop-shadow(0 0 5px var(--g))}
+.spin-res{font-size:14px;font-weight:800;color:var(--g);min-height:20px;text-align:center;margin:4px 0}
+.spin-rem{font-size:10px;color:#8888aa;text-align:center}
 
-/* TAP */
-.tap-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0}
-.tap-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:20px}
-.tap-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px;text-align:center}
-.tap-stat-val{font-size:18px;font-weight:800;color:#00ff9d}
-.tap-stat-lbl{font-size:10px;color:#8888aa;margin-top:2px}
-.tap-btn{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(0,255,157,0.2),rgba(0,255,157,0.03));border:2px solid rgba(0,255,157,0.3);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;user-select:none;transition:transform 0.1s;box-shadow:0 0 40px rgba(0,255,157,0.1),inset 0 0 40px rgba(0,255,157,0.05)}
-.tap-btn:active{transform:scale(0.91);box-shadow:0 0 20px rgba(0,255,157,0.15)}
-.tap-logo{font-size:48px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tap-lbl{font-size:10px;color:rgba(0,255,157,0.5);margin-top:4px;letter-spacing:1px}
-.tap-reward{font-size:13px;color:#00ff9d;margin-top:14px;font-weight:700}
-.val-box{width:100%;margin-top:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px;text-align:center}
-.val-lbl{font-size:11px;color:#8888aa;margin-bottom:4px}
-.val-amount{font-size:22px;font-weight:800;color:#00ff9d}
-.val-ticket{font-size:11px;color:#8888aa;margin-top:4px}
+/* CHECKIN PANE */
+.streak-row{display:flex;align-items:center;gap:10px;background:rgba(255,100,0,0.08);border:1px solid rgba(255,100,0,0.15);border-radius:12px;padding:10px 14px;width:100%;margin-bottom:10px}
+.streak-num{font-size:28px;font-weight:900;color:#ff6400;min-width:36px;text-align:center}
+.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-bottom:10px}
+.day-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 2px;text-align:center}
+.day-box.done{border-color:rgba(0,255,157,0.3);background:rgba(0,255,157,0.06)}
+.day-box.today{border-color:var(--g);background:rgba(0,255,157,0.1);box-shadow:0 0 8px rgba(0,255,157,0.1)}
+.day-num{font-size:8px;color:#8888aa}
+.day-ico{font-size:14px;margin:1px 0}
+.day-amt{font-size:9px;font-weight:700;color:var(--g)}
 
-/* SPIN */
-.spin-wrap{display:flex;flex-direction:column;align-items:center}
-.spin-badge{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.3);border-radius:20px;padding:5px 16px;font-size:12px;color:#00ff9d;font-weight:700;margin-bottom:12px}
-.wheel-wrap{position:relative;width:260px;height:260px;margin-bottom:8px}
-.w-arrow{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:24px;filter:drop-shadow(0 0 6px #00ff9d)}
-.spin-result{font-size:16px;font-weight:800;color:#00ff9d;min-height:24px;text-align:center;margin:8px 0}
-.spin-info{font-size:11px;color:#8888aa;text-align:center;margin-top:6px}
-
-/* CHECKIN */
-.streak-box{background:linear-gradient(135deg,rgba(255,100,0,0.1),rgba(255,50,0,0.05));border:1px solid rgba(255,100,0,0.2);border-radius:16px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
-.streak-num{font-size:32px;font-weight:900;color:#ff6400}
-.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
-.day-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 2px;text-align:center}
-.day-box.done{border-color:rgba(0,255,157,0.3);background:rgba(0,255,157,0.08)}
-.day-box.today{border-color:#00ff9d;background:rgba(0,255,157,0.12);box-shadow:0 0 10px rgba(0,255,157,0.15)}
-
-/* TASKS */
-.task-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.2s}
+/* TASKS PANE */
+.tasks-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.task-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s}
 .task-item:active{transform:scale(0.98)}
-.task-item.done{opacity:0.5;cursor:default}
-.task-icon{font-size:28px;min-width:36px;text-align:center}
+.task-item.done{opacity:0.45}
+.task-ico{font-size:24px;min-width:30px;text-align:center}
 .task-info{flex:1}
-.task-title{font-size:13px;font-weight:700;margin-bottom:3px}
-.task-desc{font-size:11px;color:#8888aa}
-.task-reward{text-align:right}
-.task-sans{font-size:14px;font-weight:800;color:#00ff9d}
-.task-done{font-size:20px}
+.task-title{font-size:12px;font-weight:700;margin-bottom:2px}
+.task-desc{font-size:10px;color:#8888aa}
+.task-r{text-align:right}
+.task-sans{font-size:13px;font-weight:800;color:var(--g)}
+.ref-mini{background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.15);border-radius:12px;padding:10px 12px;margin-top:6px}
+.ref-link-row{display:flex;align-items:center;gap:6px;margin:6px 0}
+.ref-link-text{flex:1;font-size:9px;color:#aaa;word-break:break-all;background:var(--card);border-radius:6px;padding:5px 8px}
 
-/* REFERRAL */
-.ref-box{background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.2);border-radius:16px;padding:16px;margin-top:16px}
-.ref-title{font-size:15px;font-weight:800;color:#0099ff;margin-bottom:6px}
-.ref-link-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;margin:10px 0;display:flex;align-items:center;gap:8px}
-.ref-link-text{flex:1;font-size:10px;color:#aaa;word-break:break-all}
-.ref-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:9px 12px;color:#fff;font-size:12px;outline:none}
+/* RANK PANE */
+.rank-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.rank-my{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.15);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rank-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:5px;display:flex;align-items:center;gap:8px}
 
-/* LEADERBOARD */
-.lb-prize-pool{background:linear-gradient(135deg,rgba(255,170,0,0.12),rgba(255,100,0,0.08));border:1px solid rgba(255,170,0,0.25);border-radius:16px;padding:16px;margin-bottom:16px;text-align:center}
-.lb-pool-title{font-size:12px;color:#ffaa00;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
-.lb-pool-prizes{display:flex;justify-content:center;gap:8px;margin-bottom:8px}
-.lb-prize{background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);border-radius:10px;padding:8px 14px;text-align:center}
-.lb-prize-place{font-size:16px}
-.lb-prize-amt{font-size:12px;font-weight:800;color:#ffaa00}
-.lb-my-rank{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.2);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
-.lb-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-
-/* RAFFLE PAGE */
-.raffle-hero{background:linear-gradient(135deg,rgba(255,170,0,0.12),rgba(255,50,0,0.08));border:1px solid rgba(255,170,0,0.25);border-radius:20px;padding:20px;margin-bottom:16px;text-align:center}
-.raffle-title{font-size:22px;font-weight:900;color:#ffaa00;margin-bottom:6px}
-.raffle-pools{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.raffle-pool{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px}
-.raffle-pool-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.raffle-pool-prize{font-size:20px;font-weight:900;color:#ffaa00}
-.raffle-pool-status{font-size:11px;color:#8888aa}
-.raffle-pb{height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-bottom:6px}
-.raffle-pf{height:100%;background:linear-gradient(90deg,#ffaa00,#ff6400);border-radius:4px}
-.raffle-pool-info{font-size:11px;color:#8888aa;display:flex;justify-content:space-between}
-.raffle-ticket-box{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.2);border-radius:16px;padding:16px;margin-bottom:16px;text-align:center}
-.raffle-ticket-count{font-size:36px;font-weight:900;color:#00ff9d;margin:8px 0}
-.raffle-join-btn{width:100%;background:linear-gradient(135deg,#ffaa00,#ff6400);color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;margin-bottom:8px}
-.raffle-join-btn:disabled{opacity:0.4;cursor:not-allowed}
-
-/* OVERLAYS */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-.overlay.on{display:flex}
-.sheet{background:linear-gradient(180deg,#0d0d2e,#060612);border:1px solid rgba(255,255,255,0.1);border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px}
-.sheet-handle{width:40px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 20px}
+/* RAFFLE PANE */
+.raffle-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.pool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
+.pool-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pool-prize{font-size:18px;font-weight:900;color:var(--gold)}
+.pool-pb{height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:5px}
+.pool-pf{height:100%;background:linear-gradient(90deg,var(--gold),#ff6400);border-radius:4px;transition:width 0.5s}
+.pool-info{display:flex;justify-content:space-between;font-size:10px;color:#8888aa}
+.ticket-box{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.15);border-radius:12px;padding:12px;margin-bottom:8px;text-align:center}
+.ticket-count{font-size:32px;font-weight:900;color:var(--g);margin:4px 0}
+.wallet-row{display:flex;gap:6px;margin-top:8px}
+.wallet-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:#fff;font-size:10px;outline:none}
 
 /* BUTTONS */
-.btn-primary{width:100%;background:linear-gradient(135deg,#00ff9d,#00cc7a);color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer}
-.btn-primary:disabled{opacity:0.4}
-.btn-secondary{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#aaa;border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer}
-.btn-sm{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.2);color:#00ff9d;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer}
-.btn-blue{background:rgba(0,153,255,0.1);border:1px solid rgba(0,153,255,0.3);color:#0099ff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer}
+.btn-g{background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;width:100%}
+.btn-g:disabled{opacity:0.4}
+.btn-s{background:var(--card);border:1px solid var(--border);color:#aaa;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer}
+.btn-xs{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.2);color:var(--g);border-radius:7px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer}
+
+/* OVERLAYS */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:50;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.ov.on{display:flex}
+.sheet{background:linear-gradient(180deg,#0d0d28,#07071a);border:1px solid rgba(255,255,255,0.1);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:440px}
+.sh{width:36px;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 16px}
+
+/* WIN OVERLAY */
+.win-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.win-ov.on{display:flex}
+.win-card{background:linear-gradient(160deg,#0d1a0d,#07071a,#0d0d28);border:1px solid rgba(0,255,157,0.25);border-radius:24px;padding:28px 22px;width:86%;max-width:300px;text-align:center;box-shadow:0 0 50px rgba(0,255,157,0.12);animation:wci 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes wci{from{transform:scale(0.6) translateY(30px);opacity:0}to{transform:scale(1);opacity:1}}
+.win-coin{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--gb));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 15px rgba(0,255,157,0.3)}50%{box-shadow:0 0 30px rgba(0,255,157,0.6)}}
+.win-title{font-size:11px;color:var(--g);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.win-amt{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.win-sub{font-size:11px;color:#8888aa;margin-bottom:16px}
+.win-stats{background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;margin-bottom:16px}
+.win-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px}
+.win-row+.win-row{border-top:1px solid rgba(255,255,255,0.05)}
+
+/* CONFETTI */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
 
 /* TOAST */
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#00ff9d,#00cc7a);color:#000;border-radius:20px;padding:10px 20px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,255,157,0.3)}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1}
-.float{position:fixed;font-size:16px;font-weight:800;color:#00ff9d;pointer-events:none;animation:fu 1s ease-out forwards;z-index:9999;text-shadow:0 0 10px rgba(0,255,157,0.5)}
-@keyframes fu{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-60px)}}
-
-/* WELCOME */
-.welcome{display:flex;position:fixed;inset:0;background:linear-gradient(160deg,#060612,#0d0d2e,#060612);z-index:990;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-.w-logo{font-size:58px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;margin-bottom:4px}
-.w-card{background:rgba(255,255,255,0.03);border:1px solid rgba(0,255,157,0.2);border-radius:20px;padding:20px;width:100%;max-width:320px;margin-bottom:14px}
-.w-pb{height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin:10px 0 14px}
-.w-pf{height:100%;background:linear-gradient(90deg,#00ff9d,#0099ff);border-radius:4px;transition:width 1.2s ease}
-.w-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.w-stat{background:rgba(255,255,255,0.04);border-radius:12px;padding:10px;text-align:center}
-.w-stat-v{font-size:18px;font-weight:800;color:#00ff9d}
-.w-stat-l{font-size:10px;color:#8888aa;margin-top:2px}
-.w-listing{background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.15);border-radius:14px;padding:12px;text-align:center;margin-bottom:16px;width:100%;max-width:320px}
+.float{position:fixed;font-size:15px;font-weight:800;color:var(--g);pointer-events:none;animation:fu 0.9s ease-out forwards;z-index:150}
+@keyframes fu{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-55px)}}
 </style>
 </head>
 <body>
 
-<!-- LANGUAGE SCREEN -->
-<div id="langScreen" class="lang-screen">
-  <div class="lang-logo">SANS</div>
-  <div class="lang-tagline">Earn crypto. Win real prizes. 🏆</div>
-  <div class="lang-title" id="ls-title">Choose your language</div>
-  <div class="lang-grid" id="langGrid">
-    <div class="lang-btn selected" onclick="selectLang('en',this)"><div class="flag">🇬🇧</div><div class="lname">English</div></div>
-    <div class="lang-btn" onclick="selectLang('tr',this)"><div class="flag">🇹🇷</div><div class="lname">Türkçe</div></div>
-    <div class="lang-btn" onclick="selectLang('ru',this)"><div class="flag">🇷🇺</div><div class="lname">Русский</div></div>
-    <div class="lang-btn" onclick="selectLang('ar',this)"><div class="flag">🇸🇦</div><div class="lname">العربية</div></div>
-    <div class="lang-btn" onclick="selectLang('es',this)"><div class="flag">🇪🇸</div><div class="lname">Español</div></div>
-    <div class="lang-btn" onclick="selectLang('pt',this)"><div class="flag">🇧🇷</div><div class="lname">Português</div></div>
-    <div class="lang-btn" onclick="selectLang('fr',this)"><div class="flag">🇫🇷</div><div class="lname">Français</div></div>
-    <div class="lang-btn" onclick="selectLang('de',this)"><div class="flag">🇩🇪</div><div class="lname">Deutsch</div></div>
-    <div class="lang-btn" onclick="selectLang('id',this)"><div class="flag">🇮🇩</div><div class="lname">Indonesia</div></div>
-    <div class="lang-btn" onclick="selectLang('uk',this)"><div class="flag">🇺🇦</div><div class="lname">Українська</div></div>
+<!-- CONFETTI CANVAS -->
+<canvas id="confetti"></canvas>
+
+<!-- LANG SCREEN -->
+<div class="screen" id="sLang">
+  <div class="brand">SANS</div>
+  <div class="brand-sub">Earn Crypto · Win Real Prizes 🏆</div>
+  <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:14px;text-align:center">🌍 Choose your language</div>
+  <div class="lang-grid">
+    <div class="lb sel" onclick="pickLang('en',this)"><div class="fl">🇬🇧</div><div class="ln">English</div></div>
+    <div class="lb" onclick="pickLang('tr',this)"><div class="fl">🇹🇷</div><div class="ln">Türkçe</div></div>
+    <div class="lb" onclick="pickLang('ru',this)"><div class="fl">🇷🇺</div><div class="ln">Русский</div></div>
+    <div class="lb" onclick="pickLang('ar',this)"><div class="fl">🇸🇦</div><div class="ln">العربية</div></div>
+    <div class="lb" onclick="pickLang('es',this)"><div class="fl">🇪🇸</div><div class="ln">Español</div></div>
+    <div class="lb" onclick="pickLang('pt',this)"><div class="fl">🇧🇷</div><div class="ln">Português</div></div>
+    <div class="lb" onclick="pickLang('fr',this)"><div class="fl">🇫🇷</div><div class="ln">Français</div></div>
+    <div class="lb" onclick="pickLang('de',this)"><div class="fl">🇩🇪</div><div class="ln">Deutsch</div></div>
+    <div class="lb" onclick="pickLang('id',this)"><div class="fl">🇮🇩</div><div class="ln">Indonesia</div></div>
+    <div class="lb" onclick="pickLang('uk',this)"><div class="fl">🇺🇦</div><div class="ln">Українська</div></div>
   </div>
-  <button class="lang-confirm" id="langConfirmBtn" onclick="confirmLang()">Continue →</button>
+  <button class="btn-main" onclick="confirmLang()">Continue →</button>
 </div>
 
 <!-- MENU SCREEN -->
-<div id="menuScreen" class="menu-screen">
-  <div class="menu-logo">SANS</div>
-  <div class="menu-sub" id="ms-sub">Earn & Win Real Prizes</div>
-  <div class="menu-balance">
-    <div class="menu-bal-label" id="ms-bal-label">Your Balance</div>
-    <div class="menu-bal-amount"><span id="menuBal">0</span> SANS</div>
-    <div class="menu-bal-tickets" id="ms-tickets">🎟 <span id="menuTickets">0</span> raffle tickets</div>
+<div class="screen hidden" id="sMenu">
+  <div class="brand" style="font-size:40px;margin-bottom:2px">SANS</div>
+  <div class="brand-sub" id="m-sub">Earn & Win Real Prizes</div>
+  <div class="menu-bal">
+    <div class="menu-bal-lbl" id="m-bal-lbl">Your Balance</div>
+    <div class="menu-bal-amt"><span id="mBal">0</span> SANS</div>
+    <div class="menu-bal-tickets">🎟 <span id="mTickets">0</span> <span id="m-tickets-lbl">raffle tickets</span></div>
   </div>
   <div class="menu-cards">
-    <div class="menu-card earn" onclick="goEarn()">
-      <div class="menu-card-icon">🎮</div>
-      <div class="menu-card-title" id="ms-earn-title">Earn SANS</div>
-      <div class="menu-card-desc" id="ms-earn-desc">Watch ads & complete tasks to earn free SANS tokens. Use them to enter real prize draws!</div>
-      <div class="menu-card-arrow">→</div>
-    </div>
-    <div class="menu-card buy" onclick="goBuy()">
-      <div class="menu-card-icon">💎</div>
-      <div class="menu-card-title" id="ms-buy-title">Buy SANS</div>
-      <div class="menu-card-desc" id="ms-buy-desc">Buy SANS tokens directly in presale. More tokens = more raffle tickets = more chances to win!</div>
-      <div class="menu-card-arrow">→</div>
-    </div>
-  </div>
-  <div class="menu-raffle" onclick="goTab('raffle');showEarnUI()">
-    <div class="menu-raffle-title">🏆 Active Prize Draws</div>
-    <div class="menu-raffle-desc" id="ms-raffle-desc">Pools filling up — be early to win!</div>
-  </div>
-</div>
-
-<!-- WELCOME PROGRESS -->
-<div class="welcome" id="ws" style="display:none">
-  <div class="w-logo">SANS</div>
-  <div style="font-size:12px;color:#8888aa;margin-bottom:24px;text-align:center" id="ws-sub">Loading your progress...</div>
-  <div class="w-card">
-    <div style="font-size:11px;color:#8888aa" id="ws-lbl">Total SANS Earned</div>
-    <div class="w-pb"><div class="w-pf" id="wsPf" style="width:0%"></div></div>
-    <div class="w-stats">
-      <div class="w-stat"><div class="w-stat-v" id="wsSans">0</div><div class="w-stat-l">SANS</div></div>
-      <div class="w-stat"><div class="w-stat-v" id="wsTickets">0</div><div class="w-stat-l" id="ws-ticket-lbl">Raffle Tickets</div></div>
-    </div>
-  </div>
-  <div class="w-listing">
-    <div style="font-size:11px;color:#8888aa;margin-bottom:3px" id="ws-next">Next raffle draw</div>
-    <div style="font-size:16px;font-weight:800;color:#ffaa00" id="wsNextDraw">5 USDT Pool</div>
-  </div>
-  <button class="btn-primary" id="wsBtn" style="max-width:320px">🎮 Start Earning!</button>
-</div>
-
-<!-- NAV (hidden until earn UI) -->
-<div class="nav" id="mainNav" style="display:none">
-  <div style="display:flex;align-items:center;gap:10px">
-    <button class="back-btn" onclick="showMenuScreen()">← Menu</button>
-    <div class="nav-logo">SANS</div>
-  </div>
-  <div class="nav-right">
-    <div>
-      <div class="nav-bal"><span id="balEl">0</span> SANS</div>
-      <div class="nav-bal-sub">🎟 <span id="ticketEl">0</span> tickets</div>
-    </div>
-  </div>
-</div>
-
-<!-- TABS -->
-<div class="tabs" id="mainTabs" style="display:none">
-  <div class="tab on" id="tTap" onclick="goTab('tap')">👆 Tap</div>
-  <div class="tab" id="tSpin" onclick="goTab('spin')">🎡 Spin</div>
-  <div class="tab" id="tCi" onclick="goTab('ci')">📅 Daily</div>
-  <div class="tab" id="tTask" onclick="goTab('task')">✅ Tasks</div>
-  <div class="tab" id="tLb" onclick="goTab('lb')">🏆 Rank</div>
-  <div class="tab" id="tRaffle" onclick="goTab('raffle')">🎰 Draw</div>
-</div>
-
-<!-- TAP PAGE -->
-<div class="page on" id="pTap" style="display:none">
-  <div class="tap-wrap">
-    <div class="tap-stats">
-      <div class="tap-stat">
-        <div class="tap-stat-val" id="tapTotal">0</div>
-        <div class="tap-stat-lbl" id="ts-earned">SANS Earned</div>
+    <div class="mc earn" onclick="goEarn()">
+      <div class="mc-ico">🎮</div>
+      <div class="mc-info">
+        <div class="mc-title" id="m-earn-t">Earn SANS</div>
+        <div class="mc-desc" id="m-earn-d">Watch ads & complete tasks to earn free tokens</div>
       </div>
-      <div class="tap-stat">
-        <div class="tap-stat-val" id="tapTickets">0</div>
-        <div class="tap-stat-lbl" id="ts-tickets">Raffle Tickets</div>
+      <div class="mc-arr">›</div>
+    </div>
+    <div class="mc buy" onclick="goBuy()">
+      <div class="mc-ico">💎</div>
+      <div class="mc-info">
+        <div class="mc-title" id="m-buy-t">Buy SANS</div>
+        <div class="mc-desc" id="m-buy-d">Purchase tokens in presale for more tickets</div>
+      </div>
+      <div class="mc-arr">›</div>
+    </div>
+    <div class="mc raffle" onclick="goEarn();setTimeout(function(){goPane('raffle');},100)">
+      <div class="mc-ico">🏆</div>
+      <div class="mc-info">
+        <div class="mc-title" id="m-raffle-t">Prize Draws</div>
+        <div class="mc-desc" id="m-raffle-d">Win USDT/BNB with your tickets</div>
+      </div>
+      <div class="mc-arr">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app hidden" id="app">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="tb-back" onclick="backToMenu()">← Menu</button>
+      <div class="tb-logo">SANS</div>
+    </div>
+    <div class="tb-bal">
+      <div class="tb-bal-amt"><span id="balEl">0</span> SANS</div>
+      <div class="tb-bal-tickets">🎟 <span id="tickEl">0</span> <span id="tb-tick-lbl">tickets</span></div>
+    </div>
+  </div>
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab on" id="tTap" onclick="goPane('tap')" id="t0">👆 Tap</div>
+    <div class="tab" id="tSpin" onclick="goPane('spin')" id="t1">🎡 Spin</div>
+    <div class="tab" id="tCi" onclick="goPane('ci')" id="t2">📅 Daily</div>
+    <div class="tab" id="tTask" onclick="goPane('task')" id="t3">✅ Tasks</div>
+    <div class="tab" id="tLb" onclick="goPane('lb');loadLB()" id="t4">🏆 Rank</div>
+    <div class="tab" id="tRaffle" onclick="goPane('raffle')" id="t5">🎰 Draw</div>
+  </div>
+  <!-- CONTENT -->
+  <div class="content">
+    <!-- TAP -->
+    <div class="pane on" id="pTap">
+      <div class="tap-stats">
+        <div class="stat-box"><div class="stat-val" id="tTotal">0</div><div class="stat-lbl" id="ts-sans">SANS</div></div>
+        <div class="stat-box"><div class="stat-val" id="tTickets">0</div><div class="stat-lbl" id="ts-tick">Tickets</div></div>
+      </div>
+      <div class="info-strip" id="tap-info">Tap → watch short ad → earn <b>+10 SANS</b> · 100 SANS = 1 🎟</div>
+      <div class="tap-btn" onclick="onTap(event)">
+        <div class="tap-logo">SANS</div>
+        <div class="tap-lbl">TAP TO EARN</div>
+      </div>
+      <div class="tap-reward" id="tap-r">+10 SANS per tap</div>
+    </div>
+    <!-- SPIN -->
+    <div class="pane" id="pSpin">
+      <div class="spin-badge" id="spinBadge">🎁 1 Free Spin!</div>
+      <div class="wheel-wrap">
+        <div class="w-arr">▼</div>
+        <canvas id="wheel" width="220" height="220"></canvas>
+      </div>
+      <div class="spin-res" id="spinRes"></div>
+      <button class="btn-g" id="spinBtn" onclick="onSpin()" style="max-width:220px;margin-bottom:6px">🎡 SPIN</button>
+      <div class="spin-rem"><span id="spinIL">Remaining:</span> <span id="spinLeft">3</span></div>
+    </div>
+    <!-- CHECKIN -->
+    <div class="pane" id="pCi">
+      <div class="streak-row" style="width:100%">
+        <div class="streak-num" id="streakN">0</div>
+        <div>
+          <div style="font-size:14px;font-weight:800"><span id="streakL">Day Streak!</span></div>
+          <div style="font-size:11px;color:#8888aa;margin-top:2px" id="streakS">Keep going for bigger rewards!</div>
+        </div>
+      </div>
+      <div class="days-grid" id="daysGrid"></div>
+      <button class="btn-g" id="ciBtn" onclick="onCheckin()">🎁 Claim Daily Reward</button>
+    </div>
+    <!-- TASKS -->
+    <div class="pane" id="pTask" style="justify-content:flex-start;padding-top:8px">
+      <div class="tasks-scroll" id="taskList"></div>
+      <div class="ref-mini" style="width:100%;flex-shrink:0">
+        <div style="font-size:12px;font-weight:700;color:#0099ff;margin-bottom:4px">👥 Referral</div>
+        <div style="font-size:10px;color:#8888aa;margin-bottom:6px" id="ref-desc">Invite friends: you +30, they +20 SANS!</div>
+        <div class="ref-link-row">
+          <div class="ref-link-text" id="refLink">...</div>
+          <button class="btn-xs" onclick="copyRef()">📋</button>
+        </div>
+        <div id="refBox" style="display:flex;gap:6px">
+          <input class="wallet-input" id="refIn" placeholder="Enter referral code..."/>
+          <button class="btn-xs" onclick="useRef()">Use</button>
+        </div>
+        <div id="refMsg" style="font-size:10px;margin-top:5px;min-height:14px"></div>
       </div>
     </div>
-    <div class="info-card" style="width:100%;margin-bottom:16px">
-      <div class="info-row"><div class="info-icon">📺</div><div class="info-text" id="tap-info">Tap the button below to watch a short ad and earn <b>+10 SANS</b> tokens. Each 100 SANS = 1 raffle ticket!</div></div>
+    <!-- RANK -->
+    <div class="pane" id="pLb" style="justify-content:flex-start;padding-top:8px">
+      <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:12px;padding:10px;width:100%;margin-bottom:8px;flex-shrink:0">
+        <div style="font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" id="lb-weekly">Weekly Top 3 Bonus Tickets</div>
+        <div style="display:flex;gap:6px;justify-content:center">
+          <div style="text-align:center;background:rgba(255,215,0,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥇</div><div style="font-size:10px;font-weight:700;color:#FFD700">+50</div></div>
+          <div style="text-align:center;background:rgba(192,192,192,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥈</div><div style="font-size:10px;font-weight:700;color:#C0C0C0">+30</div></div>
+          <div style="text-align:center;background:rgba(205,127,50,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥉</div><div style="font-size:10px;font-weight:700;color:#CD7F32">+20</div></div>
+        </div>
+      </div>
+      <div id="myRankBox" style="display:none;width:100%;flex-shrink:0" class="rank-my">
+        <div style="font-size:16px;font-weight:900;color:var(--g);width:22px;text-align:center" id="myRN">-</div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:700" id="myRName">-</div><div style="font-size:9px;color:#8888aa">🎟 <span id="myRTick">0</span> tickets</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:var(--g)" id="myRS">0 SANS</div><div style="font-size:9px;color:var(--g);font-weight:700" id="myRY">YOU</div></div>
+      </div>
+      <div class="rank-scroll" id="lbList"></div>
     </div>
-    <div class="tap-btn" onclick="onTap(event)">
-      <div class="tap-logo">SANS</div>
-      <div class="tap-lbl">TAP TO EARN</div>
-    </div>
-    <div class="tap-reward" id="tap-reward-lbl">+10 SANS per tap</div>
-    <div class="val-box">
-      <div class="val-lbl" id="vb-lbl">Your SANS Balance</div>
-      <div class="val-amount"><span id="tapBalEl">0</span> SANS</div>
-      <div class="val-ticket" id="vb-ticket">= <span id="tapTicketEl">0</span> raffle tickets</div>
+    <!-- RAFFLE -->
+    <div class="pane" id="pRaffle" style="justify-content:flex-start;padding-top:8px">
+      <div class="raffle-scroll">
+        <div class="info-strip" style="margin-bottom:8px" id="raffle-how">100 SANS = 1 🎟 · Pool fills up → winner drawn automatically → USDT/BNB sent to wallet!</div>
+        <div id="rafflePools"></div>
+        <div class="ticket-box">
+          <div style="font-size:10px;color:#8888aa" id="rt-lbl">Your Tickets</div>
+          <div class="ticket-count" id="rafTickets">0</div>
+          <div style="font-size:10px;color:#8888aa"><span id="rafBal">0</span> SANS = <span id="rafCalc">0</span> 🎟</div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:6px" id="wallet-lbl">Prize Wallet (BSC)</div>
+        <div class="wallet-row">
+          <input class="wallet-input" id="walletIn" placeholder="0x... your BSC wallet address"/>
+          <button class="btn-xs" onclick="saveWallet()">Save</button>
+        </div>
+        <div id="walletMsg" style="font-size:10px;color:#8888aa;margin-top:5px"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- SPIN PAGE -->
-<div class="page" id="pSpin" style="display:none">
-  <div class="sec-head">
-    <div class="sec-title" id="spin-title">🎡 Lucky Spin</div>
-    <div class="sec-sub" id="spin-sub">Spin the wheel to earn SANS. 1 free spin daily, watch ads for more!</div>
-  </div>
-  <div class="info-card" style="margin-bottom:16px">
-    <div class="info-row"><div class="info-icon">🎁</div><div class="info-text" id="spin-info">You get <b>1 free spin every day</b>. Watch an ad to get additional spins. Prizes range from 10 to 50 SANS!</div></div>
-  </div>
-  <div class="spin-wrap">
-    <div class="spin-badge" id="spinBadge">🎁 1 Free Spin Available!</div>
-    <div class="wheel-wrap">
-      <div class="w-arrow">▼</div>
-      <canvas id="wheel" width="260" height="260"></canvas>
-    </div>
-    <div class="spin-result" id="spinRes"></div>
-    <button class="btn-primary" id="spinBtn" onclick="onSpin()" style="margin-top:8px;max-width:260px">🎡 SPIN</button>
-    <div class="spin-info"><span id="spinIL">Remaining spins:</span> <span id="spinLeft">3</span></div>
-  </div>
-</div>
-
-<!-- CHECKIN PAGE -->
-<div class="page" id="pCi" style="display:none">
-  <div class="sec-head">
-    <div class="sec-title" id="ci-title">📅 Daily Check-in</div>
-    <div class="sec-sub" id="ci-sub">Check in every day to earn bonus SANS. Don't break your streak!</div>
-  </div>
-  <div class="info-card" style="margin-bottom:14px">
-    <div class="info-row"><div class="info-icon">🔥</div><div class="info-text" id="ci-info">Log in every day and watch a short ad to claim your daily bonus. Streak bonuses increase each day up to <b>25 SANS</b> on day 7!</div></div>
-  </div>
-  <div class="streak-box">
-    <div class="streak-num" id="streakNum">0</div>
-    <div>
-      <div style="font-size:15px;font-weight:800"><span id="streakL">Day Streak!</span></div>
-      <div style="font-size:12px;color:#8888aa;margin-top:2px" id="streakS">Keep going for bigger rewards!</div>
-    </div>
-  </div>
-  <div class="days-grid" id="daysGrid"></div>
-  <button class="btn-primary" id="ciBtn" onclick="onCheckin()">🎁 Claim Daily Reward</button>
-</div>
-
-<!-- TASKS PAGE -->
-<div class="page" id="pTask" style="display:none">
-  <div class="sec-head">
-    <div class="sec-title" id="task-title">✅ Tasks</div>
-    <div class="sec-sub" id="task-sub">Complete tasks to earn bonus SANS tokens. One-time rewards!</div>
-  </div>
-  <div id="taskList"></div>
-  <div class="ref-box">
-    <div class="ref-title">👥 Referral Program</div>
-    <div style="font-size:12px;color:#8888aa;margin-bottom:10px" id="ref-desc">Invite friends and earn bonus SANS! You get <b style="color:#0099ff">+30 SANS</b>, they get <b style="color:#0099ff">+20 SANS</b>.</div>
-    <div style="font-size:11px;color:#8888aa;margin-bottom:8px">Total referrals: <span id="refN" style="color:#0099ff;font-weight:800">0</span></div>
-    <div class="ref-link-box">
-      <div class="ref-link-text" id="refLink">...</div>
-      <button class="btn-sm" onclick="copyRef()">📋 Copy</button>
-    </div>
-    <div id="refUsedBox" style="display:flex;gap:8px;margin-top:8px">
-      <input class="ref-input" id="refIn" placeholder="Enter referral code..."/>
-      <button style="background:linear-gradient(135deg,#0099ff,#0066cc);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer" onclick="useRef()" id="ref-use-btn">Use</button>
-    </div>
-    <div id="refMsg" style="font-size:11px;margin-top:6px;min-height:16px"></div>
-  </div>
-</div>
-
-<!-- LEADERBOARD PAGE -->
-<div class="page" id="pLb" style="display:none">
-  <div class="sec-head">
-    <div class="sec-title" id="lb-title">🏆 Leaderboard</div>
-    <div class="sec-sub" id="lb-sub">Top SANS earners. Higher rank = more raffle tickets!</div>
-  </div>
-  <div class="lb-prize-pool">
-    <div class="lb-pool-title" id="lb-weekly">Weekly Top 3 Bonus Tickets</div>
-    <div class="lb-pool-prizes">
-      <div class="lb-prize"><div class="lb-prize-place">🥇</div><div class="lb-prize-amt">+50 tickets</div></div>
-      <div class="lb-prize"><div class="lb-prize-place">🥈</div><div class="lb-prize-amt">+30 tickets</div></div>
-      <div class="lb-prize"><div class="lb-prize-place">🥉</div><div class="lb-prize-amt">+20 tickets</div></div>
-    </div>
-    <div style="font-size:11px;color:#8888aa" id="lb-info">Rankings reset every Monday. Keep earning!</div>
-  </div>
-  <div id="myRankBox" style="display:none" class="lb-my-rank">
-    <div style="font-size:18px;font-weight:900;color:#00ff9d;width:28px;text-align:center" id="myRN">-</div>
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:700" id="myRName">-</div>
-      <div style="font-size:10px;color:#8888aa" id="myRTickets">0 tickets</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:13px;font-weight:800;color:#00ff9d" id="myRS">0 SANS</div>
-      <div style="font-size:10px;color:#00ff9d;font-weight:700" id="myRY">YOU</div>
-    </div>
-  </div>
-  <div id="lbList"></div>
-</div>
-
-<!-- RAFFLE PAGE -->
-<div class="page" id="pRaffle" style="display:none">
-  <div class="sec-head">
-    <div class="sec-title" id="raffle-title">🎰 Prize Draws</div>
-    <div class="sec-sub" id="raffle-sub">Real money prizes! Use your SANS tokens to enter draws.</div>
-  </div>
-  <div class="info-card gold" style="margin-bottom:16px">
-    <div class="info-row"><div class="info-icon">🎟</div><div class="info-text" id="raffle-how"><b>How it works:</b> Every 100 SANS = 1 ticket. When a pool fills up, a winner is drawn automatically and prize is sent to their wallet!</div></div>
-    <div class="info-row"><div class="info-icon">💰</div><div class="info-text" id="raffle-prize-info">Prizes are paid in <b>USDT or BNB</b> directly to the winner's blockchain wallet.</div></div>
-    <div class="info-row"><div class="info-icon">🔒</div><div class="info-text" id="raffle-fair">All draws are <b>provably fair</b> and transparent on the BSC blockchain.</div></div>
-  </div>
-
-  <div class="raffle-pools" id="rafflePools">
-    <!-- Dynamic -->
-  </div>
-
-  <div class="raffle-ticket-box">
-    <div style="font-size:12px;color:#8888aa" id="rt-lbl">Your Raffle Tickets</div>
-    <div class="raffle-ticket-count" id="raffleTickets">0</div>
-    <div style="font-size:11px;color:#8888aa" id="rt-sub">Earn more SANS to get more tickets</div>
-    <div style="margin-top:10px;font-size:12px;color:#8888aa" id="rt-calc">100 SANS = 1 ticket · <span id="raffleBalance" style="color:#00ff9d;font-weight:700">0</span> SANS = <span id="raffleTicketCalc" style="color:#ffaa00;font-weight:700">0</span> tickets</div>
-  </div>
-
-  <div id="walletBox" style="margin-bottom:16px">
-    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px" id="wallet-lbl">Your Prize Wallet</div>
-    <div style="display:flex;gap:8px">
-      <input id="walletInput" placeholder="Enter your BSC wallet address (0x...)" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 12px;color:#fff;font-size:11px;outline:none"/>
-      <button class="btn-sm" onclick="saveWallet()" id="walletSaveBtn">Save</button>
-    </div>
-    <div id="walletMsg" style="font-size:11px;color:#8888aa;margin-top:6px"></div>
-  </div>
-
-  <div id="raffleHistoryBox" style="display:none">
-    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px" id="rh-title">Recent Winners</div>
-    <div id="raffleHistory"></div>
-  </div>
-</div>
-
-<!-- INFO SHEET -->
-<div class="overlay" id="infoOverlay">
+<!-- INFO OVERLAY -->
+<div class="ov" id="ovInfo">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div style="text-align:center;margin-bottom:18px">
-      <div style="font-size:32px;margin-bottom:8px">📺</div>
-      <div style="font-size:17px;font-weight:800;margin-bottom:4px" id="io-title">Watch Ad & Earn!</div>
-      <div style="font-size:12px;color:#8888aa" id="io-sub">A short ad will play. Watch it completely to claim your reward.</div>
+    <div class="sh"></div>
+    <div style="text-align:center;margin-bottom:14px">
+      <div style="font-size:28px;margin-bottom:6px">📺</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:3px" id="io-t">Watch Ad & Earn!</div>
     </div>
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <span style="font-size:12px;color:#8888aa">🎁 You will earn</span>
-        <span style="font-size:15px;font-weight:800;color:#00ff9d" id="io-reward">+10 SANS</span>
+    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+        <span style="font-size:11px;color:#8888aa">🎁 Reward</span>
+        <span style="font-size:14px;font-weight:800;color:var(--g)" id="io-r">+10 SANS</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <span style="font-size:12px;color:#8888aa">🎟 Tickets gained</span>
-        <span style="font-size:13px;font-weight:700;color:#ffaa00" id="io-tickets">+0.1 ticket</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:7px 0">
-        <span style="font-size:12px;color:#8888aa">⏱ Ad duration</span>
-        <span style="font-size:13px;font-weight:700;color:#fff">~15 seconds</span>
+      <div style="display:flex;justify-content:space-between;padding:6px 0">
+        <span style="font-size:11px;color:#8888aa">🎟 Tickets</span>
+        <span style="font-size:12px;font-weight:700;color:var(--gold)" id="io-t2">+0.1</span>
       </div>
     </div>
-    <div style="background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.2);border-radius:12px;padding:12px;margin-bottom:16px">
-      <div style="font-size:12px;color:#ffaa00;font-weight:700;margin-bottom:8px">📋 Instructions:</div>
-      <div style="font-size:12px;color:#aaa;line-height:1.8">
-        ⏱ A <b style="color:#fff">15-second ad</b> will appear<br>
-        ✅ After 15s, tap <b style="color:#00ff9d">✕</b> to close the ad<br>
-        🏆 Then tap <b style="color:#00ff9d">Claim Reward ✓</b> to get your SANS<br>
-        🚫 <b style="color:#ff4444">Do NOT touch anything during the ad</b>
-      </div>
+    <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.7">
+      ⏱ A <b style="color:#fff">15-second ad</b> will appear<br>
+      ✅ After 15s, close the ad with <b style="color:var(--g)">✕</b><br>
+      🏆 Then tap <b style="color:var(--g)">Claim Reward ✓</b><br>
+      🚫 <b style="color:#ff6666">Do NOT touch anything during the ad</b>
     </div>
     <div style="display:flex;gap:8px">
-      <button class="btn-secondary" style="flex:1" onclick="closeInfo()">✕ Cancel</button>
-      <button class="btn-primary" style="flex:2" id="iBtn" onclick="startAd()">▶ Starting in 5s</button>
+      <button class="btn-s" style="flex:1" onclick="closeInfo()">✕ Cancel</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="iBtn" onclick="startAd()">▶ Starting in 5s</button>
     </div>
   </div>
 </div>
 
-<!-- AD SHEET -->
-<div class="overlay" id="adOverlay">
+<!-- AD OVERLAY -->
+<div class="ov" id="ovAd">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div style="font-size:15px;font-weight:800">📺 Watching Ad...</div>
-      <div style="background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.3);border-radius:20px;padding:5px 14px;font-size:14px;font-weight:700;color:#00ff9d" id="adTimer">15s</div>
+    <div class="sh"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:14px;font-weight:800">📺 Watching Ad...</div>
+      <div style="background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.25);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--g)" id="adTimer">15s</div>
     </div>
-    <div style="background:rgba(255,255,255,0.04);border-radius:12px;height:70px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#555;margin-bottom:14px">📢 Ad Loading...</div>
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;margin-bottom:12px">📢 Ad Loading...</div>
     <div style="display:flex;gap:8px">
-      <button class="btn-secondary" style="flex:1" onclick="nextAd()">⏭ Next Ad</button>
-      <button class="btn-primary" style="flex:2" id="claimBtn" disabled onclick="claimAd()">✓ Claim Reward</button>
+      <button class="btn-s" style="flex:1" onclick="nextAd()">⏭ Next</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="claimBtn" disabled onclick="claimAd()">✓ Claim Reward</button>
     </div>
   </div>
 </div>
 
-<!-- EARN NOTIF - AAA -->
-<div id="earnOverlay" style="display:none;position:fixed;inset:0;z-index:600;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px)">
-  <!-- Confetti canvas -->
-  <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></canvas>
-  
-  <!-- Win card -->
-  <div id="earnCard" style="position:relative;background:linear-gradient(160deg,#0d1a0d,#060612,#0d0d2e);border:1px solid rgba(0,255,157,0.3);border-radius:28px;padding:32px 24px;width:88%;max-width:320px;text-align:center;box-shadow:0 0 60px rgba(0,255,157,0.15),0 0 120px rgba(0,255,157,0.05);animation:winCardIn 0.5s cubic-bezier(0.34,1.56,0.64,1)">
-    <style>
-    @keyframes winCardIn{from{transform:scale(0.5) translateY(40px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-    @keyframes coinSpin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
-    @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,255,157,0.3)}50%{box-shadow:0 0 40px rgba(0,255,157,0.6)}}
-    @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(300%) rotate(45deg)}}
-    </style>
-    
-    <!-- Shine effect -->
-    <div style="position:absolute;inset:0;border-radius:28px;overflow:hidden;pointer-events:none">
-      <div id="earnShine" style="position:absolute;top:-50%;left:-50%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);transform:translateX(-100%) rotate(45deg)"></div>
+<!-- WIN OVERLAY -->
+<div class="win-ov" id="ovWin">
+  <div class="win-card">
+    <div class="win-coin">🪙</div>
+    <div class="win-title" id="w-title">YOU EARNED</div>
+    <div class="win-amt" id="w-amt">+10 SANS</div>
+    <div class="win-sub" id="w-sub">Added to your balance!</div>
+    <div class="win-stats">
+      <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-total-lbl">Total SANS</span><span style="font-size:12px;font-weight:700;color:var(--g)" id="w-total">0</span></div>
+      <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-tick-lbl">Raffle Tickets</span><span style="font-size:12px;font-weight:700;color:var(--gold)" id="w-tick">0 🎟</span></div>
     </div>
-
-    <!-- Coin icon -->
-    <div id="earnCoin" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00ff9d,#00cc7a);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;animation:pulse 2s ease-in-out infinite;position:relative">
-      <span style="animation:coinSpin 1s ease-in-out">🪙</span>
-    </div>
-
-    <div style="font-size:13px;color:#00ff9d;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px" id="earn-win-label">YOU EARNED</div>
-    <div style="font-size:40px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px" id="earnLabel">+10 SANS</div>
-    <div style="font-size:12px;color:#8888aa;margin-bottom:20px" id="earn-added">Added to your balance!</div>
-    
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px;margin-bottom:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <span style="font-size:12px;color:#8888aa" id="earn-total-lbl">Total SANS</span>
-        <span style="font-size:15px;font-weight:800;color:#00ff9d" id="earnTotal">0 SANS</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
-        <span style="font-size:12px;color:#8888aa" id="earn-ticket-lbl">Raffle Tickets</span>
-        <span style="font-size:15px;font-weight:800;color:#ffaa00" id="earnTickets">0 🎟</span>
-      </div>
-    </div>
-    
-    <button class="btn-primary" onclick="closeEarn()" style="font-size:16px;padding:16px">✓ Awesome!</button>
+    <button class="btn-g" onclick="closeWin()">✓ Awesome!</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== CONFIG ==========
-var SB_URL = 'https://dcafhbwemskivrirhlzm.supabase.co';
-var SB_KEY = 'sb_publishable_-tcKpWWZ39F0SEAYMR_7HQ_kUfCj7VO';
-var TICKET_COST = 100; // 100 SANS = 1 ticket
-var CI_REWARDS = [10,12,14,16,18,20,25];
-var PRIZES = [
-  {l:'10 SANS',v:10,c:'#0d2d1a'},{l:'15 SANS',v:15,c:'#1a2d0d'},
-  {l:'20 SANS',v:20,c:'#2d1a0d'},{l:'50 SANS',v:50,c:'#1a0d2d'},
-  {l:'10 SANS',v:10,c:'#0d1a2d'},{l:'30 SANS',v:30,c:'#2d0d1a'},
-  {l:'15 SANS',v:15,c:'#0d2d2d'},{l:'25 SANS',v:25,c:'#1a0d1a'}
-];
-var RAFFLE_POOLS = [
-  {id:'pool5',prize:'5 USDT',currency:'USDT',target:500,color:'#00ff9d'},
-  {id:'pool10',prize:'10 USDT',currency:'USDT',target:1000,color:'#0099ff'},
-  {id:'pool50',prize:'50 USDT',currency:'USDT',target:5000,color:'#ffaa00'},
-];
+var SB_URL='https://dcafhbwemskivrirhlzm.supabase.co';
+var SB_KEY='sb_publishable_-tcKpWWZ39F0SEAYMR_7HQ_kUfCj7VO';
+var TICK=100;
+var CI_R=[10,12,14,16,18,20,25];
+var PRIZES=[{l:'10',v:10,c:'#0a2010'},{l:'15',v:15,c:'#102010'},{l:'20',v:20,c:'#0a1020'},{l:'50',v:50,c:'#1a0a20'},{l:'10',v:10,c:'#0a1520'},{l:'30',v:30,c:'#200a0a'},{l:'15',v:15,c:'#0a2020'},{l:'25',v:25,c:'#0a0a20'}];
+var POOLS=[{id:'p5',prize:'5 USDT',target:500,color:'#00ff9d'},{id:'p10',prize:'10 USDT',target:1000,color:'#0099ff'},{id:'p50',prize:'50 USDT',target:5000,color:'#ffaa00'}];
 
-// ========== LANGS ==========
-var LANGS = {
-  en:{
-    tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],
-    ms_sub:'Earn & Win Real Prizes',
-    ms_earn_title:'Earn SANS',ms_earn_desc:'Watch ads & complete tasks to earn free SANS tokens. Use them to enter real prize draws!',
-    ms_buy_title:'Buy SANS',ms_buy_desc:'Buy SANS tokens directly in presale. More tokens = more raffle tickets = more chances to win!',
-    ms_raffle:'Active Prize Draws',
-    ws_sub:'Loading your progress...',ws_lbl:'Total SANS Earned',ws_ticket_lbl:'Raffle Tickets',ws_next:'Next prize draw',ws_btn:'🎮 Start Earning!',
-    tap_info:'Tap the button below to watch a short ad and earn +10 SANS tokens. Each 100 SANS = 1 raffle ticket!',
-    tap_reward:'+10 SANS per tap',vb_lbl:'Your SANS Balance',vb_ticket:'raffle tickets',
-    spin_title:'🎡 Lucky Spin',spin_sub:'Spin the wheel to earn SANS. 1 free spin daily, watch ads for more!',
-    spin_info:'You get 1 free spin every day. Watch an ad to get additional spins. Prizes range from 10 to 50 SANS!',
-    free_spin:'🎁 1 Free Spin Available!',free_used:'Free spin used today',spin_remaining:'Remaining spins:',spin_won:'You won!',
-    ci_title:'📅 Daily Check-in',ci_sub:'Check in every day to earn bonus SANS. Don\'t break your streak!',
-    ci_info:'Log in every day and watch a short ad to claim your daily bonus. Streak bonuses increase each day up to 25 SANS on day 7!',
-    streak_lbl:'Day Streak!',streak_sub:'Keep going for bigger rewards!',ci_btn:'🎁 Claim Daily Reward',ci_done:'✅ Already claimed today',
-    task_title:'✅ Tasks',task_sub:'Complete tasks to earn bonus SANS tokens. One-time rewards!',
-    ref_desc:'Invite friends and earn bonus SANS! You get +30 SANS, they get +20 SANS.',
-    lb_title:'🏆 Leaderboard',lb_sub:'Top SANS earners. Higher rank = more raffle tickets!',
-    lb_weekly:'Weekly Top 3 Bonus Tickets',lb_info:'Rankings reset every Monday. Keep earning!',
-    raffle_title:'🎰 Prize Draws',raffle_sub:'Real money prizes! Use your SANS tokens to enter draws.',
-    raffle_how:'How it works: Every 100 SANS = 1 ticket. When a pool fills up, a winner is drawn automatically and prize is sent to their wallet!',
-    raffle_prize_info:'Prizes are paid in USDT or BNB directly to the winner\'s blockchain wallet.',
-    raffle_fair:'All draws are provably fair and transparent on the BSC blockchain.',
-    rt_lbl:'Your Raffle Tickets',rt_sub:'Earn more SANS to get more tickets',
-    wallet_lbl:'Your Prize Wallet',rh_title:'Recent Winners',
-    io_title:'Watch Ad & Earn!',io_sub:'A short ad will play. Watch it completely to claim your reward.',
-    io_note:'✅ After the ad ends, tap Claim Reward\n❌ Do not close the app during the ad',
-    earn_added:'Added to your balance!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Raffle Tickets',
-    ms_bal_label:'Your Balance',ms_tickets:'raffle tickets',
-    you:'YOU',day:'Day',go:'Go →',
-    tasks:[
-      {id:'tg',ico:'📱',t:'Join Telegram Channel',d:'Follow our official announcements channel',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-      {id:'tw',ico:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical — Stay updated',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-      {id:'ig',ico:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-      {id:'yt_sub',ico:'🔔',t:'Subscribe on YouTube',d:'Get notified of draw results',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'yt_vid',ico:'▶️',t:'Watch Our YouTube Video',d:'Learn how SANS works',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'web',ico:'🌐',t:'Visit Our Website',d:'sanslicekilis.com — Learn more',r:10,s:0,u:'https://sanslicekilis.com'},
-    ]
-  },
-  tr:{
-    tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],
-    ms_sub:'Kazan & Gerçek Ödüller Kazan',
-    ms_earn_title:'SANS Kazan',ms_earn_desc:'Reklam izle ve görevleri tamamla, ücretsiz SANS token kazan. Gerçek para çekilişlerine katıl!',
-    ms_buy_title:'SANS Satın Al',ms_buy_desc:'SANS tokenlarını direkt presale\'den satın al. Daha fazla token = daha fazla bilet = daha fazla kazanma şansı!',
-    ms_raffle:'Aktif Çekilişler',
-    ws_sub:'İlerlemeniz yükleniyor...',ws_lbl:'Toplam SANS Kazancın',ws_ticket_lbl:'Çekiliş Biletleri',ws_next:'Sonraki çekiliş',ws_btn:'🎮 Kazanmaya Başla!',
-    tap_info:'Aşağıdaki butona dokun, kısa bir reklam izle ve +10 SANS kazan. Her 100 SANS = 1 çekiliş bileti!',
-    tap_reward:'+10 SANS / dokunu',vb_lbl:'SANS Bakiyeniz',vb_ticket:'çekiliş bileti',
-    spin_title:'🎡 Şans Çarkı',spin_sub:'Çarkı çevir ve SANS kazan. Günde 1 ücretsiz, reklam izle daha fazla kazan!',
-    spin_info:'Her gün 1 ücretsiz spin hakkın var. Reklam izleyerek daha fazla spin kazan. Ödüller 10 ile 50 SANS arasında!',
-    free_spin:'🎁 1 Ücretsiz Spin Hakkın Var!',free_used:'Ücretsiz spin bugün kullanıldı',spin_remaining:'Kalan spin:',spin_won:'Kazandın!',
-    ci_title:'📅 Günlük Giriş',ci_sub:'Her gün giriş yap ve bonus SANS kazan. Serini kırma!',
-    ci_info:'Her gün giriş yap ve kısa bir reklam izle. Seri bonusları 7. günde 25 SANS\'a kadar artıyor!',
-    streak_lbl:'Gün Serisi!',streak_sub:'Devam et, büyük ödüller seni bekliyor!',ci_btn:'🎁 Günlük Ödülü Al',ci_done:'✅ Bugün alındı',
-    task_title:'✅ Görevler',task_sub:'Görevleri tamamla, bonus SANS kazan. Tek seferlik ödüller!',
-    ref_desc:'Arkadaşını davet et ve bonus SANS kazan! Sen +30 SANS, arkadaşın +20 SANS alır.',
-    lb_title:'🏆 Sıralama',lb_sub:'En çok SANS kazananlar. Yüksek sıra = daha fazla çekiliş bileti!',
-    lb_weekly:'Haftalık İlk 3 Bonus Bilet',lb_info:'Sıralama her Pazartesi sıfırlanır. Kazanmaya devam et!',
-    raffle_title:'🎰 Çekilişler',raffle_sub:'Gerçek para ödülleri! SANS tokenlarınla çekilişlere katıl.',
-    raffle_how:'Nasıl çalışır: Her 100 SANS = 1 bilet. Havuz dolduğunda kazanan otomatik seçilir ve ödül cüzdanına gönderilir!',
-    raffle_prize_info:'Ödüller kazananın blockchain cüzdanına direkt olarak USDT veya BNB olarak ödenir.',
-    raffle_fair:'Tüm çekilişler BSC blockchain\'de şeffaf ve kanıtlanabilir şekilde gerçekleşir.',
-    rt_lbl:'Çekiliş Biletleriniz',rt_sub:'Daha fazla SANS kazan, daha fazla bilet al',
-    wallet_lbl:'Ödül Cüzdanınız',rh_title:'Son Kazananlar',
-    io_title:'Reklam İzle & Kazan!',io_sub:'Kısa bir reklam oynatılacak. Ödülünü almak için tamamen izle.',
-    io_note:'✅ Reklam bitince Ödülü Al\'a bas\n❌ Reklam sırasında uygulamayı kapatma',
-    earn_added:'Bakiyene eklendi!',earn_total_lbl:'Toplam SANS',earn_ticket_lbl:'Çekiliş Biletleri',
-    ms_bal_label:'Bakiyeniz',ms_tickets:'çekiliş bileti',
-    you:'SEN',day:'Gün',go:'Git →',
-    tasks:[
-      {id:'tg',ico:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyuru kanalımızı takip et',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-      {id:'tw',ico:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical — Güncel kal',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-      {id:'ig',ico:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-      {id:'yt_sub',ico:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş sonuçlarından haberdar ol',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'yt_vid',ico:'▶️',t:'YouTube Videomuzu İzle',d:'SANS\'ın nasıl çalıştığını öğren',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'web',ico:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com — Daha fazlası',r:10,s:0,u:'https://sanslicekilis.com'},
-    ]
-  },
-  ru:{
-    tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],
-    ms_sub:'Зарабатывай и выигрывай призы',
-    ms_earn_title:'Заработать SANS',ms_earn_desc:'Смотри рекламу и выполняй задания, зарабатывай токены SANS бесплатно. Участвуй в реальных розыгрышах!',
-    ms_buy_title:'Купить SANS',ms_buy_desc:'Купи токены SANS на пресейле. Больше токенов = больше билетов = больше шансов выиграть!',
-    ms_raffle:'Активные розыгрыши',
-    ws_sub:'Загрузка прогресса...',ws_lbl:'Всего заработано SANS',ws_ticket_lbl:'Билеты на розыгрыш',ws_next:'Следующий розыгрыш',ws_btn:'🎮 Начать зарабатывать!',
-    tap_info:'Нажми кнопку, посмотри короткую рекламу и получи +10 SANS. Каждые 100 SANS = 1 билет на розыгрыш!',
-    tap_reward:'+10 SANS за нажатие',vb_lbl:'Баланс SANS',vb_ticket:'билетов',
-    spin_title:'🎡 Колесо удачи',spin_sub:'Крути колесо и зарабатывай SANS. 1 бесплатный спин в день!',
-    spin_info:'Каждый день у тебя есть 1 бесплатный спин. Смотри рекламу для дополнительных спинов. Призы: 10-50 SANS!',
-    free_spin:'🎁 1 Бесплатный спин!',free_used:'Бесплатный спин использован',spin_remaining:'Осталось спинов:',spin_won:'Ты выиграл!',
-    ci_title:'📅 Ежедневный вход',ci_sub:'Заходи каждый день и зарабатывай бонусные SANS. Не прерывай серию!',
-    ci_info:'Заходи каждый день и смотри короткую рекламу. Серийные бонусы увеличиваются до 25 SANS на 7-й день!',
-    streak_lbl:'дней подряд!',streak_sub:'Продолжай — тебя ждут большие награды!',ci_btn:'🎁 Получить дневной бонус',ci_done:'✅ Уже получено сегодня',
-    task_title:'✅ Задания',task_sub:'Выполняй задания и зарабатывай бонусные SANS. Одноразовые награды!',
-    ref_desc:'Приглашай друзей и зарабатывай бонусные SANS! Ты получаешь +30 SANS, друг +20 SANS.',
-    lb_title:'🏆 Рейтинг',lb_sub:'Топ заработчиков SANS. Выше рейтинг = больше билетов!',
-    lb_weekly:'Топ-3 недели — бонусные билеты',lb_info:'Рейтинг сбрасывается каждый понедельник. Продолжай зарабатывать!',
-    raffle_title:'🎰 Розыгрыши',raffle_sub:'Реальные денежные призы! Используй SANS токены для участия.',
-    raffle_how:'Как это работает: каждые 100 SANS = 1 билет. Когда пул заполняется, победитель выбирается автоматически!',
-    raffle_prize_info:'Призы выплачиваются в USDT или BNB прямо на кошелёк победителя.',
-    raffle_fair:'Все розыгрыши прозрачны и верифицируемы в блокчейне BSC.',
-    rt_lbl:'Твои билеты',rt_sub:'Зарабатывай больше SANS — получай больше билетов',
-    wallet_lbl:'Кошелёк для призов',rh_title:'Последние победители',
-    io_title:'Смотри рекламу и зарабатывай!',io_sub:'Будет показана короткая реклама. Досмотри до конца.',
-    io_note:'✅ После рекламы нажми Получить награду\n❌ Не закрывай приложение во время рекламы',
-    earn_added:'Добавлено к балансу!',earn_total_lbl:'Всего SANS',earn_ticket_lbl:'Билеты',
-    ms_bal_label:'Ваш баланс',ms_tickets:'билетов',
-    you:'ТЫ',day:'День',go:'Перейти →',
-    tasks:[
-      {id:'tg',ico:'📱',t:'Вступить в Telegram канал',d:'Следи за официальными объявлениями',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-      {id:'tw',ico:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-      {id:'ig',ico:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-      {id:'yt_sub',ico:'🔔',t:'Подписаться на YouTube',d:'Узнавай о результатах розыгрышей',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'yt_vid',ico:'▶️',t:'Посмотреть наше видео',d:'Узнай как работает SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-      {id:'web',ico:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-    ]
-  }
+// LANGS
+var L={
+en:{tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],ms:'Earn & Win Real Prizes',et:'Earn SANS',ed:'Watch ads & complete tasks to earn free tokens',bt:'Buy SANS',bd:'Purchase tokens in presale for more tickets',rt:'Prize Draws',rd:'Win USDT/BNB with your tickets',bll:'Your Balance',tl:'raffle tickets',tapI:'Tap → watch short ad → earn +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS per tap',sb:'🎁 1 Free Spin!',sbu:'Free spin used',srl:'Remaining:',sw:'You won!',sl:'Day Streak!',ss:'Keep going for bigger rewards!',ci:'Claim Daily Reward',cid:'✅ Already claimed today',tt:'Tasks',ts:'Complete tasks to earn SANS',rd2:'Invite friends: you +30, they +20 SANS!',lt:'Weekly Top 3 Bonus Tickets',rh:'100 SANS = 1 🎟 · Pool fills → winner drawn → USDT/BNB sent!',rtl:'Your Tickets',wl:'Prize Wallet (BSC)',yt:'YOU',day:'Day',go:'Go →',you:'YOU',
+tasks:[{id:'tg',i:'📱',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
+tr:{tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],ms:'Kazan & Gerçek Ödüller Kazan',et:'SANS Kazan',ed:'Reklam izle ve görev tamamla, ücretsiz token kazan',bt:'SANS Satın Al',bd:'Presale\'den token satın al, daha fazla bilet kazan',rt:'Çekilişler',rd:'Biletlerinle USDT/BNB kazan',bll:'Bakiyeniz',tl:'çekiliş bileti',tapI:'Dokun → kısa reklam izle → +10 SANS kazan · 100 SANS = 1 🎟',tapR:'+10 SANS / dokunuş',sb:'🎁 1 Ücretsiz Spin!',sbu:'Ücretsiz spin kullanıldı',srl:'Kalan:',sw:'Kazandın!',sl:'Gün Serisi!',ss:'Devam et, daha büyük ödüller seni bekliyor!',ci:'Günlük Ödülü Al',cid:'✅ Bugün alındı',tt:'Görevler',ts:'Görevleri tamamla, SANS kazan',rd2:'Arkadaşını davet et: sen +30, o +20 SANS!',lt:'Haftalık İlk 3 Bonus Bilet',rh:'100 SANS = 1 🎟 · Havuz dolar → kazanan seçilir → USDT/BNB gönderilir!',rtl:'Biletleriniz',wl:'Ödül Cüzdanı (BSC)',yt:'SEN',day:'Gün',go:'Git →',you:'SEN',
+tasks:[{id:'tg',i:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'YouTube Videomuzu İzle',d:'SANS nasıl çalışır?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
+ru:{tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],ms:'Зарабатывай & Выигрывай призы',et:'Заработать SANS',ed:'Смотри рекламу и выполняй задания',bt:'Купить SANS',bd:'Купи токены на пресейле — больше билетов',rt:'Розыгрыши',rd:'Выигрывай USDT/BNB своими билетами',bll:'Ваш баланс',tl:'билетов',tapI:'Нажми → смотри рекламу → получи +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS за нажатие',sb:'🎁 1 Бесплатный спин!',sbu:'Бесплатный спин использован',srl:'Осталось:',sw:'Ты выиграл!',sl:'Дней подряд!',ss:'Продолжай для больших наград!',ci:'Получить дневной бонус',cid:'✅ Уже получено',tt:'Задания',ts:'Выполняй задания — зарабатывай SANS',rd2:'Пригласи друга: ты +30, он +20 SANS!',lt:'Топ-3 недели — бонусные билеты',rh:'100 SANS = 1 🎟 · Пул заполнен → выбирается победитель → USDT/BNB отправляется!',rtl:'Ваши билеты',wl:'Кошелёк для призов (BSC)',yt:'ТЫ',day:'День',go:'Перейти →',you:'ТЫ',
+tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Официальные объявления',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Подписаться на YouTube',d:'Уведомления о розыгрышах',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Посмотреть наше видео',d:'Как работает SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]}
 };
+// Other langs default to EN
+['ar','es','pt','fr','de','id','uk'].forEach(function(k){L[k]=L.en;});
 
-// Diğer diller
-LANGS['ar'] = {
-  tabs:['👆 اضغط','🎡 دوّر','📅 يومي','✅ مهام','🏆 ترتيب','🎰 سحب'],
-  ms_sub:'اكسب وفز بجوائز حقيقية',
-  ms_earn_title:'اكسب SANS',ms_earn_desc:'شاهد الإعلانات وأكمل المهام لكسب رموز SANS مجاناً. استخدمها للدخول في سحوبات الجوائز!',
-  ms_buy_title:'اشتر SANS',ms_buy_desc:'اشتر رموز SANS مباشرة في البيع المسبق. المزيد من الرموز = المزيد من التذاكر = المزيد من فرص الفوز!',
-  ms_raffle:'السحوبات النشطة',ws_sub:'جاري تحميل تقدمك...',ws_lbl:'إجمالي SANS المكتسبة',
-  ws_ticket_lbl:'تذاكر السحب',ws_next:'السحب القادم',ws_btn:'🎮 ابدأ الكسب!',
-  tap_info:'اضغط الزر أدناه لمشاهدة إعلان قصير واكسب +10 SANS. كل 100 SANS = تذكرة سحب!',
-  tap_reward:'+10 SANS لكل ضغطة',vb_lbl:'رصيد SANS',vb_ticket:'تذاكر',
-  spin_title:'🎡 عجلة الحظ',spin_sub:'أدر العجلة لكسب SANS. دوران مجاني واحد يومياً!',
-  spin_info:'لديك دوران مجاني واحد كل يوم. شاهد إعلاناً لمزيد من الدورات.',
-  free_spin:'🎁 دوران مجاني متاح!',free_used:'تم استخدام الدوران المجاني',spin_remaining:'الدورات المتبقية:',spin_won:'فزت!',
-  ci_title:'📅 تسجيل يومي',ci_sub:'سجّل دخولك يومياً لكسب SANS إضافية!',
-  ci_info:'سجّل دخولك كل يوم وشاهد إعلاناً قصيراً للحصول على مكافأتك اليومية.',
-  streak_lbl:'أيام متتالية!',streak_sub:'استمر للحصول على مكافآت أكبر!',ci_btn:'🎁 احصل على المكافأة اليومية',ci_done:'✅ تم الاستلام اليوم',
-  task_title:'✅ المهام',task_sub:'أكمل المهام لكسب رموز SANS إضافية!',
-  ref_desc:'ادعُ أصدقاءك واكسب SANS! أنت +30، صديقك +20.',
-  lb_title:'🏆 المتصدرون',lb_sub:'أفضل كاسبي SANS. مرتبة أعلى = تذاكر أكثر!',
-  lb_weekly:'أفضل 3 هذا الأسبوع - تذاكر إضافية',lb_info:'يتم إعادة التصنيف كل اثنين.',
-  raffle_title:'🎰 السحوبات',raffle_sub:'جوائز نقدية حقيقية! استخدم SANS للمشاركة.',
-  raffle_how:'كيف يعمل: كل 100 SANS = تذكرة. عند امتلاء المجموعة يُختار الفائز تلقائياً!',
-  raffle_prize_info:'الجوائز تُدفع بـ USDT أو BNB مباشرة إلى محفظة الفائز.',
-  raffle_fair:'جميع السحوبات شفافة وقابلة للتحقق على بلوكشين BSC.',
-  rt_lbl:'تذاكرك',rt_sub:'اكسب المزيد من SANS للحصول على المزيد من التذاكر',
-  wallet_lbl:'محفظة الجائزة',rh_title:'آخر الفائزين',
-  io_title:'شاهد الإعلان واكسب!',io_sub:'سيُعرض إعلان قصير. شاهده كاملاً للحصول على مكافأتك.',
-  io_note:'',earn_added:'أُضيف إلى رصيدك!',earn_total_lbl:'إجمالي SANS',earn_ticket_lbl:'التذاكر',
-  ms_bal_label:'رصيدك',ms_tickets:'تذاكر',you:'أنت',day:'يوم',go:'انتقل →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'انضم إلى قناة Telegram',d:'تابع قناة الإعلانات الرسمية',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'تابع على Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'تابع على Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'اشترك في YouTube',d:'احصل على إشعارات نتائج السحب',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'شاهد فيديونا',d:'تعلم كيف يعمل SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'زر موقعنا',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['es'] = {
-  tabs:['👆 Tap','🎡 Girar','📅 Diario','✅ Tareas','🏆 Ranking','🎰 Sorteo'],
-  ms_sub:'Gana & Gana Premios Reales',
-  ms_earn_title:'Ganar SANS',ms_earn_desc:'Mira anuncios y completa tareas para ganar tokens SANS gratis. ¡Úsalos para entrar en sorteos de premios reales!',
-  ms_buy_title:'Comprar SANS',ms_buy_desc:'Compra tokens SANS directamente en preventa. ¡Más tokens = más boletos = más posibilidades de ganar!',
-  ms_raffle:'Sorteos Activos',ws_sub:'Cargando tu progreso...',ws_lbl:'SANS Ganados',
-  ws_ticket_lbl:'Boletos de Sorteo',ws_next:'Próximo sorteo',ws_btn:'🎮 ¡Empezar a Ganar!',
-  tap_info:'Toca el botón para ver un anuncio y ganar +10 SANS. ¡Cada 100 SANS = 1 boleto de sorteo!',
-  tap_reward:'+10 SANS por tap',vb_lbl:'Tu Saldo SANS',vb_ticket:'boletos',
-  spin_title:'🎡 Ruleta de la Suerte',spin_sub:'Gira la ruleta para ganar SANS. ¡1 giro gratis al día!',
-  spin_info:'Tienes 1 giro gratis cada día. Mira un anuncio para girar más veces.',
-  free_spin:'🎁 ¡1 Giro Gratis Disponible!',free_used:'Giro gratis usado hoy',spin_remaining:'Giros restantes:',spin_won:'¡Ganaste!',
-  ci_title:'📅 Check-in Diario',ci_sub:'¡Entra cada día para ganar SANS bonus!',
-  ci_info:'Entra cada día y mira un anuncio corto para reclamar tu bonus diario.',
-  streak_lbl:'¡Días seguidos!',streak_sub:'¡Sigue para obtener mayores recompensas!',ci_btn:'🎁 Reclamar Premio Diario',ci_done:'✅ Ya reclamado hoy',
-  task_title:'✅ Tareas',task_sub:'Completa tareas para ganar tokens SANS bonus.',
-  ref_desc:'¡Invita amigos y gana SANS! Tú +30, amigo +20.',
-  lb_title:'🏆 Clasificación',lb_sub:'Los mejores ganadores de SANS.',
-  lb_weekly:'Top 3 Semanal - Boletos Extra',lb_info:'El ranking se reinicia cada lunes.',
-  raffle_title:'🎰 Sorteos',raffle_sub:'¡Premios en dinero real! Usa SANS para participar.',
-  raffle_how:'Cómo funciona: Cada 100 SANS = 1 boleto. Cuando el pozo se llena, ¡se sortea!',
-  raffle_prize_info:'Los premios se pagan en USDT o BNB directamente al monedero del ganador.',
-  raffle_fair:'Todos los sorteos son transparentes y verificables en la blockchain BSC.',
-  rt_lbl:'Tus Boletos de Sorteo',rt_sub:'Gana más SANS para obtener más boletos',
-  wallet_lbl:'Tu Monedero de Premios',rh_title:'Últimos Ganadores',
-  io_title:'¡Mira el Anuncio y Gana!',io_sub:'Se reproducirá un anuncio corto. Míralo completo.',
-  io_note:'',earn_added:'¡Añadido a tu saldo!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Boletos',
-  ms_bal_label:'Tu Saldo',ms_tickets:'boletos',you:'TÚ',day:'Día',go:'Ir →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Únete al Canal de Telegram',d:'Sigue los anuncios oficiales',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Seguir en Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Seguir en Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'Suscribirse en YouTube',d:'Resultados de sorteos',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Ver Nuestro Video',d:'Aprende cómo funciona SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Visitar el Sitio Web',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['pt'] = {
-  tabs:['👆 Tap','🎡 Girar','📅 Diário','✅ Tarefas','🏆 Ranking','🎰 Sorteio'],
-  ms_sub:'Ganhe & Vença Prêmios Reais',
-  ms_earn_title:'Ganhar SANS',ms_earn_desc:'Assista anúncios e complete tarefas para ganhar tokens SANS grátis. Use-os para entrar em sorteios de prêmios reais!',
-  ms_buy_title:'Comprar SANS',ms_buy_desc:'Compre tokens SANS diretamente na pré-venda. Mais tokens = mais bilhetes = mais chances de ganhar!',
-  ms_raffle:'Sorteios Ativos',ws_sub:'Carregando seu progresso...',ws_lbl:'Total de SANS Ganhos',
-  ws_ticket_lbl:'Bilhetes de Sorteio',ws_next:'Próximo sorteio',ws_btn:'🎮 Começar a Ganhar!',
-  tap_info:'Toque o botão para assistir um anúncio e ganhar +10 SANS. Cada 100 SANS = 1 bilhete de sorteio!',
-  tap_reward:'+10 SANS por toque',vb_lbl:'Seu Saldo SANS',vb_ticket:'bilhetes',
-  spin_title:'🎡 Roda da Sorte',spin_sub:'Gire a roda para ganhar SANS. 1 giro grátis por dia!',
-  spin_info:'Você tem 1 giro grátis por dia. Assista um anúncio para mais giros.',
-  free_spin:'🎁 1 Giro Grátis Disponível!',free_used:'Giro grátis usado hoje',spin_remaining:'Giros restantes:',spin_won:'Você ganhou!',
-  ci_title:'📅 Check-in Diário',ci_sub:'Entre todo dia para ganhar SANS bônus!',
-  ci_info:'Entre todo dia e assista um anúncio curto para receber seu bônus diário.',
-  streak_lbl:'Dias seguidos!',streak_sub:'Continue para recompensas maiores!',ci_btn:'🎁 Resgatar Recompensa Diária',ci_done:'✅ Já resgatado hoje',
-  task_title:'✅ Tarefas',task_sub:'Complete tarefas para ganhar tokens SANS bônus.',
-  ref_desc:'Convide amigos e ganhe SANS! Você +30, amigo +20.',
-  lb_title:'🏆 Classificação',lb_sub:'Os maiores ganhadores de SANS.',
-  lb_weekly:'Top 3 Semanal - Bilhetes Extra',lb_info:'Ranking reinicia toda segunda-feira.',
-  raffle_title:'🎰 Sorteios',raffle_sub:'Prêmios em dinheiro real! Use SANS para participar.',
-  raffle_how:'Como funciona: Cada 100 SANS = 1 bilhete. Quando o poço encher, um vencedor é sorteado!',
-  raffle_prize_info:'Os prêmios são pagos em USDT ou BNB diretamente para a carteira do vencedor.',
-  raffle_fair:'Todos os sorteios são transparentes e verificáveis na blockchain BSC.',
-  rt_lbl:'Seus Bilhetes de Sorteio',rt_sub:'Ganhe mais SANS para obter mais bilhetes',
-  wallet_lbl:'Sua Carteira de Prêmios',rh_title:'Últimos Vencedores',
-  io_title:'Assista o Anúncio e Ganhe!',io_sub:'Um anúncio curto será reproduzido. Assista completamente.',
-  io_note:'',earn_added:'Adicionado ao seu saldo!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Bilhetes',
-  ms_bal_label:'Seu Saldo',ms_tickets:'bilhetes',you:'VOCÊ',day:'Dia',go:'Ir →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Entrar no Canal do Telegram',d:'Siga os anúncios oficiais',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Seguir no Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Seguir no Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'Inscrever no YouTube',d:'Resultados de sorteios',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Assistir Nosso Vídeo',d:'Aprenda como o SANS funciona',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Visitar o Site',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['fr'] = {
-  tabs:['Tap','Tourner','Quotidien','Taches','Classement','Tirage'],
-  ms_sub:'Gagnez et remportez de vrais prix',
-  ms_earn_title:'Gagner des SANS',ms_earn_desc:'Regardez des publicites et accomplissez des taches pour gagner des tokens SANS gratuits. Utilisez-les pour participer a des tirages!',
-  ms_buy_title:'Acheter des SANS',ms_buy_desc:'Achetez des tokens SANS directement en prevente. Plus de tokens = plus de billets = plus de chances de gagner!',
-  ms_raffle:'Tirages Actifs',ws_sub:'Chargement des progres...',ws_lbl:'Total de SANS Gagnes',
-  ws_ticket_lbl:'Billets de Tirage',ws_next:'Prochain tirage',ws_btn:'Commencer a Gagner!',
-  tap_info:'Appuyez sur le bouton pour regarder une courte publicite et gagner +10 SANS. Chaque 100 SANS = 1 billet de tirage!',
-  tap_reward:'+10 SANS par appui',vb_lbl:'Votre Solde SANS',vb_ticket:'billets',
-  spin_title:'Roue de la Fortune',spin_sub:'Tournez la roue pour gagner des SANS. 1 tour gratuit par jour!',
-  spin_info:'Vous avez 1 tour gratuit par jour. Regardez une pub pour plus de tours.',
-  free_spin:'1 Tour Gratuit Disponible!',free_used:'Tour gratuit utilise',spin_remaining:'Tours restants:',spin_won:'Vous avez gagne!',
-  ci_title:'Connexion Quotidienne',ci_sub:'Connectez-vous chaque jour pour gagner des SANS bonus!',
-  ci_info:'Connectez-vous chaque jour et regardez une courte pub pour votre bonus quotidien.',
-  streak_lbl:'Jours consecutifs!',streak_sub:'Continuez pour de plus grandes recompenses!',ci_btn:'Reclamer la Recompense du Jour',ci_done:'Deja reclame!',
-  task_title:'Taches',task_sub:'Accomplissez des taches pour gagner des SANS bonus.',
-  ref_desc:'Invitez des amis et gagnez des SANS! Vous +30, ami +20.',
-  lb_title:'Classement',lb_sub:'Les meilleurs gagneurs de SANS.',
-  lb_weekly:'Top 3 Hebdomadaire - Billets Bonus',lb_info:'Classement reinitialise chaque lundi.',
-  raffle_title:'Tirages',raffle_sub:'Vrais prix en argent! Utilisez vos SANS pour participer.',
-  raffle_how:'Comment ca marche: Chaque 100 SANS = 1 billet. Quand la cagnotte est pleine, un gagnant est tire!',
-  raffle_prize_info:'Les prix sont payes en USDT ou BNB directement au portefeuille du gagnant.',
-  raffle_fair:'Tous les tirages sont transparents et verifiables sur la blockchain BSC.',
-  rt_lbl:'Vos Billets de Tirage',rt_sub:'Gagnez plus de SANS pour plus de billets',
-  wallet_lbl:'Votre Portefeuille de Prix',rh_title:'Derniers Gagnants',
-  io_title:'Regardez la Pub et Gagnez!',io_sub:'Une courte publicite va se lancer. Regardez-la entierement.',
-  io_note:'',earn_added:'Ajoute a votre solde!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Billets',
-  ms_bal_label:'Votre Solde',ms_tickets:'billets',you:'VOUS',day:'Jour',go:'Aller',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Rejoindre le Canal Telegram',d:'Suivez les annonces officielles',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Suivre sur Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Suivre sur Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'Abonner sur YouTube',d:'Resultats des tirages',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Regarder Notre Video',d:'Apprenez comment SANS fonctionne',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Visiter le Site',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['de'] = {
-  tabs:['👆 Tippen','🎡 Drehen','📅 Täglich','✅ Aufgaben','🏆 Rangliste','🎰 Verlosung'],
-  ms_sub:'Verdiene & Gewinne echte Preise',
-  ms_earn_title:'SANS verdienen',ms_earn_desc:'Schaue Werbung und erfülle Aufgaben, um kostenlose SANS-Token zu verdienen. Nutze sie für echte Verlosungen!',
-  ms_buy_title:'SANS kaufen',ms_buy_desc:'Kaufe SANS-Token direkt im Vorverkauf. Mehr Token = mehr Lose = mehr Gewinnchancen!',
-  ms_raffle:'Aktive Verlosungen',ws_sub:'Lade deinen Fortschritt...',ws_lbl:'Gesamt verdiente SANS',
-  ws_ticket_lbl:'Verlosungslose',ws_next:'Nächste Verlosung',ws_btn:'🎮 Verdienen starten!',
-  tap_info:'Tippe den Button, schau eine kurze Werbung und verdiene +10 SANS. 100 SANS = 1 Verlosungslos!',
-  tap_reward:'+10 SANS pro Tipp',vb_lbl:'Dein SANS-Guthaben',vb_ticket:'Lose',
-  spin_title:'🎡 Glücksrad',spin_sub:'Drehe das Rad und verdiene SANS. 1 Gratisdrehung täglich!',
-  spin_info:'Du hast täglich 1 Gratisdrehung. Schaue eine Werbung für mehr Drehungen.',
-  free_spin:'🎁 1 Gratisdrehung verfügbar!',free_used:'Gratisdrehung heute genutzt',spin_remaining:'Verbleibende Drehungen:',spin_won:'Du hast gewonnen!',
-  ci_title:'📅 Täglicher Check-in',ci_sub:'Melde dich täglich an und verdiene Bonus-SANS!',
-  ci_info:'Melde dich täglich an und schau eine kurze Werbung für deine tägliche Belohnung.',
-  streak_lbl:'Tage in Folge!',streak_sub:'Mach weiter für größere Belohnungen!',ci_btn:'🎁 Tagesbelohnung holen',ci_done:'✅ Heute bereits erhalten',
-  task_title:'✅ Aufgaben',task_sub:'Erfülle Aufgaben und verdiene Bonus-SANS.',
-  ref_desc:'Lade Freunde ein und verdiene SANS! Du +30, Freund +20.',
-  lb_title:'🏆 Rangliste',lb_sub:'Die besten SANS-Verdiener.',
-  lb_weekly:'Wöchentliche Top 3 - Bonus-Lose',lb_info:'Rangliste wird jeden Montag zurückgesetzt.',
-  raffle_title:'🎰 Verlosungen',raffle_sub:'Echte Geldpreise! Nutze SANS zur Teilnahme.',
-  raffle_how:'So funktioniert es: 100 SANS = 1 Los. Wenn der Pool voll ist, wird ein Gewinner gezogen!',
-  raffle_prize_info:'Preise werden in USDT oder BNB direkt an die Wallet des Gewinners gesendet.',
-  raffle_fair:'Alle Verlosungen sind transparent und auf der BSC-Blockchain verifizierbar.',
-  rt_lbl:'Deine Verlosungslose',rt_sub:'Verdiene mehr SANS für mehr Lose',
-  wallet_lbl:'Deine Preis-Wallet',rh_title:'Letzte Gewinner',
-  io_title:'Werbung schauen & verdienen!',io_sub:'Eine kurze Werbung wird abgespielt. Schau sie vollständig.',
-  io_note:'',earn_added:'Zu deinem Guthaben hinzugefügt!',earn_total_lbl:'Gesamt SANS',earn_ticket_lbl:'Lose',
-  ms_bal_label:'Dein Guthaben',ms_tickets:'Lose',you:'DU',day:'Tag',go:'Gehen →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Telegram-Kanal beitreten',d:'Folge offiziellen Ankündigungen',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Auf Twitter/X folgen',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Auf Instagram folgen',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'YouTube abonnieren',d:'Verlosungsergebnisse',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Unser Video ansehen',d:'Lerne wie SANS funktioniert',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Website besuchen',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['id'] = {
-  tabs:['👆 Tap','🎡 Putar','📅 Harian','✅ Tugas','🏆 Peringkat','🎰 Undian'],
-  ms_sub:'Dapatkan & Menangkan Hadiah Nyata',
-  ms_earn_title:'Dapatkan SANS',ms_earn_desc:'Tonton iklan & selesaikan tugas untuk mendapatkan token SANS gratis. Gunakan untuk ikut undian berhadiah!',
-  ms_buy_title:'Beli SANS',ms_buy_desc:'Beli token SANS langsung di presale. Lebih banyak token = lebih banyak tiket = lebih banyak peluang menang!',
-  ms_raffle:'Undian Aktif',ws_sub:'Memuat progres Anda...',ws_lbl:'Total SANS Diperoleh',
-  ws_ticket_lbl:'Tiket Undian',ws_next:'Undian berikutnya',ws_btn:'🎮 Mulai Mendapatkan!',
-  tap_info:'Ketuk tombol untuk menonton iklan singkat dan dapatkan +10 SANS. Setiap 100 SANS = 1 tiket undian!',
-  tap_reward:'+10 SANS per ketukan',vb_lbl:'Saldo SANS Anda',vb_ticket:'tiket',
-  spin_title:'🎡 Roda Keberuntungan',spin_sub:'Putar roda untuk mendapatkan SANS. 1 putaran gratis per hari!',
-  spin_info:'Anda mendapat 1 putaran gratis setiap hari. Tonton iklan untuk putaran tambahan.',
-  free_spin:'🎁 1 Putaran Gratis Tersedia!',free_used:'Putaran gratis sudah digunakan',spin_remaining:'Sisa putaran:',spin_won:'Anda menang!',
-  ci_title:'📅 Check-in Harian',ci_sub:'Masuk setiap hari untuk mendapatkan SANS bonus!',
-  ci_info:'Masuk setiap hari dan tonton iklan singkat untuk hadiah harian Anda.',
-  streak_lbl:'Hari berturut-turut!',streak_sub:'Terus lakukan untuk hadiah lebih besar!',ci_btn:'🎁 Ambil Hadiah Harian',ci_done:'✅ Sudah diambil hari ini',
-  task_title:'✅ Tugas',task_sub:'Selesaikan tugas untuk mendapatkan SANS bonus.',
-  ref_desc:'Undang teman dan dapatkan SANS! Anda +30, teman +20.',
-  lb_title:'🏆 Peringkat',lb_sub:'Pemenang SANS terbaik.',
-  lb_weekly:'Top 3 Minggu Ini - Tiket Bonus',lb_info:'Peringkat direset setiap Senin.',
-  raffle_title:'🎰 Undian',raffle_sub:'Hadiah uang nyata! Gunakan SANS untuk berpartisipasi.',
-  raffle_how:'Cara kerja: Setiap 100 SANS = 1 tiket. Saat pool penuh, pemenang dipilih otomatis!',
-  raffle_prize_info:'Hadiah dibayar dalam USDT atau BNB langsung ke dompet pemenang.',
-  raffle_fair:'Semua undian transparan dan dapat diverifikasi di blockchain BSC.',
-  rt_lbl:'Tiket Undian Anda',rt_sub:'Dapatkan lebih banyak SANS untuk lebih banyak tiket',
-  wallet_lbl:'Dompet Hadiah Anda',rh_title:'Pemenang Terbaru',
-  io_title:'Tonton Iklan & Dapatkan!',io_sub:'Iklan singkat akan diputar. Tonton sampai selesai.',
-  io_note:'',earn_added:'Ditambahkan ke saldo Anda!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Tiket',
-  ms_bal_label:'Saldo Anda',ms_tickets:'tiket',you:'KAMU',day:'Hari',go:'Pergi →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Bergabung Saluran Telegram',d:'Ikuti pengumuman resmi',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Ikuti di Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Ikuti di Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'Berlangganan YouTube',d:'Hasil undian',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Tonton Video Kami',d:'Pelajari cara kerja SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Kunjungi Website',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
-LANGS['uk'] = {
-  tabs:['👆 Тап','🎡 Кручення','📅 Щодня','✅ Завдання','🏆 Рейтинг','🎰 Розіграш'],
-  ms_sub:'Заробляй & Вигравай реальні призи',
-  ms_earn_title:'Заробити SANS',ms_earn_desc:'Дивись рекламу та виконуй завдання, щоб заробляти токени SANS безкоштовно. Використовуй їх для участі в розіграшах!',
-  ms_buy_title:'Купити SANS',ms_buy_desc:'Купи токени SANS безпосередньо на пресейлі. Більше токенів = більше квитків = більше шансів виграти!',
-  ms_raffle:'Активні розіграші',ws_sub:'Завантаження прогресу...',ws_lbl:'Всього зароблено SANS',
-  ws_ticket_lbl:'Квитки на розіграш',ws_next:'Наступний розіграш',ws_btn:'🎮 Почати заробляти!',
-  tap_info:'Натисни кнопку, подивись коротку рекламу і зароби +10 SANS. Кожні 100 SANS = 1 квиток на розіграш!',
-  tap_reward:'+10 SANS за натискання',vb_lbl:'Твій баланс SANS',vb_ticket:'квитків',
-  spin_title:'🎡 Колесо удачі',spin_sub:'Крути колесо і заробляй SANS. 1 безкоштовне кручення на день!',
-  spin_info:'У тебе є 1 безкоштовне кручення щодня. Дивись рекламу для додаткових кручень.',
-  free_spin:'🎁 1 Безкоштовне кручення!',free_used:'Безкоштовне кручення використано',spin_remaining:'Залишилось кручень:',spin_won:'Ти виграв!',
-  ci_title:'📅 Щоденний вхід',ci_sub:'Заходь щодня і заробляй бонусні SANS!',
-  ci_info:'Заходь щодня і дивись коротку рекламу для щоденного бонусу.',
-  streak_lbl:'днів поспіль!',streak_sub:'Продовжуй для більших нагород!',ci_btn:'🎁 Отримати щоденну нагороду',ci_done:'✅ Вже отримано сьогодні',
-  task_title:'✅ Завдання',task_sub:'Виконуй завдання і заробляй бонусні SANS.',
-  ref_desc:'Запрошуй друзів і заробляй SANS! Ти +30, друг +20.',
-  lb_title:'🏆 Рейтинг',lb_sub:'Найкращі заробітники SANS.',
-  lb_weekly:'Топ-3 тижня - Бонусні квитки',lb_info:'Рейтинг скидається щопонеділка.',
-  raffle_title:'🎰 Розіграші',raffle_sub:'Реальні грошові призи! Використовуй SANS для участі.',
-  raffle_how:'Як це працює: Кожні 100 SANS = 1 квиток. Коли пул заповниться, переможець обирається автоматично!',
-  raffle_prize_info:'Призи виплачуються в USDT або BNB прямо на гаманець переможця.',
-  raffle_fair:'Всі розіграші прозорі і перевіряються в блокчейні BSC.',
-  rt_lbl:'Твої квитки на розіграш',rt_sub:'Заробляй більше SANS для більше квитків',
-  wallet_lbl:'Твій гаманець для призів',rh_title:'Останні переможці',
-  io_title:'Дивись рекламу і заробляй!',io_sub:'Буде показана коротка реклама. Дивись до кінця.',
-  io_note:'',earn_added:'Додано до твого балансу!',earn_total_lbl:'Всього SANS',earn_ticket_lbl:'Квитки',
-  ms_bal_label:'Твій баланс',ms_tickets:'квитків',you:'ТИ',day:'День',go:'Перейти →',
-  tasks:[
-    {id:'tg',ico:'📱',t:'Вступити до Telegram каналу',d:'Стеж за офіційними оголошеннями',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
-    {id:'tw',ico:'🐦',t:'Підписатись у Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
-    {id:'ig',ico:'📸',t:'Підписатись в Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
-    {id:'yt_sub',ico:'🔔',t:'Підписатись на YouTube',d:'Результати розіграшів',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'yt_vid',ico:'▶️',t:'Переглянути наше відео',d:'Дізнайся як працює SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
-    {id:'web',ico:'🌐',t:'Відвідати сайт',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
-  ]
-};
+var tg=window.Telegram&&window.Telegram.WebApp;
+if(tg)tg.expand();
+var db=window.supabase.createClient(SB_URL,SB_KEY);
+var user=null,ud={balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null};
+var spinning=false,lang=L.en,selLang='en';
+var adCb=null,adTimerInt=null,infoCb=null,infoCountInt=null,curR={s:10,l:'+10 SANS'};
 
-// ========== STATE ==========
-var tg = window.Telegram && window.Telegram.WebApp;
-if(tg) tg.expand();
-var db = window.supabase.createClient(SB_URL, SB_KEY);
-var user = null;
-var ud = {balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null,tickets_used:0};
-var spinning = false;
-var lang = LANGS.en;
-var selLang = 'en';
-var adCb = null;
-var adTimerInt = null;
-var curReward = {sans:10,lbl:'+10 SANS'};
-var infoCb = null;
-var infoCountInt = null;
-var earnUIVisible = false;
+function tk(b){return Math.floor((b||0)/TICK);}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
+function floatEl(e,t){var el=document.createElement('div');el.className='float';el.textContent=t;el.style.left=(e.clientX-15)+'px';el.style.top=(e.clientY-35)+'px';document.body.appendChild(el);setTimeout(function(){el.remove();},900);}
 
-// ========== HELPERS ==========
-function tickets(sans){ return Math.floor((sans||0)/TICKET_COST); }
-function toast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('on');
-  setTimeout(function(){t.classList.remove('on');},2500);
-}
-function floatEl(e,txt){
-  var el=document.createElement('div');
-  el.className='float';el.textContent=txt;
-  el.style.left=(e.clientX-20)+'px';el.style.top=(e.clientY-40)+'px';
-  document.body.appendChild(el);
-  setTimeout(function(){el.remove();},1000);
-}
-
-// ========== LANGUAGE ==========
-function selectLang(l,el){
-  selLang=l;
-  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('selected');});
-  el.classList.add('selected');
-}
+// LANG
+function pickLang(l,el){selLang=l;document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
 function confirmLang(){
-  lang=LANGS[selLang]||LANGS.en;
-  document.getElementById('langScreen').style.display='none';
-  document.getElementById('menuScreen').style.display='flex';
+  lang=L[selLang]||L.en;
+  document.getElementById('sLang').classList.add('hidden');
+  document.getElementById('sMenu').classList.remove('hidden');
   applyMenuLang();
 }
 function applyMenuLang(){
-  document.getElementById('ms-sub').textContent=lang.ms_sub;
-  document.getElementById('ms-earn-title').textContent=lang.ms_earn_title;
-  document.getElementById('ms-earn-desc').textContent=lang.ms_earn_desc;
-  document.getElementById('ms-buy-title').textContent=lang.ms_buy_title;
-  document.getElementById('ms-buy-desc').textContent=lang.ms_buy_desc;
-  document.getElementById('ms-raffle').textContent=lang.ms_raffle;
-  document.getElementById('ms-bal-label').textContent=lang.ms_bal_label;
-  document.getElementById('menuBal').textContent=ud.balance||0;
-  document.getElementById('menuTickets').textContent=tickets(ud.balance);
-  document.getElementById('ms-tickets').innerHTML='🎟 <span id="menuTickets">'+tickets(ud.balance)+'</span> '+lang.ms_tickets;
+  document.getElementById('m-sub').textContent=lang.ms;
+  document.getElementById('m-earn-t').textContent=lang.et;
+  document.getElementById('m-earn-d').textContent=lang.ed;
+  document.getElementById('m-buy-t').textContent=lang.bt;
+  document.getElementById('m-buy-d').textContent=lang.bd;
+  document.getElementById('m-raffle-t').textContent=lang.rt;
+  document.getElementById('m-raffle-d').textContent=lang.rd;
+  document.getElementById('m-bal-lbl').textContent=lang.bll;
+  document.getElementById('m-tickets-lbl').textContent=lang.tl;
+  document.getElementById('mBal').textContent=(ud.balance||0).toLocaleString();
+  document.getElementById('mTickets').textContent=tk(ud.balance);
 }
 
-// ========== MENU ACTIONS ==========
+// MENU
 function goEarn(){
-  document.getElementById('menuScreen').style.display='none';
-  showWelcomeScreen();
+  document.getElementById('sMenu').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  applyLang();updateUI();
 }
-function goBuy(){
-  window.open('https://sanslicekilis.com/#presale','_blank');
-}
-function showMenuScreen(){
-  earnUIVisible=false;
-  document.getElementById('mainNav').style.display='none';
-  document.getElementById('mainTabs').style.display='none';
-  document.querySelectorAll('.page').forEach(function(p){p.style.display='none';});
-  document.getElementById('menuScreen').style.display='flex';
+function goBuy(){window.open('https://sanslicekilis.com/#presale','_blank');}
+function backToMenu(){
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('sMenu').classList.remove('hidden');
   applyMenuLang();
 }
 
-// ========== WELCOME ==========
-function showWelcomeScreen(){
-  var b=ud.balance||0;
-  document.getElementById('wsPf').style.width=Math.min(100,(b/5000)*100)+'%';
-  document.getElementById('wsSans').textContent=b.toLocaleString();
-  document.getElementById('wsTickets').textContent=tickets(b);
-  document.getElementById('ws-sub').textContent=lang.ws_sub;
-  document.getElementById('ws-lbl').textContent=lang.ws_lbl;
-  document.getElementById('ws-ticket-lbl').textContent=lang.ws_ticket_lbl;
-  document.getElementById('ws-next').textContent=lang.ws_next;
-  document.getElementById('wsBtn').textContent=lang.ws_btn;
-  document.getElementById('ws').style.display='flex';
-}
-document.getElementById('wsBtn').onclick=function(){
-  document.getElementById('ws').style.display='none';
-  showEarnUI();
-};
-
-function showEarnUI(){
-  earnUIVisible=true;
-  document.getElementById('mainNav').style.display='flex';
-  document.getElementById('mainTabs').style.display='flex';
-  goTab('tap');
-  applyLang();
-  updateUI();
+// PANES
+function goPane(name){
+  var all={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
+  var tabs={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
+  Object.keys(all).forEach(function(k){
+    var p=document.getElementById(all[k]);
+    var t=document.getElementById(tabs[k]);
+    if(p){p.classList.toggle('on',k===name);}
+    if(t){t.classList.toggle('on',k===name);}
+  });
+  if(name==='spin')drawWheel();
+  if(name==='lb')loadLB();
+  if(name==='raffle')renderPools();
 }
 
-// ========== SUPABASE ==========
+// LANG APPLY
+function applyLang(){
+  var tabs=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
+  for(var i=0;i<tabs.length;i++)document.getElementById(tabs[i]).textContent=lang.tabs[i];
+  document.getElementById('tap-info').innerHTML='Tap → watch short ad → earn <b>+10 SANS</b> · 100 SANS = 1 🎟';
+  document.getElementById('tap-r').textContent=lang.tapR;
+  document.getElementById('spinIL').textContent=lang.srl;
+  document.getElementById('streakL').textContent=lang.sl;
+  document.getElementById('streakS').textContent=lang.ss;
+  document.getElementById('ref-desc').textContent=lang.rd2;
+  document.getElementById('lb-weekly').textContent=lang.lt;
+  document.getElementById('raffle-how').textContent=lang.rh;
+  document.getElementById('rt-lbl').textContent=lang.rtl;
+  document.getElementById('wallet-lbl').textContent=lang.wl;
+  document.getElementById('tb-tick-lbl').textContent=lang.tl;
+  document.getElementById('myRY').textContent=lang.you;
+  renderTasks();renderDays();renderPools();
+}
+
+// UI
+function updateUI(){
+  var b=ud.balance||0,t=tk(b);
+  document.getElementById('balEl').textContent=b.toLocaleString()+' SANS';
+  document.getElementById('tickEl').textContent=t;
+  document.getElementById('tTotal').textContent=b.toLocaleString();
+  document.getElementById('tTickets').textContent=t;
+  document.getElementById('spinLeft').textContent=ud.spin_left||0;
+  document.getElementById('streakN').textContent=ud.streak||0;
+  document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
+  document.getElementById('mBal').textContent=b.toLocaleString();
+  document.getElementById('mTickets').textContent=t;
+  document.getElementById('rafTickets').textContent=t;
+  document.getElementById('rafBal').textContent=b.toLocaleString();
+  document.getElementById('rafCalc').textContent=t;
+  if(ud.referral_code)document.getElementById('refLink').textContent='https://t.me/sanslicekilisbot?startapp='+ud.referral_code;
+  renderDays();renderTasks();renderPools();
+}
+
+// SUPABASE
 async function loadUser(){
   var tid=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)?String(tg.initDataUnsafe.user.id):'guest_'+Math.random().toString(36).substr(2,8);
   var uname=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)?(tg.initDataUnsafe.user.username||'Player'):'Player';
   var res=await db.from('users').select('*').eq('telegram_id',tid).maybeSingle();
   if(!res.data){
     var ins=await db.from('users').insert({telegram_id:tid,username:uname,balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null}).select().maybeSingle();
-    if(ins.data) ud=ins.data;
+    if(ins.data)ud=ins.data;
   } else {
     ud=res.data;
     var today=new Date().toDateString();
@@ -1064,529 +549,294 @@ async function loadUser(){
     }
   }
   user={id:tid,uname:uname};
-  if(!ud.referral_code){
-    var code='SANS'+tid.slice(-6).toUpperCase();
-    await db.from('users').update({referral_code:code}).eq('telegram_id',tid);
-    ud.referral_code=code;
-  }
+  if(!ud.referral_code){var c='SANS'+tid.slice(-6).toUpperCase();await db.from('users').update({referral_code:c}).eq('telegram_id',tid);ud.referral_code=c;}
   var sp=(tg&&tg.initDataUnsafe)?tg.initDataUnsafe.start_param:null;
-  if(sp&&!ud.referred_by) await applyRef(sp);
-  if(ud.last_checkin===new Date().toDateString()){
-    var cb=document.getElementById('ciBtn');
-    if(cb){cb.disabled=true;cb.textContent=lang.ci_done;}
-  }
-  if(ud.referred_by){
-    var rb=document.getElementById('refUsedBox');
-    if(rb) rb.style.display='none';
-  }
-  if(ud.wallet){
-    var wi=document.getElementById('walletInput');
-    if(wi) wi.value=ud.wallet;
-  }
+  if(sp&&!ud.referred_by)await applyRef(sp);
+  if(ud.last_checkin===new Date().toDateString()){var cb=document.getElementById('ciBtn');if(cb){cb.disabled=true;cb.textContent=lang.cid;}}
+  if(ud.referred_by){var rb=document.getElementById('refBox');if(rb)rb.style.display='none';}
+  if(ud.wallet){var wi=document.getElementById('walletIn');if(wi)wi.value=ud.wallet;}
 }
+async function save(upd){Object.assign(ud,upd);if(user)await db.from('users').update(upd).eq('telegram_id',user.id);updateUI();}
 
-async function save(upd){
-  Object.assign(ud,upd);
-  if(user) await db.from('users').update(upd).eq('telegram_id',user.id);
-  updateUI();
-}
-
-// ========== UI UPDATE ==========
-function updateUI(){
-  var b=ud.balance||0;
-  var t=tickets(b);
-  document.getElementById('balEl').textContent=b.toLocaleString()+' SANS';
-  document.getElementById('ticketEl').textContent=t;
-  document.getElementById('tapBalEl').textContent=b.toLocaleString();
-  document.getElementById('tapTicketEl').textContent=t;
-  document.getElementById('tapTotal').textContent=b.toLocaleString();
-  document.getElementById('tapTickets').textContent=t;
-  document.getElementById('spinLeft').textContent=ud.spin_left||0;
-  document.getElementById('streakNum').textContent=ud.streak||0;
-  document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.free_spin:lang.free_used;
-  if(ud.referral_code) document.getElementById('refLink').textContent='https://t.me/sanslicekilisbot?startapp='+ud.referral_code;
-  document.getElementById('refN').textContent=ud.referral_count||0;
-  document.getElementById('menuBal').textContent=b.toLocaleString();
-  document.getElementById('menuTickets').textContent=t;
-  document.getElementById('raffleTickets').textContent=t;
-  document.getElementById('raffleBalance').textContent=b.toLocaleString();
-  document.getElementById('raffleTicketCalc').textContent=t;
-  document.getElementById('earnTotal').textContent=b.toLocaleString()+' SANS';
-  document.getElementById('earnTickets').textContent=t+' tickets';
-  renderDays();
-  renderTasks();
-  renderRafflePools();
-}
-
-// ========== LANG APPLY ==========
-function applyLang(){
-  var tabs=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
-  for(var i=0;i<tabs.length;i++) document.getElementById(tabs[i]).textContent=lang.tabs[i];
-  document.getElementById('tap-info').textContent=lang.tap_info;
-  document.getElementById('tap-reward-lbl').textContent=lang.tap_reward;
-  document.getElementById('vb-lbl').textContent=lang.vb_lbl;
-  document.getElementById('vb-ticket').textContent='= '+tickets(ud.balance)+' '+lang.vb_ticket;
-  document.getElementById('spin-title').textContent=lang.spin_title;
-  document.getElementById('spin-sub').textContent=lang.spin_sub;
-  document.getElementById('spin-info').textContent=lang.spin_info;
-  document.getElementById('spinIL').textContent=lang.spin_remaining;
-  document.getElementById('ci-title').textContent=lang.ci_title;
-  document.getElementById('ci-sub').textContent=lang.ci_sub;
-  document.getElementById('ci-info').textContent=lang.ci_info;
-  document.getElementById('streakL').textContent=lang.streak_lbl;
-  document.getElementById('streakS').textContent=lang.streak_sub;
-  var cb=document.getElementById('ciBtn');
-  if(cb&&!cb.disabled) cb.textContent=lang.ci_btn;
-  document.getElementById('task-title').textContent=lang.task_title;
-  document.getElementById('task-sub').textContent=lang.task_sub;
-  document.getElementById('ref-desc').innerHTML='Invite friends and earn bonus SANS! You get <b style="color:#0099ff">+30 SANS</b>, they get <b style="color:#0099ff">+20 SANS</b>.';
-  document.getElementById('lb-title').textContent=lang.lb_title;
-  document.getElementById('lb-sub').textContent=lang.lb_sub;
-  document.getElementById('lb-weekly').textContent=lang.lb_weekly;
-  document.getElementById('lb-info').textContent=lang.lb_info;
-  document.getElementById('raffle-title').textContent=lang.raffle_title;
-  document.getElementById('raffle-sub').textContent=lang.raffle_sub;
-  document.getElementById('rt-lbl').textContent=lang.rt_lbl;
-  document.getElementById('rt-sub').textContent=lang.rt_sub;
-  document.getElementById('wallet-lbl').textContent=lang.wallet_lbl;
-  document.getElementById('io-title').textContent=lang.io_title;
-  document.getElementById('io-sub').textContent=lang.io_sub;
-  document.getElementById('earn-added').textContent=lang.earn_added;
-  document.getElementById('earn-total-lbl').textContent=lang.earn_total_lbl;
-  document.getElementById('earn-ticket-lbl').textContent=lang.earn_ticket_lbl;
-  document.getElementById('myRY').textContent=lang.you;
-  renderTasks();
-  renderDays();
-}
-
-// ========== TABS ==========
-function goTab(name){
-  var pages={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
-  var tabs={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
-  for(var k in pages){
-    var p=document.getElementById(pages[k]);
-    var t=document.getElementById(tabs[k]);
-    if(p) p.style.display=k===name?'block':'none';
-    if(p) p.classList.toggle('on',k===name);
-    if(t) t.classList.toggle('on',k===name);
-  }
-  if(name==='spin') drawWheel();
-  if(name==='lb') loadLB();
-  if(name==='raffle') renderRafflePools();
-}
-
-// ========== INFO SHEET ==========
-function showInfo(sans,lbl,cb){
-  curReward={sans:sans,lbl:lbl};
-  infoCb=cb;
-  document.getElementById('io-reward').textContent=lbl;
-  document.getElementById('io-tickets').textContent='+'+((sans/TICKET_COST).toFixed(2))+' ticket';
-  document.getElementById('infoOverlay').classList.add('on');
-  var count=5,btn=document.getElementById('iBtn');
+// INFO
+function showInfo(s,l,cb){
+  curR={s:s,l:l};infoCb=cb;
+  document.getElementById('io-r').textContent=l;
+  document.getElementById('io-t2').textContent='+'+(s/TICK).toFixed(2)+' 🎟';
+  document.getElementById('ovInfo').classList.add('on');
+  var c=5,btn=document.getElementById('iBtn');
   btn.textContent='▶ Starting in 5s';
   clearInterval(infoCountInt);
   infoCountInt=setInterval(function(){
-    count--;
-    if(count>0){ btn.textContent='▶ Starting in '+count+'s'; }
-    else{ clearInterval(infoCountInt); closeInfo(); if(infoCb){var f=infoCb;infoCb=null;f();} }
+    c--;
+    if(c>0){btn.textContent='▶ Starting in '+c+'s';}
+    else{clearInterval(infoCountInt);closeInfo();if(infoCb){var f=infoCb;infoCb=null;f();}}
   },1000);
 }
-function closeInfo(){ clearInterval(infoCountInt); document.getElementById('infoOverlay').classList.remove('on'); }
-function startAd(){ clearInterval(infoCountInt); document.getElementById('infoOverlay').classList.remove('on'); if(infoCb){var f=infoCb;infoCb=null;f();} }
+function closeInfo(){clearInterval(infoCountInt);document.getElementById('ovInfo').classList.remove('on');}
+function startAd(){clearInterval(infoCountInt);document.getElementById('ovInfo').classList.remove('on');if(infoCb){var f=infoCb;infoCb=null;f();}}
 
-// ========== AD ==========
-function showAd(sans,lbl,cb){
-  adCb=cb; curReward={sans:sans,lbl:lbl};
+// AD
+function showAd(s,l,cb){
+  adCb=cb;curR={s:s,l:l};
   document.getElementById('claimBtn').disabled=true;
-  document.getElementById('adOverlay').classList.add('on');
-  try{ if(typeof show_10975774==='function'){ show_10975774().then(function(){enableClaim();}).catch(function(){enableClaim();}); } }catch(e){}
-  var t=15; document.getElementById('adTimer').textContent=t+'s';
+  document.getElementById('ovAd').classList.add('on');
+  try{if(typeof show_10975774==='function'){show_10975774().then(function(){enableClaim();}).catch(function(){enableClaim();});}}catch(e){}
+  var t=15;document.getElementById('adTimer').textContent=t+'s';
   clearInterval(adTimerInt);
-  adTimerInt=setInterval(function(){
-    t--; document.getElementById('adTimer').textContent=t+'s';
-    if(t<=0){ clearInterval(adTimerInt); enableClaim(); }
-  },1000);
+  adTimerInt=setInterval(function(){t--;document.getElementById('adTimer').textContent=t+'s';if(t<=0){clearInterval(adTimerInt);enableClaim();}},1000);
 }
-function enableClaim(){ document.getElementById('claimBtn').disabled=false; }
-function claimAd(){ clearInterval(adTimerInt); document.getElementById('adOverlay').classList.remove('on'); if(adCb){var f=adCb;adCb=null;f();} }
+function enableClaim(){document.getElementById('claimBtn').disabled=false;}
+function claimAd(){clearInterval(adTimerInt);document.getElementById('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
 function nextAd(){
-  clearInterval(adTimerInt); document.getElementById('adOverlay').classList.remove('on');
+  clearInterval(adTimerInt);document.getElementById('ovAd').classList.remove('on');
   if(adCb){var f=adCb;adCb=null;f();}
-  setTimeout(function(){
-    showInfo(curReward.sans,curReward.lbl,function(){
-      showAd(curReward.sans,curReward.lbl,async function(){
-        await save({balance:ud.balance+curReward.sans});
-        showEarn(curReward.sans,curReward.lbl);
-      });
-    });
-  },500);
+  setTimeout(function(){showInfo(curR.s,curR.l,function(){showAd(curR.s,curR.l,async function(){await save({balance:ud.balance+curR.s});showWin(curR.s,curR.l);});});},400);
 }
 
-// ========== EARN NOTIF ==========
-function showEarn(sans,lbl){
-  document.getElementById('earnLabel').textContent=lbl;
-  document.getElementById('earnTotal').textContent=(ud.balance||0).toLocaleString()+' SANS';
-  document.getElementById('earnTickets').textContent=tickets(ud.balance)+' 🎟';
-  var overlay=document.getElementById('earnOverlay');
-  overlay.style.display='flex';
-  // Shine animasyonu
-  var shine=document.getElementById('earnShine');
-  if(shine){ shine.style.animation='none'; setTimeout(function(){ shine.style.animation='shine 0.8s ease-in-out 0.3s'; },10); }
-  // Müzik çal
-  playWinSound(sans);
-  // Confetti
-  startConfetti(sans);
-  // Auto close
-  setTimeout(function(){closeEarn();},4500);
+// WIN
+function showWin(s,l){
+  document.getElementById('w-amt').textContent=l;
+  document.getElementById('w-total').textContent=(ud.balance||0).toLocaleString()+' SANS';
+  document.getElementById('w-tick').textContent=tk(ud.balance)+' 🎟';
+  document.getElementById('ovWin').classList.add('on');
+  playWinSound(s);startConfetti(s);
+  setTimeout(function(){closeWin();},4000);
 }
-function closeEarn(){
-  document.getElementById('earnOverlay').style.display='none';
-  stopConfetti();
-}
+function closeWin(){document.getElementById('ovWin').classList.remove('on');stopConfetti();}
 
-// ===== WIN SOUND (Web Audio API) =====
-function playWinSound(amount){
+// SOUND
+function playWinSound(amt){
   try{
     var ctx=new(window.AudioContext||window.webkitAudioContext)();
-    var notes=amount>=50
-      ? [523,659,784,1047,1319] // Büyük kazanç - yükselen arpej
-      : amount>=20
-      ? [523,659,784,1047]      // Orta kazanç
-      : [523,659,784];           // Küçük kazanç
-    notes.forEach(function(freq,i){
-      var osc=ctx.createOscillator();
-      var gain=ctx.createGain();
-      var t=ctx.currentTime+i*0.12;
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.frequency.value=freq;
-      osc.type='sine';
-      gain.gain.setValueAtTime(0,t);
-      gain.gain.linearRampToValueAtTime(0.25,t+0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001,t+0.35);
-      osc.start(t);osc.stop(t+0.4);
+    var notes=amt>=50?[523,659,784,1047,1319]:amt>=20?[523,659,784,1047]:[523,659,784];
+    notes.forEach(function(f,i){
+      var o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*0.12;
+      o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.2,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
+      o.start(t);o.stop(t+0.35);
     });
-    // Jackpot extra sound
-    if(amount>=50){
-      setTimeout(function(){
-        try{
-          var ctx2=new(window.AudioContext||window.webkitAudioContext)();
-          var osc2=ctx2.createOscillator();
-          var g2=ctx2.createGain();
-          osc2.connect(g2);g2.connect(ctx2.destination);
-          osc2.frequency.setValueAtTime(800,ctx2.currentTime);
-          osc2.frequency.exponentialRampToValueAtTime(1600,ctx2.currentTime+0.3);
-          g2.gain.setValueAtTime(0.15,ctx2.currentTime);
-          g2.gain.exponentialRampToValueAtTime(0.001,ctx2.currentTime+0.5);
-          osc2.start();osc2.stop(ctx2.currentTime+0.5);
-        }catch(e){}
-      },600);
-    }
   }catch(e){}
 }
 
-// ===== CONFETTI =====
-var confettiParticles=[];
-var confettiAnimId=null;
-var confettiColors=['#00ff9d','#0099ff','#ffaa00','#ff4488','#aa44ff','#ffffff'];
-
-function startConfetti(amount){
-  var canvas=document.getElementById('confettiCanvas');
-  if(!canvas) return;
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-  var count=amount>=50?120:amount>=20?80:50;
-  confettiParticles=[];
-  for(var i=0;i<count;i++){
-    confettiParticles.push({
-      x:Math.random()*canvas.width,
-      y:-20,
-      w:Math.random()*10+5,
-      h:Math.random()*6+3,
-      color:confettiColors[Math.floor(Math.random()*confettiColors.length)],
-      rotation:Math.random()*360,
-      rotSpeed:(Math.random()-0.5)*8,
-      vx:(Math.random()-0.5)*4,
-      vy:Math.random()*4+3,
-      opacity:1
-    });
-  }
-  animateConfetti();
+// CONFETTI
+var cParts=[],cAnimId=null;
+var cColors=['#00ff9d','#0099ff','#ffaa00','#ff4488','#aa44ff','#fff'];
+function startConfetti(amt){
+  var cv=document.getElementById('confetti');
+  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  cParts=[];
+  var n=amt>=50?100:amt>=20?65:40;
+  for(var i=0;i<n;i++)cParts.push({x:Math.random()*cv.width,y:-10,w:Math.random()*8+4,h:Math.random()*5+2,color:cColors[Math.floor(Math.random()*cColors.length)],r:Math.random()*360,rs:(Math.random()-0.5)*7,vx:(Math.random()-0.5)*3.5,vy:Math.random()*3.5+2,op:1});
+  animC();
 }
-
-function animateConfetti(){
-  var canvas=document.getElementById('confettiCanvas');
-  if(!canvas) return;
-  var ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+function animC(){
+  var cv=document.getElementById('confetti');if(!cv)return;
+  var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
   var alive=false;
-  confettiParticles.forEach(function(p){
-    if(p.y<canvas.height+20){
-      alive=true;
-      p.x+=p.vx;
-      p.y+=p.vy;
-      p.vy+=0.1;
-      p.rotation+=p.rotSpeed;
-      if(p.y>canvas.height*0.6) p.opacity=Math.max(0,p.opacity-0.02);
-      ctx.save();
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.rotation*Math.PI/180);
-      ctx.globalAlpha=p.opacity;
-      ctx.fillStyle=p.color;
-      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-      ctx.restore();
-    }
+  cParts.forEach(function(p){
+    if(p.y<cv.height+10){alive=true;p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.r+=p.rs;
+    if(p.y>cv.height*0.55)p.op=Math.max(0,p.op-0.025);
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r*Math.PI/180);ctx.globalAlpha=p.op;ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();}
   });
-  if(alive) confettiAnimId=requestAnimationFrame(animateConfetti);
+  if(alive)cAnimId=requestAnimationFrame(animC);
 }
+function stopConfetti(){if(cAnimId)cancelAnimationFrame(cAnimId);cParts=[];var cv=document.getElementById('confetti');if(cv){var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);}}
 
-function stopConfetti(){
-  if(confettiAnimId) cancelAnimationFrame(confettiAnimId);
-  confettiParticles=[];
-  var canvas=document.getElementById('confettiCanvas');
-  if(canvas){ var ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); }
-}
-
-// ========== TAP ==========
+// TAP
 function onTap(e){
   showInfo(10,'+10 SANS',function(){
     showAd(10,'+10 SANS',async function(){
       await save({balance:ud.balance+10});
       floatEl(e,'+10 SANS');
-      showEarn(10,'+10 SANS');
+      showWin(10,'+10 SANS');
     });
   });
 }
 
-// ========== WHEEL ==========
+// WHEEL
 function drawWheel(rot){
   rot=rot||0;
-  var c=document.getElementById('wheel');
-  if(!c) return;
-  var ctx=c.getContext('2d'),cx=130,cy=130,r=126;
+  var c=document.getElementById('wheel');if(!c)return;
+  var ctx=c.getContext('2d'),cx=110,cy=110,r=107;
   var arc=(2*Math.PI)/PRIZES.length,off=-Math.PI/2;
-  ctx.clearRect(0,0,260,260);
+  ctx.clearRect(0,0,220,220);
   PRIZES.forEach(function(p,i){
     var s=off+rot+i*arc;
     ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,s+arc);
     ctx.fillStyle=p.c;ctx.fill();
-    ctx.strokeStyle='rgba(0,255,157,0.2)';ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle='rgba(0,255,157,0.15)';ctx.lineWidth=1.5;ctx.stroke();
     ctx.save();ctx.translate(cx,cy);ctx.rotate(s+arc/2);
-    ctx.textAlign='right';ctx.fillStyle='#00ff9d';
-    ctx.font='bold 12px sans-serif';ctx.fillText(p.l,r-10,4);ctx.restore();
+    ctx.textAlign='right';ctx.fillStyle='#00ff9d';ctx.font='bold 12px sans-serif';
+    ctx.fillText(p.l+' S',r-8,4);ctx.restore();
   });
-  ctx.beginPath();ctx.arc(cx,cy,22,0,2*Math.PI);
-  ctx.fillStyle='#060612';ctx.fill();
-  ctx.strokeStyle='#00ff9d';ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,18,0,2*Math.PI);ctx.fillStyle='#07071a';ctx.fill();ctx.strokeStyle='#00ff9d';ctx.lineWidth=2;ctx.stroke();
 }
 drawWheel();
 
 function onSpin(){
-  if(spinning) return;
+  if(spinning)return;
   var isFree=(ud.free_spin||0)>0;
-  if(!isFree&&ud.spin_left<=0){ toast('No spins left!'); return; }
-  var idx=Math.floor(Math.random()*PRIZES.length);
-  var prize=PRIZES[idx];
+  if(!isFree&&ud.spin_left<=0){toast('No spins left!');return;}
+  var idx=Math.floor(Math.random()*PRIZES.length),prize=PRIZES[idx];
   if(isFree){
-    showInfo(prize.v,'Up to 50 SANS FREE!',function(){ doSpinAnim(idx,true); });
+    showInfo(prize.v,'Up to 50 SANS FREE!',function(){doSpinAnim(idx,true);});
   } else {
     showInfo(prize.v,'+'+prize.v+' SANS',function(){
       showAd(prize.v,'+'+prize.v+' SANS',async function(){
         await save({balance:ud.balance+prize.v,spin_left:ud.spin_left-1,last_spin_date:new Date().toDateString()});
-        showEarn(prize.v,'+'+prize.v+' SANS');
+        showWin(prize.v,'+'+prize.v+' SANS');
       });
       doSpinAnim(idx,false,true);
     });
   }
 }
-function doSpinAnim(idx,free,skipSave){
-  spinning=true;
-  document.getElementById('spinBtn').disabled=true;
-  document.getElementById('spinRes').textContent='';
-  var arc=(2*Math.PI)/PRIZES.length;
-  var target=2*Math.PI*5+(PRIZES.length-idx)*arc-arc/2;
-  var dur=4000,start=performance.now();
+function doSpinAnim(idx,free,skip){
+  spinning=true;document.getElementById('spinBtn').disabled=true;document.getElementById('spinRes').textContent='';
+  var arc=(2*Math.PI)/PRIZES.length,target=2*Math.PI*5+(PRIZES.length-idx)*arc-arc/2,dur=4000,start=performance.now();
   function anim(now){
     var el=now-start,p=Math.min(el/dur,1),ease=1-Math.pow(1-p,4);
     drawWheel(ease*target);
-    if(p<1){ requestAnimationFrame(anim); }
+    if(p<1){requestAnimationFrame(anim);}
     else{
-      spinning=false;
-      document.getElementById('spinBtn').disabled=false;
+      spinning=false;document.getElementById('spinBtn').disabled=false;
       var prize=PRIZES[idx];
-      document.getElementById('spinRes').textContent='🎉 '+prize.l+' — '+lang.spin_won;
-      if(!skipSave){
-        var upd={balance:ud.balance+prize.v,last_spin_date:new Date().toDateString()};
-        if(free) upd.free_spin=0; else upd.spin_left=ud.spin_left-1;
-        save(upd);
-        showEarn(prize.v,'+'+prize.v+' SANS');
-      } else if(free){
-        save({free_spin:0,last_spin_date:new Date().toDateString()});
-      }
+      document.getElementById('spinRes').textContent='🎉 '+prize.l+' SANS — '+lang.sw;
+      if(!skip){var upd={balance:ud.balance+prize.v,last_spin_date:new Date().toDateString()};if(free)upd.free_spin=0;else upd.spin_left=ud.spin_left-1;save(upd);showWin(prize.v,'+'+prize.v+' SANS');}
+      else if(free)save({free_spin:0,last_spin_date:new Date().toDateString()});
     }
   }
   requestAnimationFrame(anim);
 }
 
-// ========== CHECKIN ==========
+// CHECKIN
 function renderDays(){
-  var today=new Date().toDateString();
-  var streak=ud.streak||0;
-  var grid=document.getElementById('daysGrid');
-  if(!grid) return;
-  grid.innerHTML=CI_REWARDS.map(function(r,i){
-    var done=i<streak;
-    var isToday=i===streak&&ud.last_checkin!==today;
-    return '<div class="day-box '+(done?'done':'')+(isToday?' today':'')+'">'+
-      '<div style="font-size:9px;color:#8888aa">'+lang.day+' '+(i+1)+'</div>'+
-      '<div style="font-size:16px;margin:3px 0">'+(done?'✅':isToday?'🎁':'🔒')+'</div>'+
-      '<div style="font-size:10px;font-weight:700;color:#00ff9d">'+r+'</div></div>';
+  var today=new Date().toDateString(),streak=ud.streak||0;
+  var g=document.getElementById('daysGrid');if(!g)return;
+  g.innerHTML=CI_R.map(function(r,i){
+    var done=i<streak,isT=i===streak&&ud.last_checkin!==today;
+    return '<div class="day-box '+(done?'done':'')+(isT?' today':'')+'"><div class="day-num">'+lang.day+' '+(i+1)+'</div><div class="day-ico">'+(done?'✅':isT?'🎁':'🔒')+'</div><div class="day-amt">'+r+'</div></div>';
   }).join('');
 }
-
 function onCheckin(){
   var today=new Date().toDateString();
-  if(ud.last_checkin===today){ toast(lang.ci_done); return; }
-  var streak=(ud.streak||0)%7;
-  var reward=CI_REWARDS[streak];
+  if(ud.last_checkin===today){toast(lang.cid);return;}
+  var streak=(ud.streak||0)%7,reward=CI_R[streak];
   showInfo(reward,'+'+reward+' SANS',function(){
     showAd(reward,'+'+reward+' SANS',async function(){
       await save({balance:ud.balance+reward,streak:streak+1,last_checkin:today});
-      var cb=document.getElementById('ciBtn');
-      cb.disabled=true;cb.textContent=lang.ci_done;
-      renderDays();
-      showEarn(reward,'+'+reward+' SANS');
+      var cb=document.getElementById('ciBtn');if(cb){cb.disabled=true;cb.textContent=lang.cid;}
+      renderDays();showWin(reward,'+'+reward+' SANS');
     });
   });
 }
 
-// ========== TASKS ==========
+// TASKS
 function renderTasks(){
-  var done=ud.tasks_done||[];
-  var tl=document.getElementById('taskList');
-  if(!tl) return;
+  var done=ud.tasks_done||[],tl=document.getElementById('taskList');if(!tl)return;
   tl.innerHTML=lang.tasks.map(function(t){
     var isDone=done.indexOf(t.id)>=0;
-    return '<div class="task-item '+(isDone?'done':'')+'" onclick="'+(isDone?'':'onTask(\''+t.id+'\',\''+t.u+'\','+t.r+')')+'">'
-      +'<div class="task-icon">'+t.ico+'</div>'
-      +'<div class="task-info"><div class="task-title">'+t.t+'</div><div class="task-desc">'+t.d+'</div></div>'
-      +'<div class="task-reward">'
-      +(isDone?'<div class="task-done">✅</div>':'<div class="task-sans">+'+t.r+' SANS</div><div style="font-size:10px;color:#8888aa;margin-top:2px">'+lang.go+'</div>')
-      +'</div></div>';
+    return '<div class="task-item '+(isDone?'done':'')+'" onclick="'+(isDone?'':'onTask(\''+t.id+'\',\''+t.u+'\','+t.r+')')+'">'+
+      '<div class="task-ico">'+t.i+'</div>'+
+      '<div class="task-info"><div class="task-title">'+t.t+'</div><div class="task-desc">'+t.d+'</div></div>'+
+      '<div class="task-r">'+(isDone?'<span style="font-size:18px">✅</span>':'<div class="task-sans">+'+t.r+'</div><div style="font-size:9px;color:#8888aa">'+lang.go+'</div>')+'</div>'+
+      '</div>';
   }).join('');
 }
-
 function onTask(id,url,reward){
   window.open(url,'_blank');
   setTimeout(function(){
     showInfo(reward,'+'+reward+' SANS',function(){
       showAd(reward,'+'+reward+' SANS',async function(){
         var done=[].concat(ud.tasks_done||[]);
-        if(done.indexOf(id)<0){
-          done.push(id);
-          await save({balance:ud.balance+reward,tasks_done:done});
-          showEarn(reward,'+'+reward+' SANS');
-        }
+        if(done.indexOf(id)<0){done.push(id);await save({balance:ud.balance+reward,tasks_done:done});showWin(reward,'+'+reward+' SANS');}
       });
     });
   },3000);
 }
 
-// ========== REFERRAL ==========
+// REFERRAL
 function copyRef(){
   var link='https://t.me/sanslicekilisbot?startapp='+(ud.referral_code||'');
-  if(navigator.clipboard) navigator.clipboard.writeText(link);
-  else{ var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta); }
-  toast('📋 Link copied!');
+  if(navigator.clipboard)navigator.clipboard.writeText(link);
+  else{var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  toast('📋 Copied!');
 }
 function useRef(){
   var code=document.getElementById('refIn').value.trim().toUpperCase();
-  if(!code) return;
-  if(code===ud.referral_code){ setRefMsg('❌ Cannot use your own code','#ff4444'); return; }
-  if(ud.referred_by){ setRefMsg('❌ Already used a code','#ff4444'); return; }
+  if(!code)return;
+  if(code===ud.referral_code){setRefMsg('❌ Cannot use own code','#ff4444');return;}
+  if(ud.referred_by){setRefMsg('❌ Already used','#ff4444');return;}
   applyRef(code);
 }
-function setRefMsg(m,c){ var el=document.getElementById('refMsg'); if(el){el.textContent=m;el.style.color=c;} }
+function setRefMsg(m,c){var el=document.getElementById('refMsg');if(el){el.textContent=m;el.style.color=c;}}
 async function applyRef(code){
   var res=await db.from('users').select('*').eq('referral_code',code.toUpperCase()).maybeSingle();
-  if(!res.data){ setRefMsg('❌ Invalid code','#ff4444'); return; }
-  if(res.data.telegram_id===user.id){ setRefMsg('❌ Cannot use own code','#ff4444'); return; }
+  if(!res.data){setRefMsg('❌ Invalid code','#ff4444');return;}
+  if(res.data.telegram_id===user.id){setRefMsg('❌ Cannot use own code','#ff4444');return;}
   await save({referred_by:code.toUpperCase(),balance:ud.balance+20});
   await db.from('users').update({balance:(res.data.balance||0)+30,referral_count:(res.data.referral_count||0)+1}).eq('telegram_id',res.data.telegram_id);
-  setRefMsg('🎉 +20 SANS bonus!','#00ff9d');
-  var rb=document.getElementById('refUsedBox');
-  if(rb) rb.style.display='none';
-  showEarn(20,'+20 SANS');
+  setRefMsg('🎉 +20 SANS!','#00ff9d');
+  var rb=document.getElementById('refBox');if(rb)rb.style.display='none';
+  showWin(20,'+20 SANS');
 }
 
-// ========== LEADERBOARD ==========
+// LEADERBOARD
 async function loadLB(){
-  var res=await db.from('users').select('telegram_id,username,balance').order('balance',{ascending:false}).limit(100);
-  if(!res.data) return;
-  // Sıfır bakiyeli kullanıcıları filtrele
-  var data=res.data.filter(function(u){ return (u.balance||0)>0; });
+  var res=await db.from('users').select('telegram_id,username,balance').order('balance',{ascending:false}).limit(50);
+  if(!res.data)return;
+  var data=res.data.filter(function(u){return (u.balance||0)>0;});
   var myRank=-1,myData=null;
-  data.forEach(function(u,i){ if(user&&u.telegram_id===user.id){ myRank=i+1; myData=u; } });
+  data.forEach(function(u,i){if(user&&u.telegram_id===user.id){myRank=i+1;myData=u;}});
   var mrBox=document.getElementById('myRankBox');
   if(myRank>0&&myData){
     mrBox.style.display='flex';
     document.getElementById('myRN').textContent=myRank;
     document.getElementById('myRName').textContent=myData.username||'Player';
     document.getElementById('myRS').textContent=(myData.balance||0).toLocaleString()+' SANS';
-    document.getElementById('myRTickets').textContent=tickets(myData.balance)+' tickets';
-  } else { mrBox.style.display='none'; }
-  var filtered=data.filter(function(u){ return u.telegram_id!==user.id; });
+    document.getElementById('myRTick').textContent=tk(myData.balance);
+  } else mrBox.style.display='none';
+  var filtered=data.filter(function(u){return u.telegram_id!==user.id;});
   var medals=['🥇','🥈','🥉'];
-  document.getElementById('lbList').innerHTML=filtered.slice(0,20).map(function(u,i){
-    return '<div class="lb-item">'
-      +'<div style="font-size:16px;font-weight:900;width:26px;text-align:center;color:'+(i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'#aaa')+'">'+(medals[i]||(i+1))+'</div>'
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:600">'+(u.username||'Player')+'</div>'
-      +'<div style="font-size:10px;color:#8888aa">🎟 '+tickets(u.balance)+' tickets</div></div>'
-      +'<div style="text-align:right"><div style="font-size:13px;font-weight:800;color:#00ff9d">'+(u.balance||0).toLocaleString()+' SANS</div></div></div>';
-  }).join('')||'<div style="text-align:center;color:#8888aa;padding:30px;font-size:13px">No players yet. Be the first! 🚀</div>';
+  var lbEl=document.getElementById('lbList');
+  lbEl.innerHTML=filtered.slice(0,20).map(function(u,i){
+    return '<div class="rank-item">'+
+      '<div style="font-size:15px;font-weight:900;width:22px;text-align:center;color:'+(i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'#888')+'">'+(medals[i]||(i+1))+'</div>'+
+      '<div style="flex:1"><div style="font-size:12px;font-weight:600">'+(u.username||'Player')+'</div>'+
+      '<div style="font-size:9px;color:#8888aa">🎟 '+tk(u.balance)+' tickets</div></div>'+
+      '<div style="font-size:12px;font-weight:800;color:var(--g)">'+(u.balance||0).toLocaleString()+'</div></div>';
+  }).join('')||'<div style="text-align:center;color:#8888aa;padding:20px;font-size:12px">No players yet. Be the first! 🚀</div>';
 }
 
-// ========== RAFFLE ==========
-function renderRafflePools(){
-  var b=ud.balance||0;
-  var t=tickets(b);
-  var poolsHtml=RAFFLE_POOLS.map(function(pool){
-    var filled=Math.min(t,pool.target);
-    var pct=Math.min(100,Math.round((filled/pool.target)*100));
-    var remaining=Math.max(0,pool.target-t);
-    return '<div class="raffle-pool">'
-      +'<div class="raffle-pool-top">'
-      +'<div>'
-      +'<div style="font-size:11px;color:#8888aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Prize Pool</div>'
-      +'<div class="raffle-pool-prize">'+pool.prize+'</div>'
-      +'</div>'
-      +'<div style="text-align:right">'
-      +'<div style="font-size:11px;color:#8888aa">Pool size</div>'
-      +'<div style="font-size:14px;font-weight:700;color:#fff">'+pool.target+' tickets</div>'
-      +'</div></div>'
-      +'<div class="raffle-pb"><div class="raffle-pf" style="width:'+pct+'%;background:linear-gradient(90deg,'+pool.color+',#0099ff)"></div></div>'
-      +'<div class="raffle-pool-info">'
-      +'<span>'+pct+'% full · '+filled+'/'+pool.target+' tickets</span>'
-      +'<span style="color:'+pool.color+'">'+remaining+' more needed</span>'
-      +'</div>'
-      +'</div>';
+// RAFFLE POOLS
+function renderPools(){
+  var b=ud.balance||0,t=tk(b);
+  var el=document.getElementById('rafflePools');if(!el)return;
+  el.innerHTML=POOLS.map(function(pool){
+    var pct=Math.min(100,Math.round((t/pool.target)*100));
+    return '<div class="pool-card">'+
+      '<div class="pool-top">'+
+      '<div><div style="font-size:10px;color:#8888aa;text-transform:uppercase;letter-spacing:1px">Prize Pool</div><div class="pool-prize">'+pool.prize+'</div></div>'+
+      '<div style="text-align:right"><div style="font-size:9px;color:#8888aa">Pool size</div><div style="font-size:13px;font-weight:700">'+pool.target+' 🎟</div></div>'+
+      '</div>'+
+      '<div class="pool-pb"><div class="pool-pf" style="width:'+pct+'%;background:linear-gradient(90deg,'+pool.color+',#0099ff)"></div></div>'+
+      '<div class="pool-info"><span>'+pct+'% · '+Math.min(t,pool.target)+'/'+pool.target+'</span><span style="color:'+pool.color+'">'+Math.max(0,pool.target-t)+' more needed</span></div>'+
+      '</div>';
   }).join('');
-  var el=document.getElementById('rafflePools');
-  if(el) el.innerHTML=poolsHtml;
 }
 
-// ========== WALLET ==========
+// WALLET
 function saveWallet(){
-  var w=document.getElementById('walletInput').value.trim();
-  if(!w.startsWith('0x')||w.length!==42){ document.getElementById('walletMsg').textContent='❌ Invalid BSC wallet address'; document.getElementById('walletMsg').style.color='#ff4444'; return; }
+  var w=document.getElementById('walletIn').value.trim();
+  if(!w.startsWith('0x')||w.length!==42){document.getElementById('walletMsg').textContent='❌ Invalid BSC address';document.getElementById('walletMsg').style.color='#ff4444';return;}
   save({wallet:w});
   document.getElementById('walletMsg').textContent='✅ Wallet saved!';
   document.getElementById('walletMsg').style.color='#00ff9d';
 }
 
-// ========== START ==========
+// START
 loadUser().then(function(){
-  // Dil seçimi ekranı göster
-  document.getElementById('langScreen').style.display='flex';
+  document.getElementById('sLang').classList.remove('hidden');
 });
 </script>
 </body>
