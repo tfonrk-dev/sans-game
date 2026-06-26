@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#060612"/>
 <title>SANS Token — Earn & Win</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="//libtl.com/sdk.js" data-zone="10975774" data-sdk="show_10975774"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'Segoe UI',sans-serif}
-body{background:#060612;color:#fff;min-height:100vh;overflow-x:hidden}
+body{background:#060612;color:#fff;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+.lang-screen,.menu-screen,.welcome{padding-top:max(24px,env(safe-area-inset-top))}
+.nav{padding-top:max(10px,env(safe-area-inset-top))}
 
 /* LANGUAGE SCREEN */
 .lang-screen{position:fixed;inset:0;background:linear-gradient(160deg,#060612 0%,#0d0d2e 50%,#060612 100%);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
@@ -466,13 +469,18 @@ body{background:#060612;color:#fff;min-height:100vh;overflow-x:hidden}
         <span style="font-size:13px;font-weight:700;color:#fff">~15 seconds</span>
       </div>
     </div>
-    <div style="background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.15);border-radius:10px;padding:10px;margin-bottom:16px;font-size:12px;color:#8888aa;line-height:1.6" id="io-note">
-      ✅ After the ad ends, tap <b style="color:#00ff9d">Claim Reward</b><br>
-      ❌ Do not close the app during the ad
+    <div style="background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.2);border-radius:12px;padding:12px;margin-bottom:16px">
+      <div style="font-size:12px;color:#ffaa00;font-weight:700;margin-bottom:8px">📋 Instructions:</div>
+      <div style="font-size:12px;color:#aaa;line-height:1.8">
+        ⏱ A <b style="color:#fff">15-second ad</b> will appear<br>
+        ✅ After 15s, tap <b style="color:#00ff9d">✕</b> to close the ad<br>
+        🏆 Then tap <b style="color:#00ff9d">Claim Reward ✓</b> to get your SANS<br>
+        🚫 <b style="color:#ff4444">Do NOT touch anything during the ad</b>
+      </div>
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn-secondary" style="flex:1" onclick="closeInfo()">✕ Cancel</button>
-      <button class="btn-primary" style="flex:2" id="iBtn" onclick="startAd()">▶ Watch Ad (3s)</button>
+      <button class="btn-primary" style="flex:2" id="iBtn" onclick="startAd()">▶ Starting in 5s</button>
     </div>
   </div>
 </div>
@@ -677,8 +685,266 @@ var LANGS = {
   }
 };
 
-// Diğer diller EN ile aynı (şimdilik)
-['ar','es','pt','fr','de','id','uk'].forEach(function(l){ LANGS[l] = LANGS['en']; });
+// Diğer diller
+LANGS['ar'] = {
+  tabs:['👆 اضغط','🎡 دوّر','📅 يومي','✅ مهام','🏆 ترتيب','🎰 سحب'],
+  ms_sub:'اكسب وفز بجوائز حقيقية',
+  ms_earn_title:'اكسب SANS',ms_earn_desc:'شاهد الإعلانات وأكمل المهام لكسب رموز SANS مجاناً. استخدمها للدخول في سحوبات الجوائز!',
+  ms_buy_title:'اشتر SANS',ms_buy_desc:'اشتر رموز SANS مباشرة في البيع المسبق. المزيد من الرموز = المزيد من التذاكر = المزيد من فرص الفوز!',
+  ms_raffle:'السحوبات النشطة',ws_sub:'جاري تحميل تقدمك...',ws_lbl:'إجمالي SANS المكتسبة',
+  ws_ticket_lbl:'تذاكر السحب',ws_next:'السحب القادم',ws_btn:'🎮 ابدأ الكسب!',
+  tap_info:'اضغط الزر أدناه لمشاهدة إعلان قصير واكسب +10 SANS. كل 100 SANS = تذكرة سحب!',
+  tap_reward:'+10 SANS لكل ضغطة',vb_lbl:'رصيد SANS',vb_ticket:'تذاكر',
+  spin_title:'🎡 عجلة الحظ',spin_sub:'أدر العجلة لكسب SANS. دوران مجاني واحد يومياً!',
+  spin_info:'لديك دوران مجاني واحد كل يوم. شاهد إعلاناً لمزيد من الدورات.',
+  free_spin:'🎁 دوران مجاني متاح!',free_used:'تم استخدام الدوران المجاني',spin_remaining:'الدورات المتبقية:',spin_won:'فزت!',
+  ci_title:'📅 تسجيل يومي',ci_sub:'سجّل دخولك يومياً لكسب SANS إضافية!',
+  ci_info:'سجّل دخولك كل يوم وشاهد إعلاناً قصيراً للحصول على مكافأتك اليومية.',
+  streak_lbl:'أيام متتالية!',streak_sub:'استمر للحصول على مكافآت أكبر!',ci_btn:'🎁 احصل على المكافأة اليومية',ci_done:'✅ تم الاستلام اليوم',
+  task_title:'✅ المهام',task_sub:'أكمل المهام لكسب رموز SANS إضافية!',
+  ref_desc:'ادعُ أصدقاءك واكسب SANS! أنت +30، صديقك +20.',
+  lb_title:'🏆 المتصدرون',lb_sub:'أفضل كاسبي SANS. مرتبة أعلى = تذاكر أكثر!',
+  lb_weekly:'أفضل 3 هذا الأسبوع - تذاكر إضافية',lb_info:'يتم إعادة التصنيف كل اثنين.',
+  raffle_title:'🎰 السحوبات',raffle_sub:'جوائز نقدية حقيقية! استخدم SANS للمشاركة.',
+  raffle_how:'كيف يعمل: كل 100 SANS = تذكرة. عند امتلاء المجموعة يُختار الفائز تلقائياً!',
+  raffle_prize_info:'الجوائز تُدفع بـ USDT أو BNB مباشرة إلى محفظة الفائز.',
+  raffle_fair:'جميع السحوبات شفافة وقابلة للتحقق على بلوكشين BSC.',
+  rt_lbl:'تذاكرك',rt_sub:'اكسب المزيد من SANS للحصول على المزيد من التذاكر',
+  wallet_lbl:'محفظة الجائزة',rh_title:'آخر الفائزين',
+  io_title:'شاهد الإعلان واكسب!',io_sub:'سيُعرض إعلان قصير. شاهده كاملاً للحصول على مكافأتك.',
+  io_note:'',earn_added:'أُضيف إلى رصيدك!',earn_total_lbl:'إجمالي SANS',earn_ticket_lbl:'التذاكر',
+  ms_bal_label:'رصيدك',ms_tickets:'تذاكر',you:'أنت',day:'يوم',go:'انتقل →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'انضم إلى قناة Telegram',d:'تابع قناة الإعلانات الرسمية',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'تابع على Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'تابع على Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'اشترك في YouTube',d:'احصل على إشعارات نتائج السحب',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'شاهد فيديونا',d:'تعلم كيف يعمل SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'زر موقعنا',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['es'] = {
+  tabs:['👆 Tap','🎡 Girar','📅 Diario','✅ Tareas','🏆 Ranking','🎰 Sorteo'],
+  ms_sub:'Gana & Gana Premios Reales',
+  ms_earn_title:'Ganar SANS',ms_earn_desc:'Mira anuncios y completa tareas para ganar tokens SANS gratis. ¡Úsalos para entrar en sorteos de premios reales!',
+  ms_buy_title:'Comprar SANS',ms_buy_desc:'Compra tokens SANS directamente en preventa. ¡Más tokens = más boletos = más posibilidades de ganar!',
+  ms_raffle:'Sorteos Activos',ws_sub:'Cargando tu progreso...',ws_lbl:'SANS Ganados',
+  ws_ticket_lbl:'Boletos de Sorteo',ws_next:'Próximo sorteo',ws_btn:'🎮 ¡Empezar a Ganar!',
+  tap_info:'Toca el botón para ver un anuncio y ganar +10 SANS. ¡Cada 100 SANS = 1 boleto de sorteo!',
+  tap_reward:'+10 SANS por tap',vb_lbl:'Tu Saldo SANS',vb_ticket:'boletos',
+  spin_title:'🎡 Ruleta de la Suerte',spin_sub:'Gira la ruleta para ganar SANS. ¡1 giro gratis al día!',
+  spin_info:'Tienes 1 giro gratis cada día. Mira un anuncio para girar más veces.',
+  free_spin:'🎁 ¡1 Giro Gratis Disponible!',free_used:'Giro gratis usado hoy',spin_remaining:'Giros restantes:',spin_won:'¡Ganaste!',
+  ci_title:'📅 Check-in Diario',ci_sub:'¡Entra cada día para ganar SANS bonus!',
+  ci_info:'Entra cada día y mira un anuncio corto para reclamar tu bonus diario.',
+  streak_lbl:'¡Días seguidos!',streak_sub:'¡Sigue para obtener mayores recompensas!',ci_btn:'🎁 Reclamar Premio Diario',ci_done:'✅ Ya reclamado hoy',
+  task_title:'✅ Tareas',task_sub:'Completa tareas para ganar tokens SANS bonus.',
+  ref_desc:'¡Invita amigos y gana SANS! Tú +30, amigo +20.',
+  lb_title:'🏆 Clasificación',lb_sub:'Los mejores ganadores de SANS.',
+  lb_weekly:'Top 3 Semanal - Boletos Extra',lb_info:'El ranking se reinicia cada lunes.',
+  raffle_title:'🎰 Sorteos',raffle_sub:'¡Premios en dinero real! Usa SANS para participar.',
+  raffle_how:'Cómo funciona: Cada 100 SANS = 1 boleto. Cuando el pozo se llena, ¡se sortea!',
+  raffle_prize_info:'Los premios se pagan en USDT o BNB directamente al monedero del ganador.',
+  raffle_fair:'Todos los sorteos son transparentes y verificables en la blockchain BSC.',
+  rt_lbl:'Tus Boletos de Sorteo',rt_sub:'Gana más SANS para obtener más boletos',
+  wallet_lbl:'Tu Monedero de Premios',rh_title:'Últimos Ganadores',
+  io_title:'¡Mira el Anuncio y Gana!',io_sub:'Se reproducirá un anuncio corto. Míralo completo.',
+  io_note:'',earn_added:'¡Añadido a tu saldo!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Boletos',
+  ms_bal_label:'Tu Saldo',ms_tickets:'boletos',you:'TÚ',day:'Día',go:'Ir →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Únete al Canal de Telegram',d:'Sigue los anuncios oficiales',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Seguir en Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Seguir en Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'Suscribirse en YouTube',d:'Resultados de sorteos',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Ver Nuestro Video',d:'Aprende cómo funciona SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Visitar el Sitio Web',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['pt'] = {
+  tabs:['👆 Tap','🎡 Girar','📅 Diário','✅ Tarefas','🏆 Ranking','🎰 Sorteio'],
+  ms_sub:'Ganhe & Vença Prêmios Reais',
+  ms_earn_title:'Ganhar SANS',ms_earn_desc:'Assista anúncios e complete tarefas para ganhar tokens SANS grátis. Use-os para entrar em sorteios de prêmios reais!',
+  ms_buy_title:'Comprar SANS',ms_buy_desc:'Compre tokens SANS diretamente na pré-venda. Mais tokens = mais bilhetes = mais chances de ganhar!',
+  ms_raffle:'Sorteios Ativos',ws_sub:'Carregando seu progresso...',ws_lbl:'Total de SANS Ganhos',
+  ws_ticket_lbl:'Bilhetes de Sorteio',ws_next:'Próximo sorteio',ws_btn:'🎮 Começar a Ganhar!',
+  tap_info:'Toque o botão para assistir um anúncio e ganhar +10 SANS. Cada 100 SANS = 1 bilhete de sorteio!',
+  tap_reward:'+10 SANS por toque',vb_lbl:'Seu Saldo SANS',vb_ticket:'bilhetes',
+  spin_title:'🎡 Roda da Sorte',spin_sub:'Gire a roda para ganhar SANS. 1 giro grátis por dia!',
+  spin_info:'Você tem 1 giro grátis por dia. Assista um anúncio para mais giros.',
+  free_spin:'🎁 1 Giro Grátis Disponível!',free_used:'Giro grátis usado hoje',spin_remaining:'Giros restantes:',spin_won:'Você ganhou!',
+  ci_title:'📅 Check-in Diário',ci_sub:'Entre todo dia para ganhar SANS bônus!',
+  ci_info:'Entre todo dia e assista um anúncio curto para receber seu bônus diário.',
+  streak_lbl:'Dias seguidos!',streak_sub:'Continue para recompensas maiores!',ci_btn:'🎁 Resgatar Recompensa Diária',ci_done:'✅ Já resgatado hoje',
+  task_title:'✅ Tarefas',task_sub:'Complete tarefas para ganhar tokens SANS bônus.',
+  ref_desc:'Convide amigos e ganhe SANS! Você +30, amigo +20.',
+  lb_title:'🏆 Classificação',lb_sub:'Os maiores ganhadores de SANS.',
+  lb_weekly:'Top 3 Semanal - Bilhetes Extra',lb_info:'Ranking reinicia toda segunda-feira.',
+  raffle_title:'🎰 Sorteios',raffle_sub:'Prêmios em dinheiro real! Use SANS para participar.',
+  raffle_how:'Como funciona: Cada 100 SANS = 1 bilhete. Quando o poço encher, um vencedor é sorteado!',
+  raffle_prize_info:'Os prêmios são pagos em USDT ou BNB diretamente para a carteira do vencedor.',
+  raffle_fair:'Todos os sorteios são transparentes e verificáveis na blockchain BSC.',
+  rt_lbl:'Seus Bilhetes de Sorteio',rt_sub:'Ganhe mais SANS para obter mais bilhetes',
+  wallet_lbl:'Sua Carteira de Prêmios',rh_title:'Últimos Vencedores',
+  io_title:'Assista o Anúncio e Ganhe!',io_sub:'Um anúncio curto será reproduzido. Assista completamente.',
+  io_note:'',earn_added:'Adicionado ao seu saldo!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Bilhetes',
+  ms_bal_label:'Seu Saldo',ms_tickets:'bilhetes',you:'VOCÊ',day:'Dia',go:'Ir →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Entrar no Canal do Telegram',d:'Siga os anúncios oficiais',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Seguir no Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Seguir no Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'Inscrever no YouTube',d:'Resultados de sorteios',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Assistir Nosso Vídeo',d:'Aprenda como o SANS funciona',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Visitar o Site',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['fr'] = {
+  tabs:['Tap','Tourner','Quotidien','Taches','Classement','Tirage'],
+  ms_sub:'Gagnez et remportez de vrais prix',
+  ms_earn_title:'Gagner des SANS',ms_earn_desc:'Regardez des publicites et accomplissez des taches pour gagner des tokens SANS gratuits. Utilisez-les pour participer a des tirages!',
+  ms_buy_title:'Acheter des SANS',ms_buy_desc:'Achetez des tokens SANS directement en prevente. Plus de tokens = plus de billets = plus de chances de gagner!',
+  ms_raffle:'Tirages Actifs',ws_sub:'Chargement des progres...',ws_lbl:'Total de SANS Gagnes',
+  ws_ticket_lbl:'Billets de Tirage',ws_next:'Prochain tirage',ws_btn:'Commencer a Gagner!',
+  tap_info:'Appuyez sur le bouton pour regarder une courte publicite et gagner +10 SANS. Chaque 100 SANS = 1 billet de tirage!',
+  tap_reward:'+10 SANS par appui',vb_lbl:'Votre Solde SANS',vb_ticket:'billets',
+  spin_title:'Roue de la Fortune',spin_sub:'Tournez la roue pour gagner des SANS. 1 tour gratuit par jour!',
+  spin_info:'Vous avez 1 tour gratuit par jour. Regardez une pub pour plus de tours.',
+  free_spin:'1 Tour Gratuit Disponible!',free_used:'Tour gratuit utilise',spin_remaining:'Tours restants:',spin_won:'Vous avez gagne!',
+  ci_title:'Connexion Quotidienne',ci_sub:'Connectez-vous chaque jour pour gagner des SANS bonus!',
+  ci_info:'Connectez-vous chaque jour et regardez une courte pub pour votre bonus quotidien.',
+  streak_lbl:'Jours consecutifs!',streak_sub:'Continuez pour de plus grandes recompenses!',ci_btn:'Reclamer la Recompense du Jour',ci_done:'Deja reclame!',
+  task_title:'Taches',task_sub:'Accomplissez des taches pour gagner des SANS bonus.',
+  ref_desc:'Invitez des amis et gagnez des SANS! Vous +30, ami +20.',
+  lb_title:'Classement',lb_sub:'Les meilleurs gagneurs de SANS.',
+  lb_weekly:'Top 3 Hebdomadaire - Billets Bonus',lb_info:'Classement reinitialise chaque lundi.',
+  raffle_title:'Tirages',raffle_sub:'Vrais prix en argent! Utilisez vos SANS pour participer.',
+  raffle_how:'Comment ca marche: Chaque 100 SANS = 1 billet. Quand la cagnotte est pleine, un gagnant est tire!',
+  raffle_prize_info:'Les prix sont payes en USDT ou BNB directement au portefeuille du gagnant.',
+  raffle_fair:'Tous les tirages sont transparents et verifiables sur la blockchain BSC.',
+  rt_lbl:'Vos Billets de Tirage',rt_sub:'Gagnez plus de SANS pour plus de billets',
+  wallet_lbl:'Votre Portefeuille de Prix',rh_title:'Derniers Gagnants',
+  io_title:'Regardez la Pub et Gagnez!',io_sub:'Une courte publicite va se lancer. Regardez-la entierement.',
+  io_note:'',earn_added:'Ajoute a votre solde!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Billets',
+  ms_bal_label:'Votre Solde',ms_tickets:'billets',you:'VOUS',day:'Jour',go:'Aller',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Rejoindre le Canal Telegram',d:'Suivez les annonces officielles',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Suivre sur Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Suivre sur Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'Abonner sur YouTube',d:'Resultats des tirages',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Regarder Notre Video',d:'Apprenez comment SANS fonctionne',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Visiter le Site',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['de'] = {
+  tabs:['👆 Tippen','🎡 Drehen','📅 Täglich','✅ Aufgaben','🏆 Rangliste','🎰 Verlosung'],
+  ms_sub:'Verdiene & Gewinne echte Preise',
+  ms_earn_title:'SANS verdienen',ms_earn_desc:'Schaue Werbung und erfülle Aufgaben, um kostenlose SANS-Token zu verdienen. Nutze sie für echte Verlosungen!',
+  ms_buy_title:'SANS kaufen',ms_buy_desc:'Kaufe SANS-Token direkt im Vorverkauf. Mehr Token = mehr Lose = mehr Gewinnchancen!',
+  ms_raffle:'Aktive Verlosungen',ws_sub:'Lade deinen Fortschritt...',ws_lbl:'Gesamt verdiente SANS',
+  ws_ticket_lbl:'Verlosungslose',ws_next:'Nächste Verlosung',ws_btn:'🎮 Verdienen starten!',
+  tap_info:'Tippe den Button, schau eine kurze Werbung und verdiene +10 SANS. 100 SANS = 1 Verlosungslos!',
+  tap_reward:'+10 SANS pro Tipp',vb_lbl:'Dein SANS-Guthaben',vb_ticket:'Lose',
+  spin_title:'🎡 Glücksrad',spin_sub:'Drehe das Rad und verdiene SANS. 1 Gratisdrehung täglich!',
+  spin_info:'Du hast täglich 1 Gratisdrehung. Schaue eine Werbung für mehr Drehungen.',
+  free_spin:'🎁 1 Gratisdrehung verfügbar!',free_used:'Gratisdrehung heute genutzt',spin_remaining:'Verbleibende Drehungen:',spin_won:'Du hast gewonnen!',
+  ci_title:'📅 Täglicher Check-in',ci_sub:'Melde dich täglich an und verdiene Bonus-SANS!',
+  ci_info:'Melde dich täglich an und schau eine kurze Werbung für deine tägliche Belohnung.',
+  streak_lbl:'Tage in Folge!',streak_sub:'Mach weiter für größere Belohnungen!',ci_btn:'🎁 Tagesbelohnung holen',ci_done:'✅ Heute bereits erhalten',
+  task_title:'✅ Aufgaben',task_sub:'Erfülle Aufgaben und verdiene Bonus-SANS.',
+  ref_desc:'Lade Freunde ein und verdiene SANS! Du +30, Freund +20.',
+  lb_title:'🏆 Rangliste',lb_sub:'Die besten SANS-Verdiener.',
+  lb_weekly:'Wöchentliche Top 3 - Bonus-Lose',lb_info:'Rangliste wird jeden Montag zurückgesetzt.',
+  raffle_title:'🎰 Verlosungen',raffle_sub:'Echte Geldpreise! Nutze SANS zur Teilnahme.',
+  raffle_how:'So funktioniert es: 100 SANS = 1 Los. Wenn der Pool voll ist, wird ein Gewinner gezogen!',
+  raffle_prize_info:'Preise werden in USDT oder BNB direkt an die Wallet des Gewinners gesendet.',
+  raffle_fair:'Alle Verlosungen sind transparent und auf der BSC-Blockchain verifizierbar.',
+  rt_lbl:'Deine Verlosungslose',rt_sub:'Verdiene mehr SANS für mehr Lose',
+  wallet_lbl:'Deine Preis-Wallet',rh_title:'Letzte Gewinner',
+  io_title:'Werbung schauen & verdienen!',io_sub:'Eine kurze Werbung wird abgespielt. Schau sie vollständig.',
+  io_note:'',earn_added:'Zu deinem Guthaben hinzugefügt!',earn_total_lbl:'Gesamt SANS',earn_ticket_lbl:'Lose',
+  ms_bal_label:'Dein Guthaben',ms_tickets:'Lose',you:'DU',day:'Tag',go:'Gehen →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Telegram-Kanal beitreten',d:'Folge offiziellen Ankündigungen',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Auf Twitter/X folgen',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Auf Instagram folgen',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'YouTube abonnieren',d:'Verlosungsergebnisse',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Unser Video ansehen',d:'Lerne wie SANS funktioniert',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Website besuchen',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['id'] = {
+  tabs:['👆 Tap','🎡 Putar','📅 Harian','✅ Tugas','🏆 Peringkat','🎰 Undian'],
+  ms_sub:'Dapatkan & Menangkan Hadiah Nyata',
+  ms_earn_title:'Dapatkan SANS',ms_earn_desc:'Tonton iklan & selesaikan tugas untuk mendapatkan token SANS gratis. Gunakan untuk ikut undian berhadiah!',
+  ms_buy_title:'Beli SANS',ms_buy_desc:'Beli token SANS langsung di presale. Lebih banyak token = lebih banyak tiket = lebih banyak peluang menang!',
+  ms_raffle:'Undian Aktif',ws_sub:'Memuat progres Anda...',ws_lbl:'Total SANS Diperoleh',
+  ws_ticket_lbl:'Tiket Undian',ws_next:'Undian berikutnya',ws_btn:'🎮 Mulai Mendapatkan!',
+  tap_info:'Ketuk tombol untuk menonton iklan singkat dan dapatkan +10 SANS. Setiap 100 SANS = 1 tiket undian!',
+  tap_reward:'+10 SANS per ketukan',vb_lbl:'Saldo SANS Anda',vb_ticket:'tiket',
+  spin_title:'🎡 Roda Keberuntungan',spin_sub:'Putar roda untuk mendapatkan SANS. 1 putaran gratis per hari!',
+  spin_info:'Anda mendapat 1 putaran gratis setiap hari. Tonton iklan untuk putaran tambahan.',
+  free_spin:'🎁 1 Putaran Gratis Tersedia!',free_used:'Putaran gratis sudah digunakan',spin_remaining:'Sisa putaran:',spin_won:'Anda menang!',
+  ci_title:'📅 Check-in Harian',ci_sub:'Masuk setiap hari untuk mendapatkan SANS bonus!',
+  ci_info:'Masuk setiap hari dan tonton iklan singkat untuk hadiah harian Anda.',
+  streak_lbl:'Hari berturut-turut!',streak_sub:'Terus lakukan untuk hadiah lebih besar!',ci_btn:'🎁 Ambil Hadiah Harian',ci_done:'✅ Sudah diambil hari ini',
+  task_title:'✅ Tugas',task_sub:'Selesaikan tugas untuk mendapatkan SANS bonus.',
+  ref_desc:'Undang teman dan dapatkan SANS! Anda +30, teman +20.',
+  lb_title:'🏆 Peringkat',lb_sub:'Pemenang SANS terbaik.',
+  lb_weekly:'Top 3 Minggu Ini - Tiket Bonus',lb_info:'Peringkat direset setiap Senin.',
+  raffle_title:'🎰 Undian',raffle_sub:'Hadiah uang nyata! Gunakan SANS untuk berpartisipasi.',
+  raffle_how:'Cara kerja: Setiap 100 SANS = 1 tiket. Saat pool penuh, pemenang dipilih otomatis!',
+  raffle_prize_info:'Hadiah dibayar dalam USDT atau BNB langsung ke dompet pemenang.',
+  raffle_fair:'Semua undian transparan dan dapat diverifikasi di blockchain BSC.',
+  rt_lbl:'Tiket Undian Anda',rt_sub:'Dapatkan lebih banyak SANS untuk lebih banyak tiket',
+  wallet_lbl:'Dompet Hadiah Anda',rh_title:'Pemenang Terbaru',
+  io_title:'Tonton Iklan & Dapatkan!',io_sub:'Iklan singkat akan diputar. Tonton sampai selesai.',
+  io_note:'',earn_added:'Ditambahkan ke saldo Anda!',earn_total_lbl:'Total SANS',earn_ticket_lbl:'Tiket',
+  ms_bal_label:'Saldo Anda',ms_tickets:'tiket',you:'KAMU',day:'Hari',go:'Pergi →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Bergabung Saluran Telegram',d:'Ikuti pengumuman resmi',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Ikuti di Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Ikuti di Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'Berlangganan YouTube',d:'Hasil undian',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Tonton Video Kami',d:'Pelajari cara kerja SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Kunjungi Website',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
+LANGS['uk'] = {
+  tabs:['👆 Тап','🎡 Кручення','📅 Щодня','✅ Завдання','🏆 Рейтинг','🎰 Розіграш'],
+  ms_sub:'Заробляй & Вигравай реальні призи',
+  ms_earn_title:'Заробити SANS',ms_earn_desc:'Дивись рекламу та виконуй завдання, щоб заробляти токени SANS безкоштовно. Використовуй їх для участі в розіграшах!',
+  ms_buy_title:'Купити SANS',ms_buy_desc:'Купи токени SANS безпосередньо на пресейлі. Більше токенів = більше квитків = більше шансів виграти!',
+  ms_raffle:'Активні розіграші',ws_sub:'Завантаження прогресу...',ws_lbl:'Всього зароблено SANS',
+  ws_ticket_lbl:'Квитки на розіграш',ws_next:'Наступний розіграш',ws_btn:'🎮 Почати заробляти!',
+  tap_info:'Натисни кнопку, подивись коротку рекламу і зароби +10 SANS. Кожні 100 SANS = 1 квиток на розіграш!',
+  tap_reward:'+10 SANS за натискання',vb_lbl:'Твій баланс SANS',vb_ticket:'квитків',
+  spin_title:'🎡 Колесо удачі',spin_sub:'Крути колесо і заробляй SANS. 1 безкоштовне кручення на день!',
+  spin_info:'У тебе є 1 безкоштовне кручення щодня. Дивись рекламу для додаткових кручень.',
+  free_spin:'🎁 1 Безкоштовне кручення!',free_used:'Безкоштовне кручення використано',spin_remaining:'Залишилось кручень:',spin_won:'Ти виграв!',
+  ci_title:'📅 Щоденний вхід',ci_sub:'Заходь щодня і заробляй бонусні SANS!',
+  ci_info:'Заходь щодня і дивись коротку рекламу для щоденного бонусу.',
+  streak_lbl:'днів поспіль!',streak_sub:'Продовжуй для більших нагород!',ci_btn:'🎁 Отримати щоденну нагороду',ci_done:'✅ Вже отримано сьогодні',
+  task_title:'✅ Завдання',task_sub:'Виконуй завдання і заробляй бонусні SANS.',
+  ref_desc:'Запрошуй друзів і заробляй SANS! Ти +30, друг +20.',
+  lb_title:'🏆 Рейтинг',lb_sub:'Найкращі заробітники SANS.',
+  lb_weekly:'Топ-3 тижня - Бонусні квитки',lb_info:'Рейтинг скидається щопонеділка.',
+  raffle_title:'🎰 Розіграші',raffle_sub:'Реальні грошові призи! Використовуй SANS для участі.',
+  raffle_how:'Як це працює: Кожні 100 SANS = 1 квиток. Коли пул заповниться, переможець обирається автоматично!',
+  raffle_prize_info:'Призи виплачуються в USDT або BNB прямо на гаманець переможця.',
+  raffle_fair:'Всі розіграші прозорі і перевіряються в блокчейні BSC.',
+  rt_lbl:'Твої квитки на розіграш',rt_sub:'Заробляй більше SANS для більше квитків',
+  wallet_lbl:'Твій гаманець для призів',rh_title:'Останні переможці',
+  io_title:'Дивись рекламу і заробляй!',io_sub:'Буде показана коротка реклама. Дивись до кінця.',
+  io_note:'',earn_added:'Додано до твого балансу!',earn_total_lbl:'Всього SANS',earn_ticket_lbl:'Квитки',
+  ms_bal_label:'Твій баланс',ms_tickets:'квитків',you:'ТИ',day:'День',go:'Перейти →',
+  tasks:[
+    {id:'tg',ico:'📱',t:'Вступити до Telegram каналу',d:'Стеж за офіційними оголошеннями',r:25,s:0,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',ico:'🐦',t:'Підписатись у Twitter/X',d:'@sanslioffical',r:25,s:0,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',ico:'📸',t:'Підписатись в Instagram',d:'sanslicekilisofficial',r:25,s:0,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'yt_sub',ico:'🔔',t:'Підписатись на YouTube',d:'Результати розіграшів',r:30,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yt_vid',ico:'▶️',t:'Переглянути наше відео',d:'Дізнайся як працює SANS',r:20,s:0,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',ico:'🌐',t:'Відвідати сайт',d:'sanslicekilis.com',r:10,s:0,u:'https://sanslicekilis.com'},
+  ]
+};
 
 // ========== STATE ==========
 var tg = window.Telegram && window.Telegram.WebApp;
@@ -916,12 +1182,12 @@ function showInfo(sans,lbl,cb){
   document.getElementById('io-reward').textContent=lbl;
   document.getElementById('io-tickets').textContent='+'+((sans/TICKET_COST).toFixed(2))+' ticket';
   document.getElementById('infoOverlay').classList.add('on');
-  var count=3,btn=document.getElementById('iBtn');
-  btn.textContent='▶ Watch Ad (3s)';
+  var count=5,btn=document.getElementById('iBtn');
+  btn.textContent='▶ Starting in 5s';
   clearInterval(infoCountInt);
   infoCountInt=setInterval(function(){
     count--;
-    if(count>0){ btn.textContent='▶ Watch Ad ('+count+'s)'; }
+    if(count>0){ btn.textContent='▶ Starting in '+count+'s'; }
     else{ clearInterval(infoCountInt); closeInfo(); if(infoCb){var f=infoCb;infoCb=null;f();} }
   },1000);
 }
