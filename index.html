@@ -926,13 +926,24 @@ function renderPools(){
     });
   }
 }
-function joinPool(idx){
+async function joinPool(idx){
   if(!ud.wallet){toast('\u26A0\uFE0F '+lang.nowallet);return;}
   var t=tk();
   if(t<1){toast('\u26A0\uFE0F '+lang.notick);return;}
-  save({tickets:t-1});
-  toast(lang.joinok);
-  renderPools();
+  var pool=POOLS[idx];
+  try{
+    var result=await db.from('raffle_entries').insert({
+      telegram_id:user.id,
+      username:user.uname,
+      pool_id:pool.id,
+      pool_prize:pool.prize,
+      wallet:ud.wallet
+    });
+    if(result.error){toast('\u274C '+result.error.message);console.error(result.error);return;}
+    await save({tickets:t-1});
+    toast(lang.joinok);
+    renderPools();
+  }catch(e){toast('\u274C '+e.message);console.error(e);}
 }
 
 // WALLET
