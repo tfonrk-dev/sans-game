@@ -493,24 +493,46 @@ body{background:#060612;color:#fff;min-height:100vh;overflow-x:hidden}
   </div>
 </div>
 
-<!-- EARN NOTIF -->
-<div class="overlay" id="earnOverlay">
-  <div class="sheet" style="text-align:center">
-    <div class="sheet-handle"></div>
-    <div style="font-size:44px;margin-bottom:10px">🎉</div>
-    <div style="font-size:24px;font-weight:900;color:#00ff9d;margin-bottom:4px" id="earnLabel">+10 SANS</div>
-    <div style="font-size:12px;color:#8888aa;margin-bottom:16px" id="earn-added">Added to your balance!</div>
-    <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
+<!-- EARN NOTIF - AAA -->
+<div id="earnOverlay" style="display:none;position:fixed;inset:0;z-index:600;align-items:center;justify-content:center;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px)">
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></canvas>
+  
+  <!-- Win card -->
+  <div id="earnCard" style="position:relative;background:linear-gradient(160deg,#0d1a0d,#060612,#0d0d2e);border:1px solid rgba(0,255,157,0.3);border-radius:28px;padding:32px 24px;width:88%;max-width:320px;text-align:center;box-shadow:0 0 60px rgba(0,255,157,0.15),0 0 120px rgba(0,255,157,0.05);animation:winCardIn 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+    <style>
+    @keyframes winCardIn{from{transform:scale(0.5) translateY(40px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+    @keyframes coinSpin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+    @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,255,157,0.3)}50%{box-shadow:0 0 40px rgba(0,255,157,0.6)}}
+    @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(300%) rotate(45deg)}}
+    </style>
+    
+    <!-- Shine effect -->
+    <div style="position:absolute;inset:0;border-radius:28px;overflow:hidden;pointer-events:none">
+      <div id="earnShine" style="position:absolute;top:-50%;left:-50%;width:40%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);transform:translateX(-100%) rotate(45deg)"></div>
+    </div>
+
+    <!-- Coin icon -->
+    <div id="earnCoin" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00ff9d,#00cc7a);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;animation:pulse 2s ease-in-out infinite;position:relative">
+      <span style="animation:coinSpin 1s ease-in-out">🪙</span>
+    </div>
+
+    <div style="font-size:13px;color:#00ff9d;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px" id="earn-win-label">YOU EARNED</div>
+    <div style="font-size:40px;font-weight:900;background:linear-gradient(135deg,#00ff9d,#00cc7a,#0099ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px" id="earnLabel">+10 SANS</div>
+    <div style="font-size:12px;color:#8888aa;margin-bottom:20px" id="earn-added">Added to your balance!</div>
+    
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
         <span style="font-size:12px;color:#8888aa" id="earn-total-lbl">Total SANS</span>
-        <span style="font-size:13px;font-weight:700;color:#00ff9d" id="earnTotal">0 SANS</span>
+        <span style="font-size:15px;font-weight:800;color:#00ff9d" id="earnTotal">0 SANS</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
         <span style="font-size:12px;color:#8888aa" id="earn-ticket-lbl">Raffle Tickets</span>
-        <span style="font-size:13px;font-weight:700;color:#ffaa00" id="earnTickets">0 tickets</span>
+        <span style="font-size:15px;font-weight:800;color:#ffaa00" id="earnTickets">0 🎟</span>
       </div>
     </div>
-    <button class="btn-primary" onclick="closeEarn()">✓ Nice!</button>
+    
+    <button class="btn-primary" onclick="closeEarn()" style="font-size:16px;padding:16px">✓ Awesome!</button>
   </div>
 </div>
 
@@ -938,11 +960,125 @@ function nextAd(){
 function showEarn(sans,lbl){
   document.getElementById('earnLabel').textContent=lbl;
   document.getElementById('earnTotal').textContent=(ud.balance||0).toLocaleString()+' SANS';
-  document.getElementById('earnTickets').textContent=tickets(ud.balance)+' tickets';
-  document.getElementById('earnOverlay').classList.add('on');
-  setTimeout(function(){closeEarn();},4000);
+  document.getElementById('earnTickets').textContent=tickets(ud.balance)+' 🎟';
+  var overlay=document.getElementById('earnOverlay');
+  overlay.style.display='flex';
+  // Shine animasyonu
+  var shine=document.getElementById('earnShine');
+  if(shine){ shine.style.animation='none'; setTimeout(function(){ shine.style.animation='shine 0.8s ease-in-out 0.3s'; },10); }
+  // Müzik çal
+  playWinSound(sans);
+  // Confetti
+  startConfetti(sans);
+  // Auto close
+  setTimeout(function(){closeEarn();},4500);
 }
-function closeEarn(){ document.getElementById('earnOverlay').classList.remove('on'); }
+function closeEarn(){
+  document.getElementById('earnOverlay').style.display='none';
+  stopConfetti();
+}
+
+// ===== WIN SOUND (Web Audio API) =====
+function playWinSound(amount){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    var notes=amount>=50
+      ? [523,659,784,1047,1319] // Büyük kazanç - yükselen arpej
+      : amount>=20
+      ? [523,659,784,1047]      // Orta kazanç
+      : [523,659,784];           // Küçük kazanç
+    notes.forEach(function(freq,i){
+      var osc=ctx.createOscillator();
+      var gain=ctx.createGain();
+      var t=ctx.currentTime+i*0.12;
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.frequency.value=freq;
+      osc.type='sine';
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.25,t+0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+      osc.start(t);osc.stop(t+0.4);
+    });
+    // Jackpot extra sound
+    if(amount>=50){
+      setTimeout(function(){
+        try{
+          var ctx2=new(window.AudioContext||window.webkitAudioContext)();
+          var osc2=ctx2.createOscillator();
+          var g2=ctx2.createGain();
+          osc2.connect(g2);g2.connect(ctx2.destination);
+          osc2.frequency.setValueAtTime(800,ctx2.currentTime);
+          osc2.frequency.exponentialRampToValueAtTime(1600,ctx2.currentTime+0.3);
+          g2.gain.setValueAtTime(0.15,ctx2.currentTime);
+          g2.gain.exponentialRampToValueAtTime(0.001,ctx2.currentTime+0.5);
+          osc2.start();osc2.stop(ctx2.currentTime+0.5);
+        }catch(e){}
+      },600);
+    }
+  }catch(e){}
+}
+
+// ===== CONFETTI =====
+var confettiParticles=[];
+var confettiAnimId=null;
+var confettiColors=['#00ff9d','#0099ff','#ffaa00','#ff4488','#aa44ff','#ffffff'];
+
+function startConfetti(amount){
+  var canvas=document.getElementById('confettiCanvas');
+  if(!canvas) return;
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  var count=amount>=50?120:amount>=20?80:50;
+  confettiParticles=[];
+  for(var i=0;i<count;i++){
+    confettiParticles.push({
+      x:Math.random()*canvas.width,
+      y:-20,
+      w:Math.random()*10+5,
+      h:Math.random()*6+3,
+      color:confettiColors[Math.floor(Math.random()*confettiColors.length)],
+      rotation:Math.random()*360,
+      rotSpeed:(Math.random()-0.5)*8,
+      vx:(Math.random()-0.5)*4,
+      vy:Math.random()*4+3,
+      opacity:1
+    });
+  }
+  animateConfetti();
+}
+
+function animateConfetti(){
+  var canvas=document.getElementById('confettiCanvas');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var alive=false;
+  confettiParticles.forEach(function(p){
+    if(p.y<canvas.height+20){
+      alive=true;
+      p.x+=p.vx;
+      p.y+=p.vy;
+      p.vy+=0.1;
+      p.rotation+=p.rotSpeed;
+      if(p.y>canvas.height*0.6) p.opacity=Math.max(0,p.opacity-0.02);
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rotation*Math.PI/180);
+      ctx.globalAlpha=p.opacity;
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    }
+  });
+  if(alive) confettiAnimId=requestAnimationFrame(animateConfetti);
+}
+
+function stopConfetti(){
+  if(confettiAnimId) cancelAnimationFrame(confettiAnimId);
+  confettiParticles=[];
+  var canvas=document.getElementById('confettiCanvas');
+  if(canvas){ var ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); }
+}
 
 // ========== TAP ==========
 function onTap(e){
