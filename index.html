@@ -9,430 +9,357 @@
 <script src="//libtl.com/sdk.js" data-zone="10975774" data-sdk="show_10975774"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--g:#00ff9d;--gb:#00cc7a;--blue:#0099ff;--gold:#ffaa00;--bg:#07071a;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08)}
+:root{--g:#00ff9d;--gb:#00cc7a;--bl:#0099ff;--go:#ffaa00;--bg:#07071a;--c:rgba(255,255,255,0.04);--br:rgba(255,255,255,0.08)}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-
-/* SCREENS */
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:10;padding:env(safe-area-inset-top,16px) 16px env(safe-area-inset-bottom,16px)}
-.screen.hidden{display:none}
-
-/* LANG SCREEN */
-.brand{font-size:52px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:4px}
-.brand-sub{font-size:12px;color:#8888aa;margin-bottom:24px;text-align:center}
-.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:320px;margin-bottom:20px}
-.lb{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
-.lb:active{transform:scale(0.95)}
-.lb.sel{background:rgba(0,255,157,0.1);border-color:var(--g)}
-.lb .fl{font-size:22px;margin-bottom:3px}
-.lb .ln{font-size:11px;font-weight:600;color:#aaa}
-.lb.sel .ln{color:var(--g)}
-.btn-main{width:100%;max-width:320px;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer}
-
-/* MENU SCREEN */
-.menu-bal{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.15);border-radius:16px;padding:14px 20px;margin-bottom:20px;text-align:center;width:100%;max-width:320px}
-.menu-bal-lbl{font-size:10px;color:#8888aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.menu-bal-amt{font-size:26px;font-weight:900;color:var(--g)}
-.menu-bal-tickets{font-size:11px;color:#8888aa;margin-top:3px}
-.menu-cards{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-bottom:12px}
-.mc{border-radius:18px;padding:18px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
-.mc:active{transform:scale(0.97)}
-.mc.earn{background:linear-gradient(135deg,#0a2518,#070d1f);border:1px solid rgba(0,255,157,0.2)}
-.mc.buy{background:linear-gradient(135deg,#150a20,#070d1f);border:1px solid rgba(153,68,255,0.2)}
-.mc.raffle{background:linear-gradient(135deg,#1a1200,#070d1f);border:1px solid rgba(255,170,0,0.2)}
-.mc-ico{font-size:32px;min-width:40px;text-align:center}
-.mc-info{flex:1}
-.mc-title{font-size:15px;font-weight:800;margin-bottom:3px}
-.mc.earn .mc-title{color:var(--g)}
-.mc.buy .mc-title{color:#aa44ff}
-.mc.raffle .mc-title{color:var(--gold)}
-.mc-desc{font-size:11px;color:#8888aa;line-height:1.4}
-.mc-arr{font-size:18px;color:#555}
-
-/* MAIN APP */
+.scr{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:10;padding:max(env(safe-area-inset-top),16px) 16px max(env(safe-area-inset-bottom),12px);overflow-y:auto}
+.h{display:none!important}
+.brand{font-size:52px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--bl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:4px}
+.bsub{font-size:12px;color:#8888aa;margin-bottom:22px;text-align:center}
+.lgr{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:320px;margin-bottom:18px}
+.lb{background:var(--c);border:1px solid var(--br);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.lb:active{transform:scale(.95)}
+.lb.sel{background:rgba(0,255,157,.1);border-color:var(--g)}
+.lbf{font-size:22px;margin-bottom:3px}
+.lbn{font-size:11px;font-weight:600;color:#aaa}
+.lb.sel .lbn{color:var(--g)}
+.btn{width:100%;max-width:320px;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer}
+.mbal{background:rgba(0,255,157,.06);border:1px solid rgba(0,255,157,.15);border-radius:16px;padding:14px 20px;margin-bottom:18px;text-align:center;width:100%;max-width:320px}
+.mball{font-size:10px;color:#8888aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.mbala{font-size:26px;font-weight:900;color:var(--g)}
+.mbalt{font-size:11px;color:#8888aa;margin-top:3px}
+.mcs{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-bottom:12px}
+.mc{border-radius:18px;padding:18px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:14px}
+.mc:active{transform:scale(.97)}
+.mc.me{background:linear-gradient(135deg,#0a2518,#070d1f);border:1px solid rgba(0,255,157,.2)}
+.mc.mb{background:linear-gradient(135deg,#150a20,#070d1f);border:1px solid rgba(153,68,255,.2)}
+.mc.mr{background:linear-gradient(135deg,#1a1200,#070d1f);border:1px solid rgba(255,170,0,.2)}
+.mci{font-size:32px;min-width:40px;text-align:center}
+.mct{font-size:15px;font-weight:800;margin-bottom:3px}
+.mc.me .mct{color:var(--g)}.mc.mb .mct{color:#aa44ff}.mc.mr .mct{color:var(--go)}
+.mcd{font-size:11px;color:#8888aa;line-height:1.4}
 .app{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg)}
-.app.hidden{display:none}
-
-/* TOP BAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:max(env(safe-area-inset-top),10px) 14px 10px;background:rgba(7,7,26,0.95);border-bottom:1px solid var(--border);flex-shrink:0}
-.tb-left{display:flex;align-items:center;gap:8px}
-.tb-back{background:var(--card);border:1px solid var(--border);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer}
-.tb-logo{font-size:16px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tb-bal{text-align:right}
-.tb-bal-amt{font-size:13px;font-weight:800;color:var(--g)}
-.tb-bal-tickets{font-size:10px;color:#8888aa}
-
-/* TABS */
-.tabs{display:flex;background:rgba(7,7,26,0.9);border-bottom:1px solid var(--border);flex-shrink:0}
-.tab{flex:1;padding:9px 2px;text-align:center;font-size:9px;font-weight:700;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.3px}
+.topb{display:flex;align-items:center;justify-content:space-between;padding:max(env(safe-area-inset-top),8px) 14px 8px;background:rgba(7,7,26,.95);border-bottom:1px solid var(--br);flex-shrink:0}
+.topbl{display:flex;align-items:center;gap:8px}
+.topbback{background:var(--c);border:1px solid var(--br);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer}
+.topblo{font-size:16px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--bl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbr{text-align:right}
+.topba{font-size:13px;font-weight:800;color:var(--g)}
+.topbs{font-size:10px;color:#8888aa}
+.tabs{display:flex;background:rgba(7,7,26,.9);border-bottom:1px solid var(--br);flex-shrink:0}
+.tab{flex:1;padding:9px 2px;text-align:center;font-size:9px;font-weight:700;color:#555;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;overflow:hidden}
 .tab.on{color:var(--g);border-bottom-color:var(--g)}
-
-/* CONTENT AREA - single screen fit */
 .content{flex:1;overflow:hidden;position:relative}
-.pane{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:12px}
-.pane.on{display:flex}
-
-/* TAP PANE */
-.tap-stats{display:flex;gap:8px;width:100%;margin-bottom:12px}
-.stat-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.stat-val{font-size:16px;font-weight:800;color:var(--g)}
-.stat-lbl{font-size:9px;color:#8888aa;margin-top:1px;text-transform:uppercase;letter-spacing:0.5px}
-.info-strip{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.1);border-radius:10px;padding:9px 12px;font-size:11px;color:#aaa;line-height:1.5;width:100%;margin-bottom:12px}
-.info-strip b{color:#fff}
-.tap-btn{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(0,255,157,0.18),rgba(0,255,157,0.02));border:2px solid rgba(0,255,157,0.25);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.08s;box-shadow:0 0 30px rgba(0,255,157,0.08);margin-bottom:10px}
-.tap-btn:active{transform:scale(0.88)}
-.tap-logo{font-size:40px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.tap-lbl{font-size:9px;color:rgba(0,255,157,0.4);margin-top:3px;letter-spacing:1px}
-.tap-reward{font-size:12px;color:var(--g);font-weight:700}
-
-/* SPIN PANE */
-.spin-badge{background:rgba(0,255,157,0.08);border:1px solid rgba(0,255,157,0.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--g);font-weight:700;margin-bottom:8px}
-.wheel-wrap{position:relative;width:220px;height:220px;margin-bottom:6px}
-.w-arr{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:20px;filter:drop-shadow(0 0 5px var(--g))}
-.spin-res{font-size:14px;font-weight:800;color:var(--g);min-height:20px;text-align:center;margin:4px 0}
-.spin-rem{font-size:10px;color:#8888aa;text-align:center}
-
-/* CHECKIN PANE */
-.streak-row{display:flex;align-items:center;gap:10px;background:rgba(255,100,0,0.08);border:1px solid rgba(255,100,0,0.15);border-radius:12px;padding:10px 14px;width:100%;margin-bottom:10px}
-.streak-num{font-size:28px;font-weight:900;color:#ff6400;min-width:36px;text-align:center}
-.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-bottom:10px}
-.day-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 2px;text-align:center}
-.day-box.done{border-color:rgba(0,255,157,0.3);background:rgba(0,255,157,0.06)}
-.day-box.today{border-color:var(--g);background:rgba(0,255,157,0.1);box-shadow:0 0 8px rgba(0,255,157,0.1)}
-.day-num{font-size:8px;color:#8888aa}
-.day-ico{font-size:14px;margin:1px 0}
-.day-amt{font-size:9px;font-weight:700;color:var(--g)}
-
-/* TASKS PANE */
-.tasks-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.task-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s}
-.task-item:active{transform:scale(0.98)}
-.task-item.done{opacity:0.45}
-.task-ico{font-size:24px;min-width:30px;text-align:center}
-.task-info{flex:1}
-.task-title{font-size:12px;font-weight:700;margin-bottom:2px}
-.task-desc{font-size:10px;color:#8888aa}
-.task-r{text-align:right}
-.task-sans{font-size:13px;font-weight:800;color:var(--g)}
-.ref-mini{background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.15);border-radius:12px;padding:10px 12px;margin-top:6px}
-.ref-link-row{display:flex;align-items:center;gap:6px;margin:6px 0}
-.ref-link-text{flex:1;font-size:9px;color:#aaa;word-break:break-all;background:var(--card);border-radius:6px;padding:5px 8px}
-
-/* RANK PANE */
-.rank-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.rank-my{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.15);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.rank-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:5px;display:flex;align-items:center;gap:8px}
-
-/* RAFFLE PANE */
-.raffle-scroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.pool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
-.pool-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.pool-prize{font-size:18px;font-weight:900;color:var(--gold)}
-.pool-pb{height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;margin-bottom:5px}
-.pool-pf{height:100%;background:linear-gradient(90deg,var(--gold),#ff6400);border-radius:4px;transition:width 0.5s}
-.pool-info{display:flex;justify-content:space-between;font-size:10px;color:#8888aa}
-.ticket-box{background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.15);border-radius:12px;padding:12px;margin-bottom:8px;text-align:center}
-.ticket-count{font-size:32px;font-weight:900;color:var(--g);margin:4px 0}
-.wallet-row{display:flex;gap:6px;margin-top:8px}
-.wallet-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:#fff;font-size:10px;outline:none}
-
-/* BUTTONS */
-.btn-g{background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;width:100%}
-.btn-g:disabled{opacity:0.4}
-.btn-s{background:var(--card);border:1px solid var(--border);color:#aaa;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer}
-.btn-xs{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.2);color:var(--g);border-radius:7px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer}
-
-/* OVERLAYS */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:50;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.pn{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+.pn.on{display:flex}
+.statrow{display:flex;gap:8px;width:100%;margin-bottom:10px}
+.statb{flex:1;background:var(--c);border:1px solid var(--br);border-radius:12px;padding:10px;text-align:center}
+.statv{font-size:16px;font-weight:800;color:var(--g)}
+.statl{font-size:9px;color:#8888aa;margin-top:1px;text-transform:uppercase}
+.infostrip{background:rgba(0,255,157,.05);border:1px solid rgba(0,255,157,.1);border-radius:10px;padding:9px 12px;font-size:11px;color:#aaa;line-height:1.5;width:100%;margin-bottom:10px}
+.infostrip b{color:#fff}
+.tapbtn{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(0,255,157,.18),rgba(0,255,157,.02));border:2px solid rgba(0,255,157,.25);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .08s;box-shadow:0 0 30px rgba(0,255,157,.08);margin-bottom:10px}
+.tapbtn:active{transform:scale(.88)}
+.taplogo{font-size:40px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--gb));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.taplbl{font-size:9px;color:rgba(0,255,157,.4);margin-top:3px;letter-spacing:1px}
+.taprew{font-size:12px;color:var(--g);font-weight:700}
+.spbadge{background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--g);font-weight:700;margin-bottom:8px}
+.wwrap{position:relative;width:220px;height:220px;margin-bottom:6px}
+.warr{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:20px;filter:drop-shadow(0 0 5px var(--g))}
+.spres{font-size:14px;font-weight:800;color:var(--g);min-height:20px;text-align:center;margin:4px 0}
+.sprem{font-size:10px;color:#8888aa;text-align:center}
+.streakrow{display:flex;align-items:center;gap:10px;background:rgba(255,100,0,.08);border:1px solid rgba(255,100,0,.15);border-radius:12px;padding:10px 14px;width:100%;margin-bottom:10px}
+.streakn{font-size:28px;font-weight:900;color:#ff6400;min-width:36px;text-align:center}
+.daygrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-bottom:10px}
+.dayb{background:var(--c);border:1px solid var(--br);border-radius:8px;padding:5px 2px;text-align:center}
+.dayb.done{border-color:rgba(0,255,157,.3);background:rgba(0,255,157,.06)}
+.dayb.today{border-color:var(--g);background:rgba(0,255,157,.1)}
+.dayn{font-size:8px;color:#8888aa}.dayi{font-size:14px;margin:1px 0}.daya{font-size:9px;font-weight:700;color:var(--g)}
+.taskscroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.taskitem{background:var(--c);border:1px solid var(--br);border-radius:12px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.taskitem:active{transform:scale(.98)}
+.taskitem.done{opacity:.45;cursor:default}
+.taskico{font-size:24px;min-width:30px;text-align:center}
+.taskttl{font-size:12px;font-weight:700;margin-bottom:2px}
+.taskdsc{font-size:10px;color:#8888aa}
+.taskrew{font-size:13px;font-weight:800;color:var(--g)}
+.refbox{background:rgba(0,153,255,.06);border:1px solid rgba(0,153,255,.15);border-radius:12px;padding:10px 12px;margin-top:6px;flex-shrink:0}
+.refrow{display:flex;align-items:center;gap:6px;margin:6px 0}
+.reflink{flex:1;font-size:9px;color:#aaa;word-break:break-all;background:var(--c);border-radius:6px;padding:5px 8px}
+.rscroll{width:100%;overflow-y:auto;flex:1}
+.rankitem{background:var(--c);border:1px solid var(--br);border-radius:10px;padding:9px 12px;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.myrankbox{background:rgba(0,255,157,.05);border:1px solid rgba(0,255,157,.15);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.rfscroll{width:100%;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.poolcard{background:var(--c);border:1px solid var(--br);border-radius:14px;padding:12px;margin-bottom:8px}
+.pooltop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.poolprize{font-size:18px;font-weight:900;color:var(--go)}
+.poolpb{height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-bottom:5px}
+.poolpf{height:100%;background:linear-gradient(90deg,var(--go),#ff6400);border-radius:4px}
+.poolinfo{display:flex;justify-content:space-between;font-size:10px;color:#8888aa;margin-bottom:8px}
+.wlbox{background:rgba(0,153,255,.06);border:1px solid rgba(0,153,255,.15);border-radius:14px;padding:12px;margin-bottom:8px;flex-shrink:0}
+.cvbox{background:rgba(0,255,157,.05);border:1px solid rgba(0,255,157,.12);border-radius:14px;padding:12px;margin-bottom:10px;flex-shrink:0}
+.inp{flex:1;background:var(--c);border:1px solid var(--br);border-radius:8px;padding:8px 10px;color:#fff;font-size:11px;outline:none}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:50;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .ov.on{display:flex}
-.sheet{background:linear-gradient(180deg,#0d0d28,#07071a);border:1px solid rgba(255,255,255,0.1);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:440px}
-.sh{width:36px;height:3px;background:rgba(255,255,255,0.12);border-radius:2px;margin:0 auto 16px}
-
-/* WIN OVERLAY */
-.win-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
-.win-ov.on{display:flex}
-.win-card{background:linear-gradient(160deg,#0d1a0d,#07071a,#0d0d28);border:1px solid rgba(0,255,157,0.25);border-radius:24px;padding:28px 22px;width:86%;max-width:300px;text-align:center;box-shadow:0 0 50px rgba(0,255,157,0.12);animation:wci 0.4s cubic-bezier(0.34,1.56,0.64,1)}
-@keyframes wci{from{transform:scale(0.6) translateY(30px);opacity:0}to{transform:scale(1);opacity:1}}
-.win-coin{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--gb));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px;animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 15px rgba(0,255,157,0.3)}50%{box-shadow:0 0 30px rgba(0,255,157,0.6)}}
-.win-title{font-size:11px;color:var(--g);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-.win-amt{font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
-.win-sub{font-size:11px;color:#8888aa;margin-bottom:16px}
-.win-stats{background:rgba(255,255,255,0.04);border-radius:12px;padding:12px;margin-bottom:16px}
-.win-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px}
-.win-row+.win-row{border-top:1px solid rgba(255,255,255,0.05)}
-
-/* CONFETTI */
+.sheet{background:linear-gradient(180deg,#0d0d28,#07071a);border:1px solid rgba(255,255,255,.1);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:440px}
+.shdl{width:36px;height:3px;background:rgba(255,255,255,.12);border-radius:2px;margin:0 auto 16px}
+.winov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.winov.on{display:flex}
+.wincard{background:linear-gradient(160deg,#0d1a0d,#07071a,#0d0d28);border:1px solid rgba(0,255,157,.25);border-radius:24px;padding:28px 22px;width:86%;max-width:300px;text-align:center;animation:wci .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes wci{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.wincoin{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--gb));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:32px;animation:pls 2s ease-in-out infinite}
+@keyframes pls{0%,100%{box-shadow:0 0 15px rgba(0,255,157,.3)}50%{box-shadow:0 0 30px rgba(0,255,157,.6)}}
+.btnp{width:100%;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer}
+.btnp:disabled{opacity:.4}
+.btns{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#aaa;border-radius:10px;padding:10px;font-size:12px;font-weight:600;cursor:pointer}
+.btnx{background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.2);color:var(--g);border-radius:7px;padding:5px 10px;font-size:10px;font-weight:700;cursor:pointer}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
-
-/* TOAST */
-.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1}
-.float{position:fixed;font-size:15px;font-weight:800;color:var(--g);pointer-events:none;animation:fu 0.9s ease-out forwards;z-index:150}
-@keyframes fu{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-55px)}}
+.floatel{position:fixed;font-size:15px;font-weight:800;color:var(--g);pointer-events:none;animation:fup .9s ease-out forwards;z-index:150}
+@keyframes fup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-55px)}}
 </style>
 </head>
 <body>
-
-<!-- CONFETTI CANVAS -->
 <canvas id="confetti"></canvas>
 
-<!-- LANG SCREEN -->
-<div class="screen" id="sLang">
+<!-- LANG EKRANI -->
+<div class="scr" id="sLang">
   <div class="brand">SANS</div>
-  <div class="brand-sub">Earn Crypto · Win Real Prizes 🏆</div>
-  <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:14px;text-align:center">🌍 Choose your language</div>
-  <div class="lang-grid">
-    <div class="lb sel" onclick="pickLang('en',this)"><div class="fl">🇬🇧</div><div class="ln">English</div></div>
-    <div class="lb" onclick="pickLang('tr',this)"><div class="fl">🇹🇷</div><div class="ln">Türkçe</div></div>
-    <div class="lb" onclick="pickLang('ru',this)"><div class="fl">🇷🇺</div><div class="ln">Русский</div></div>
-    <div class="lb" onclick="pickLang('ar',this)"><div class="fl">🇸🇦</div><div class="ln">العربية</div></div>
-    <div class="lb" onclick="pickLang('es',this)"><div class="fl">🇪🇸</div><div class="ln">Español</div></div>
-    <div class="lb" onclick="pickLang('pt',this)"><div class="fl">🇧🇷</div><div class="ln">Português</div></div>
-    <div class="lb" onclick="pickLang('fr',this)"><div class="fl">🇫🇷</div><div class="ln">Français</div></div>
-    <div class="lb" onclick="pickLang('de',this)"><div class="fl">🇩🇪</div><div class="ln">Deutsch</div></div>
-    <div class="lb" onclick="pickLang('id',this)"><div class="fl">🇮🇩</div><div class="ln">Indonesia</div></div>
-    <div class="lb" onclick="pickLang('uk',this)"><div class="fl">🇺🇦</div><div class="ln">Українська</div></div>
+  <div class="bsub" id="xLsub">Earn Crypto · Win Real Prizes</div>
+  <div class="lgr">
+    <div class="lb sel" onclick="pickL('en',this)"><div class="lbf">🇬🇧</div><div class="lbn">English</div></div>
+    <div class="lb" onclick="pickL('tr',this)"><div class="lbf">🇹🇷</div><div class="lbn">Türkçe</div></div>
+    <div class="lb" onclick="pickL('ru',this)"><div class="lbf">🇷🇺</div><div class="lbn">Русский</div></div>
+    <div class="lb" onclick="pickL('ar',this)"><div class="lbf">🇸🇦</div><div class="lbn">العربية</div></div>
+    <div class="lb" onclick="pickL('es',this)"><div class="lbf">🇪🇸</div><div class="lbn">Español</div></div>
+    <div class="lb" onclick="pickL('pt',this)"><div class="lbf">🇧🇷</div><div class="lbn">Português</div></div>
+    <div class="lb" onclick="pickL('fr',this)"><div class="lbf">🇫🇷</div><div class="lbn">Français</div></div>
+    <div class="lb" onclick="pickL('de',this)"><div class="lbf">🇩🇪</div><div class="lbn">Deutsch</div></div>
+    <div class="lb" onclick="pickL('id',this)"><div class="lbf">🇮🇩</div><div class="lbn">Indonesia</div></div>
+    <div class="lb" onclick="pickL('uk',this)"><div class="lbf">🇺🇦</div><div class="lbn">Українська</div></div>
   </div>
-  <button class="btn-main" onclick="confirmLang()">Continue →</button>
+  <button class="btn" onclick="goMenu()" id="xLbtn">Continue →</button>
 </div>
 
-<!-- MENU SCREEN -->
-<div class="screen hidden" id="sMenu">
-  <div style="position:absolute;top:max(env(safe-area-inset-top),12px);right:14px">
-    <button onclick="changeLang()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer">🌍 Language</button>
+<!-- MENU EKRANI -->
+<div class="scr h" id="sMenu">
+  <div style="position:absolute;top:max(env(safe-area-inset-top),10px);right:14px">
+    <button onclick="goLang()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#aaa;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer" id="xMLang">🌍 Language</button>
   </div>
   <div class="brand" style="font-size:40px;margin-bottom:2px">SANS</div>
-  <div class="brand-sub" id="m-sub">Earn & Win Real Prizes</div>
-  <div class="menu-bal">
-    <div class="menu-bal-lbl" id="m-bal-lbl">Your Balance</div>
-    <div class="menu-bal-amt"><span id="mBal">0</span> SANS</div>
-    <div class="menu-bal-tickets">🎟 <span id="mTickets">0</span> <span id="m-tickets-lbl">raffle tickets</span></div>
+  <div class="bsub" id="xMSub">Earn & Win Real Prizes</div>
+  <div class="mbal">
+    <div class="mball" id="xMBalLbl">Your Balance</div>
+    <div class="mbala"><span id="xMBal">0</span> SANS</div>
+    <div class="mbalt">🎟 <span id="xMTick">0</span> <span id="xMTickLbl">tickets</span></div>
   </div>
-  <div class="menu-cards">
-    <div class="mc earn" onclick="goEarn()">
-      <div class="mc-ico">🎮</div>
-      <div class="mc-info">
-        <div class="mc-title" id="m-earn-t">Earn SANS</div>
-        <div class="mc-desc" id="m-earn-d">Watch ads & complete tasks to earn free tokens</div>
-      </div>
-      <div class="mc-arr">›</div>
+  <div class="mcs">
+    <div class="mc me" onclick="goApp('tap')">
+      <div class="mci">🎮</div>
+      <div style="flex:1"><div class="mct" id="xMET">Earn SANS</div><div class="mcd" id="xMED">Watch ads and complete tasks to earn free tokens</div></div>
+      <div style="font-size:18px;color:#555">›</div>
     </div>
-    <div class="mc buy" onclick="goBuy()">
-      <div class="mc-ico">💎</div>
-      <div class="mc-info">
-        <div class="mc-title" id="m-buy-t">Buy SANS</div>
-        <div class="mc-desc" id="m-buy-d">Purchase tokens in presale for more tickets</div>
-      </div>
-      <div class="mc-arr">›</div>
+    <div class="mc mb" onclick="goBuy()">
+      <div class="mci">💎</div>
+      <div style="flex:1"><div class="mct" id="xMBT">Buy SANS</div><div class="mcd" id="xMBD">Purchase tokens in presale for more tickets</div></div>
+      <div style="font-size:18px;color:#555">›</div>
     </div>
-    <div class="mc raffle" onclick="goEarn();setTimeout(function(){goPane('raffle');},100)">
-      <div class="mc-ico">🏆</div>
-      <div class="mc-info">
-        <div class="mc-title" id="m-raffle-t">Prize Draws</div>
-        <div class="mc-desc" id="m-raffle-d">Win USDT/BNB with your tickets</div>
-      </div>
-      <div class="mc-arr">›</div>
+    <div class="mc mr" onclick="goApp('raffle')">
+      <div class="mci">🏆</div>
+      <div style="flex:1"><div class="mct" id="xMRT">Prize Draws</div><div class="mcd" id="xMRD">Win USDT/BNB with your tickets</div></div>
+      <div style="font-size:18px;color:#555">›</div>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app hidden" id="app">
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="tb-left">
-      <button class="tb-back" id="btn-back" onclick="backToMenu()">← Menu</button>
-      <div class="tb-logo">SANS</div>
+<!-- ANA UYGULAMA -->
+<div class="app h" id="app">
+  <div class="topb">
+    <div class="topbl">
+      <button class="topbback" onclick="goMenu()" id="xBack">← Menu</button>
+      <div class="topblo">SANS</div>
     </div>
-    <div class="tb-bal">
-      <div class="tb-bal-amt"><span id="balEl">0</span> SANS</div>
-      <div class="tb-bal-tickets">🎟 <span id="tickEl">0</span> <span id="tb-tick-lbl">tickets</span></div>
+    <div class="topbr">
+      <div class="topba"><span id="xBal">0</span> SANS</div>
+      <div class="topbs">🎟 <span id="xTick">0</span> <span id="xTickLbl">tickets</span></div>
     </div>
   </div>
-  <!-- TABS -->
   <div class="tabs">
-    <div class="tab on" id="tTap" onclick="goPane('tap')" id="t0">👆 Tap</div>
-    <div class="tab" id="tSpin" onclick="goPane('spin')" id="t1">🎡 Spin</div>
-    <div class="tab" id="tCi" onclick="goPane('ci')" id="t2">📅 Daily</div>
-    <div class="tab" id="tTask" onclick="goPane('task')" id="t3">✅ Tasks</div>
-    <div class="tab" id="tLb" onclick="goPane('lb');loadLB()" id="t4">🏆 Rank</div>
-    <div class="tab" id="tRaffle" onclick="goPane('raffle')" id="t5">🎰 Draw</div>
+    <div class="tab on" id="tTap" onclick="goPane('tap')">TAP</div>
+    <div class="tab" id="tSpin" onclick="goPane('spin')">SPIN</div>
+    <div class="tab" id="tCi" onclick="goPane('ci')">DAILY</div>
+    <div class="tab" id="tTask" onclick="goPane('task')">TASKS</div>
+    <div class="tab" id="tLb" onclick="goPane('lb');loadLB()">RANK</div>
+    <div class="tab" id="tRaffle" onclick="goPane('raffle')">DRAW</div>
   </div>
-  <!-- CONTENT -->
   <div class="content">
     <!-- TAP -->
-    <div class="pane on" id="pTap">
-      <div class="tap-stats">
-        <div class="stat-box"><div class="stat-val" id="tTotal">0</div><div class="stat-lbl" id="ts-sans">SANS</div></div>
-        <div class="stat-box"><div class="stat-val" id="tTickets">0</div><div class="stat-lbl" id="ts-tick">Tickets</div></div>
+    <div class="pn on" id="pTap">
+      <div class="statrow">
+        <div class="statb"><div class="statv" id="xTpBal">0</div><div class="statl" id="xTpBalLbl">SANS</div></div>
+        <div class="statb"><div class="statv" id="xTpTick">0</div><div class="statl" id="xTpTickLbl">TICKETS</div></div>
       </div>
-      <div class="info-strip" id="tap-info">Tap → watch short ad → earn <b>+10 SANS</b> · 100 SANS = 1 🎟</div>
-      <div class="tap-btn" onclick="onTap(event)">
-        <div class="tap-logo">SANS</div>
-        <div class="tap-lbl" id="tap-lbl-inner">TAP TO EARN</div>
+      <div class="infostrip" id="xTapInfo">Tap below to watch a short ad and earn +10 SANS</div>
+      <div class="tapbtn" onclick="onTap(event)">
+        <div class="taplogo">SANS</div>
+        <div class="taplbl" id="xTapLbl">TAP TO EARN</div>
       </div>
-      <div class="tap-reward" id="tap-r">+10 SANS per tap</div>
+      <div class="taprew" id="xTapRew">+10 SANS per tap</div>
     </div>
     <!-- SPIN -->
-    <div class="pane" id="pSpin">
-      <div class="spin-badge" id="spinBadge">🎁 1 Free Spin!</div>
-      <div class="wheel-wrap">
-        <div class="w-arr">▼</div>
+    <div class="pn" id="pSpin">
+      <div class="spbadge" id="xSpBadge">🎁 Free Spin!</div>
+      <div class="wwrap">
+        <div class="warr">▼</div>
         <canvas id="wheel" width="220" height="220"></canvas>
       </div>
-      <div class="spin-res" id="spinRes"></div>
-      <button class="btn-g" id="spinBtn" onclick="onSpin()" style="max-width:220px;margin-bottom:6px">🎡 SPIN</button>
-      <div class="spin-rem"><span id="spinIL">Remaining:</span> <span id="spinLeft">3</span></div>
+      <div class="spres" id="xSpRes"></div>
+      <button class="btnp" id="xSpBtn" onclick="onSpin()" style="max-width:220px;margin-bottom:6px">🎡 SPIN</button>
+      <div class="sprem"><span id="xSpRL">Remaining:</span> <span id="xSpLeft">3</span></div>
     </div>
-    <!-- CHECKIN -->
-    <div class="pane" id="pCi">
-      <div class="streak-row" style="width:100%">
-        <div class="streak-num" id="streakN">0</div>
+    <!-- GUNLUK -->
+    <div class="pn" id="pCi">
+      <div class="streakrow" style="width:100%">
+        <div class="streakn" id="xStN">0</div>
         <div>
-          <div style="font-size:14px;font-weight:800"><span id="streakL">Day Streak!</span></div>
-          <div style="font-size:11px;color:#8888aa;margin-top:2px" id="streakS">Keep going for bigger rewards!</div>
+          <div style="font-size:14px;font-weight:800" id="xStL">Day Streak!</div>
+          <div style="font-size:11px;color:#8888aa;margin-top:2px" id="xStS">Keep going for bigger rewards!</div>
         </div>
       </div>
-      <div class="days-grid" id="daysGrid"></div>
-      <button class="btn-g" id="ciBtn" onclick="onCheckin()">🎁 Claim Daily Reward</button>
+      <div class="daygrid" id="daysGrid"></div>
+      <button class="btnp" id="xCiBtn" onclick="onCi()">Claim Daily Reward</button>
     </div>
-    <!-- TASKS -->
-    <div class="pane" id="pTask" style="justify-content:flex-start;padding-top:8px">
-      <div class="tasks-scroll" id="taskList"></div>
-      <div class="ref-mini" style="width:100%;flex-shrink:0">
-        <div style="font-size:12px;font-weight:700;color:#0099ff;margin-bottom:4px">👥 Referral</div>
-        <div style="font-size:10px;color:#8888aa;margin-bottom:6px" id="ref-desc">Invite friends: you +30, they +20 SANS!</div>
-        <div class="ref-link-row">
-          <div class="ref-link-text" id="refLink">...</div>
-          <button class="btn-xs" onclick="copyRef()">📋</button>
+    <!-- GOREVLER -->
+    <div class="pn" id="pTask" style="justify-content:flex-start;padding-top:8px">
+      <div class="taskscroll" id="taskList"></div>
+      <div class="refbox" style="width:100%">
+        <div style="font-size:12px;font-weight:700;color:var(--bl);margin-bottom:4px">👥 Referral</div>
+        <div style="font-size:10px;color:#8888aa;margin-bottom:6px" id="xRefDesc">Invite friends: you get +30, they get +20 SANS!</div>
+        <div class="refrow">
+          <div class="reflink" id="xRefLink">...</div>
+          <button class="btnx" onclick="copyRef()">📋</button>
         </div>
-        <div id="refBox" style="display:flex;gap:6px">
-          <input class="wallet-input" id="refIn" placeholder="Enter referral code..."/>
-          <button class="btn-xs" onclick="useRef()">Use</button>
+        <div id="xRefBox" style="display:flex;gap:6px">
+          <input class="inp" id="xRefIn" placeholder="Enter referral code..."/>
+          <button class="btnx" onclick="useRef()" id="xRefUse">Use</button>
         </div>
-        <div id="refMsg" style="font-size:10px;margin-top:5px;min-height:14px"></div>
+        <div id="xRefMsg" style="font-size:10px;margin-top:5px;min-height:14px"></div>
       </div>
     </div>
-    <!-- RANK -->
-    <div class="pane" id="pLb" style="justify-content:flex-start;padding-top:8px">
-      <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:12px;padding:10px;width:100%;margin-bottom:8px;flex-shrink:0">
-        <div style="font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" id="lb-weekly">Weekly Top 3 Bonus Tickets</div>
+    <!-- SIRALAMA -->
+    <div class="pn" id="pLb" style="justify-content:flex-start;padding-top:8px">
+      <div style="background:rgba(255,170,0,.06);border:1px solid rgba(255,170,0,.15);border-radius:12px;padding:10px;width:100%;margin-bottom:8px;flex-shrink:0">
+        <div style="font-size:10px;color:var(--go);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" id="xLbW">Weekly Top 3 Bonus Tickets</div>
         <div style="display:flex;gap:6px;justify-content:center">
-          <div style="text-align:center;background:rgba(255,215,0,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥇</div><div style="font-size:10px;font-weight:700;color:#FFD700">+50</div></div>
-          <div style="text-align:center;background:rgba(192,192,192,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥈</div><div style="font-size:10px;font-weight:700;color:#C0C0C0">+30</div></div>
-          <div style="text-align:center;background:rgba(205,127,50,0.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥉</div><div style="font-size:10px;font-weight:700;color:#CD7F32">+20</div></div>
+          <div style="text-align:center;background:rgba(255,215,0,.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥇</div><div style="font-size:10px;font-weight:700;color:#FFD700">+50</div></div>
+          <div style="text-align:center;background:rgba(192,192,192,.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥈</div><div style="font-size:10px;font-weight:700;color:#C0C0C0">+30</div></div>
+          <div style="text-align:center;background:rgba(205,127,50,.08);border-radius:8px;padding:6px 10px"><div style="font-size:16px">🥉</div><div style="font-size:10px;font-weight:700;color:#CD7F32">+20</div></div>
         </div>
       </div>
-      <div id="myRankBox" style="display:none;width:100%;flex-shrink:0" class="rank-my">
-        <div style="font-size:16px;font-weight:900;color:var(--g);width:22px;text-align:center" id="myRN">-</div>
-        <div style="flex:1"><div style="font-size:12px;font-weight:700" id="myRName">-</div><div style="font-size:9px;color:#8888aa">🎟 <span id="myRTick">0</span> tickets</div></div>
-        <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:var(--g)" id="myRS">0 SANS</div><div style="font-size:9px;color:var(--g);font-weight:700" id="myRY">YOU</div></div>
+      <div class="myrankbox" id="xMyRank" style="display:none;width:100%">
+        <div style="font-size:16px;font-weight:900;color:var(--g);width:22px;text-align:center" id="xMyRN">-</div>
+        <div style="flex:1"><div style="font-size:12px;font-weight:700" id="xMyRNm">-</div><div style="font-size:9px;color:#8888aa">🎟 <span id="xMyRT">0</span></div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:var(--g)" id="xMyRS">0</div><div style="font-size:9px;color:var(--g);font-weight:700" id="xMyRY">YOU</div></div>
       </div>
-      <div class="rank-scroll" id="lbList"></div>
+      <div class="rscroll" id="lbList"></div>
     </div>
-    <!-- RAFFLE -->
-    <div class="pane" id="pRaffle" style="justify-content:flex-start;padding-top:8px">
-      <div class="raffle-scroll">
-        <!-- Bilgiler -->
-        <div class="info-strip" style="margin-bottom:8px" id="raffle-how">100 SANS = 1 🎟 · Pool fills up → winner drawn automatically → USDT/BNB sent to wallet!</div>
-
-        <!-- BSC Wallet + Bilet Çevirme -->
-        <div style="background:rgba(0,153,255,0.06);border:1px solid rgba(0,153,255,0.15);border-radius:14px;padding:12px;margin-bottom:10px">
-          <div style="font-size:12px;font-weight:700;color:#0099ff;margin-bottom:8px" id="wallet-lbl">💼 BSC Wallet</div>
+    <!-- CEKILIS -->
+    <div class="pn" id="pRaffle" style="justify-content:flex-start;padding-top:8px">
+      <div class="rfscroll">
+        <div class="infostrip" style="margin-bottom:8px" id="xRaffleHow">100 SANS = 1 ticket · Pool fills → winner drawn → USDT/BNB sent!</div>
+        <div class="wlbox">
+          <div style="font-size:12px;font-weight:700;color:var(--bl);margin-bottom:8px" id="xWalletLbl">💼 BSC Wallet</div>
           <div style="display:flex;gap:6px;margin-bottom:6px">
-            <input class="wallet-input" id="walletIn" placeholder="0x... BSC wallet address"/>
-            <button class="btn-xs" onclick="saveWallet()" id="walletSaveBtn">Save</button>
+            <input class="inp" id="xWalletIn" placeholder="0x... BSC wallet address" style="flex:1"/>
+            <button class="btnx" onclick="saveWallet()" id="xWSave">Save</button>
           </div>
-          <div id="walletMsg" style="font-size:10px;margin-top:3px;min-height:14px"></div>
+          <div id="xWalletMsg" style="font-size:10px;min-height:14px"></div>
         </div>
-
-        <!-- SANS → Bilet dönüşümü -->
-        <div style="background:rgba(0,255,157,0.05);border:1px solid rgba(0,255,157,0.12);border-radius:14px;padding:12px;margin-bottom:10px">
+        <div class="cvbox">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
             <div>
-              <div style="font-size:10px;color:#8888aa" id="cv-bal-lbl">Available SANS</div>
-              <div style="font-size:18px;font-weight:800;color:#00ff9d"><span id="cvSans">0</span> SANS</div>
+              <div style="font-size:10px;color:#8888aa" id="xCvBL">Available SANS</div>
+              <div style="font-size:18px;font-weight:800;color:var(--g)"><span id="xCvSans">0</span> SANS</div>
             </div>
             <div style="font-size:20px;color:#555">→</div>
             <div style="text-align:right">
-              <div style="font-size:10px;color:#8888aa" id="cv-tick-lbl">Your Tickets</div>
-              <div style="font-size:18px;font-weight:800;color:#ffaa00"><span id="cvTickets">0</span> 🎟</div>
+              <div style="font-size:10px;color:#8888aa" id="xCvTL">Your Tickets</div>
+              <div style="font-size:18px;font-weight:800;color:var(--go)"><span id="xCvTick">0</span> 🎟</div>
             </div>
           </div>
-          <div style="font-size:11px;color:#8888aa;margin-bottom:8px" id="cv-rate">100 SANS = 1 ticket</div>
+          <div style="font-size:11px;color:#8888aa;margin-bottom:8px" id="xCvRate">100 SANS = 1 ticket</div>
           <div style="display:flex;gap:6px;align-items:center">
-            <input type="number" id="convertAmt" placeholder="100" min="100" step="100" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none"/>
-            <button onclick="convertToTickets()" style="background:linear-gradient(135deg,#00ff9d,#00cc7a);color:#000;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:800;cursor:pointer" id="convertBtn">Convert</button>
+            <input type="number" id="xCvAmt" placeholder="100" min="100" step="100" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none"/>
+            <button onclick="convertSans()" class="btnp" style="padding:8px 14px;font-size:12px" id="xCvBtn">Convert</button>
           </div>
-          <div style="font-size:10px;color:#8888aa;margin-top:5px" id="cv-hint">Enter multiples of 100 SANS</div>
+          <div style="font-size:10px;color:#8888aa;margin-top:5px" id="xCvHint">Enter multiples of 100</div>
         </div>
-
-        <!-- Çekiliş Havuzları -->
         <div id="rafflePools"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- INFO OVERLAY -->
+<!-- INFO OV -->
 <div class="ov" id="ovInfo">
   <div class="sheet">
-    <div class="sh"></div>
+    <div class="shdl"></div>
     <div style="text-align:center;margin-bottom:14px">
       <div style="font-size:28px;margin-bottom:6px">📺</div>
-      <div style="font-size:16px;font-weight:800;margin-bottom:3px" id="io-t">Watch Ad & Earn!</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:3px" id="xIoT">Watch Ad &amp; Earn!</div>
     </div>
-    <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
-        <span style="font-size:11px;color:#8888aa" id="io-reward-lbl">🎁 Reward</span>
-        <span style="font-size:14px;font-weight:800;color:var(--g)" id="io-r">+10 SANS</span>
+    <div style="background:rgba(255,255,255,.03);border-radius:12px;padding:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+        <span style="font-size:11px;color:#8888aa" id="xIoRL">🎁 Reward</span>
+        <span style="font-size:14px;font-weight:800;color:var(--g)" id="xIoR">+10 SANS</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:6px 0">
-        <span style="font-size:11px;color:#8888aa" id="io-ticket-lbl">🎟 Tickets</span>
-        <span style="font-size:12px;font-weight:700;color:var(--gold)" id="io-t2">+0.1</span>
+        <span style="font-size:11px;color:#8888aa" id="xIoTL">🎟 Tickets</span>
+        <span style="font-size:12px;font-weight:700;color:var(--go)" id="xIoT2">+0.10</span>
       </div>
     </div>
-    <div id="io-instructions" style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.7">
-      ⏱ A <b style="color:#fff">15-second ad</b> will appear<br>
-      ✅ After 15s, close the ad with <b style="color:var(--g)">✕</b><br>
-      🏆 Then tap <b style="color:var(--g)">Claim Reward ✓</b><br>
-      🚫 <b style="color:#ff6666">Do NOT touch anything during the ad</b>
-    </div>
+    <div style="background:rgba(255,170,0,.06);border:1px solid rgba(255,170,0,.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.8" id="xIoInstr"></div>
     <div style="display:flex;gap:8px">
-      <button class="btn-s" style="flex:1" onclick="closeInfo()" id="btn-cancel">✕ Cancel</button>
-      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="iBtn" onclick="startAd()">▶ Starting in 5s</button>
+      <button class="btns" style="flex:1" onclick="closeInfo()" id="xBtnCancel">Cancel</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="xIBtn" onclick="startAd()">▶ 5s</button>
     </div>
   </div>
 </div>
 
-<!-- AD OVERLAY -->
+<!-- AD OV -->
 <div class="ov" id="ovAd">
   <div class="sheet">
-    <div class="sh"></div>
+    <div class="shdl"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-size:14px;font-weight:800" id="ad-watching">📺 Watching Ad...</div>
-      <div style="background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.25);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--g)" id="adTimer">15s</div>
+      <div style="font-size:14px;font-weight:800" id="xAdW">📺 Watching Ad...</div>
+      <div style="background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.25);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--g)" id="xAdTimer">15s</div>
     </div>
-    <div style="background:rgba(255,255,255,0.03);border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;margin-bottom:12px" id="ad-loading">📢 Ad Loading...</div>
+    <div style="background:rgba(255,255,255,.03);border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;margin-bottom:12px" id="xAdLoad">📢 Ad Loading...</div>
     <div style="display:flex;gap:8px">
-      <button class="btn-s" style="flex:1" onclick="nextAd()" id="btn-next-ad">⏭ Next</button>
-      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="claimBtn" disabled onclick="claimAd()" id="btn-claim">✓ Claim Reward</button>
+      <button class="btns" style="flex:1" onclick="nextAd()" id="xBtnNext">⏭ Next</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="xClaimBtn" disabled onclick="claimAd()">✓ Claim</button>
     </div>
   </div>
 </div>
 
-<!-- WIN OVERLAY -->
-<div class="win-ov" id="ovWin">
-  <div class="win-card">
-    <div class="win-coin">🪙</div>
-    <div class="win-title" id="w-title">YOU EARNED</div>
-    <div class="win-amt" id="w-amt">+10 SANS</div>
-    <div class="win-sub" id="w-sub">Added to your balance!</div>
-    <div class="win-stats">
-      <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-total-lbl">Total SANS</span><span style="font-size:12px;font-weight:700;color:var(--g)" id="w-total">0</span></div>
-      <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-tick-lbl">Raffle Tickets</span><span style="font-size:12px;font-weight:700;color:var(--gold)" id="w-tick">0 🎟</span></div>
+<!-- WIN OV -->
+<div class="winov" id="ovWin">
+  <div class="wincard">
+    <div class="wincoin">🪙</div>
+    <div style="font-size:11px;color:var(--g);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px" id="xWTitle">YOU EARNED</div>
+    <div style="font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--g),var(--bl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px" id="xWAmt">+10 SANS</div>
+    <div style="font-size:11px;color:#8888aa;margin-bottom:16px" id="xWSub">Added to your balance!</div>
+    <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:12px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.05)">
+        <span style="color:#8888aa" id="xWTL">Total SANS</span>
+        <span style="font-weight:700;color:var(--g)" id="xWTot">0 SANS</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px">
+        <span style="color:#8888aa" id="xWTickL">Tickets</span>
+        <span style="font-weight:700;color:var(--go)" id="xWTick">0 🎟</span>
+      </div>
     </div>
-    <button class="btn-g" onclick="closeWin()" id="w-close">✓ Awesome!</button>
+    <button class="btnp" id="xWClose" onclick="closeWin()">✓ Awesome!</button>
   </div>
 </div>
 
@@ -441,275 +368,260 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
 <script>
 var SB_URL='https://dcafhbwemskivrirhlzm.supabase.co';
 var SB_KEY='sb_publishable_-tcKpWWZ39F0SEAYMR_7HQ_kUfCj7VO';
-var TICK=100;
 var CI_R=[10,12,14,16,18,20,25];
 var PRIZES=[{l:'10',v:10,c:'#0a2010'},{l:'15',v:15,c:'#102010'},{l:'20',v:20,c:'#0a1020'},{l:'50',v:50,c:'#1a0a20'},{l:'10',v:10,c:'#0a1520'},{l:'30',v:30,c:'#200a0a'},{l:'15',v:15,c:'#0a2020'},{l:'25',v:25,c:'#0a0a20'}];
 var POOLS=[
-  {id:'p1',prize:'1 USDT',target:100,color:'#00ff9d'},
-  {id:'p2',prize:'2 USDT',target:200,color:'#00dd88'},
-  {id:'p3',prize:'3 USDT',target:300,color:'#00bbff'},
-  {id:'p5',prize:'5 USDT',target:500,color:'#0099ff'},
-  {id:'p10',prize:'10 USDT',target:1000,color:'#4488ff'},
-  {id:'p15',prize:'15 USDT',target:1500,color:'#6644ff'},
-  {id:'p20',prize:'20 USDT',target:2000,color:'#aa44ff'},
-  {id:'p25',prize:'25 USDT',target:2500,color:'#cc44bb'},
-  {id:'p50',prize:'50 USDT',target:5000,color:'#ffaa00'},
-  {id:'p100',prize:'100 USDT',target:10000,color:'#ff6600'},
+  {id:'p1',prize:'1 USDT',tgt:100},{id:'p2',prize:'2 USDT',tgt:200},{id:'p3',prize:'3 USDT',tgt:300},
+  {id:'p5',prize:'5 USDT',tgt:500},{id:'p10',prize:'10 USDT',tgt:1000},{id:'p15',prize:'15 USDT',tgt:1500},
+  {id:'p20',prize:'20 USDT',tgt:2000},{id:'p25',prize:'25 USDT',tgt:2500},{id:'p50',prize:'50 USDT',tgt:5000},{id:'p100',prize:'100 USDT',tgt:10000}
 ];
 
-// LANGS
 var L={
-en:{tabs:['👆 Tap','🎡 Spin','📅 Daily','✅ Tasks','🏆 Rank','🎰 Draw'],ms:'Earn & Win Real Prizes',et:'Earn SANS',ed:'Watch ads & complete tasks to earn free tokens',bt:'Buy SANS',bd:'Purchase tokens in presale for more tickets',rt:'Prize Draws',rd:'Win USDT/BNB with your tickets',bll:'Your Balance',tl:'raffle tickets',tapI:'Tap → watch short ad → earn +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS per tap',sb:'🎁 1 Free Spin!',sbu:'Free spin used',srl:'Remaining:',sw:'You won!',sl:'Day Streak!',ss:'Keep going for bigger rewards!',ci:'Claim Daily Reward',cid:'✅ Already claimed today',tt:'Tasks',ts:'Complete tasks to earn SANS',rd2:'Invite friends: you +30, they +20 SANS!',lt:'Weekly Top 3 Bonus Tickets',rh:'100 SANS = 1 🎟 · Pool fills → winner drawn → USDT/BNB sent!',rtl:'Your Tickets',wl:'Prize Wallet (BSC)',yt:'YOU',day:'Day',go:'Go →',you:'YOU',
-ioTitle:'Watch Ad & Earn!',ioRewardLbl:'🎁 Reward',ioTicketLbl:'🎟 Tickets',cvBalLbl:'Available SANS',cvTickLbl:'Your Tickets',cvRate:'100 SANS = 1 ticket',cvHint:'Enter multiples of 100',cvBtn:'Convert',joinBtn2:'Join Draw',noWallet:'Save BSC wallet first',noTickets:'No tickets! Convert SANS first',joinSuccess:'You are in! Good luck! 🍀',joinSucMsg:'🎟 Added to draw!',walletSaveOk:'✅ Wallet saved!',walletSaveFail:'❌ Invalid BSC address',adInstr:'<b style="color:#fff">15-second ad</b> will appear<br>✅ After 15s close with <b style="color:#00ff9d">✕</b><br>🏆 Tap <b style="color:#00ff9d">Claim Reward ✓</b><br>🚫 <b style="color:#ff6666">Do NOT touch during the ad</b>',winTitle:'YOU EARNED',winSub:'Added to your balance!',winTotalLbl:'Total SANS',joinBtn:'🎟 Join This Draw',poolLbl:'Prize Pool',poolSize:'Pool size',poolFull:'more needed',
-tasks:[{id:'tg',i:'📱',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
-tr:{tabs:['👆 Tap','🎡 Spin','📅 Günlük','✅ Görev','🏆 Sıra','🎰 Çekiliş'],ms:'Kazan & Gerçek Ödüller Kazan',et:'SANS Kazan',ed:'Reklam izle ve görev tamamla, ücretsiz token kazan',bt:'SANS Satın Al',bd:'Presale\'den token satın al, daha fazla bilet kazan',rt:'Çekilişler',rd:'Biletlerinle USDT/BNB kazan',bll:'Bakiyeniz',tl:'çekiliş bileti',tapI:'Dokun → kısa reklam izle → +10 SANS kazan · 100 SANS = 1 🎟',tapR:'+10 SANS / dokunuş',sb:'🎁 1 Ücretsiz Spin!',sbu:'Ücretsiz spin kullanıldı',srl:'Kalan:',sw:'Kazandın!',sl:'Gün Serisi!',ss:'Devam et, daha büyük ödüller seni bekliyor!',ci:'Günlük Ödülü Al',cid:'✅ Bugün alındı',tt:'Görevler',ts:'Görevleri tamamla, SANS kazan',rd2:'Arkadaşını davet et: sen +30, o +20 SANS!',lt:'Haftalık İlk 3 Bonus Bilet',rh:'100 SANS = 1 🎟 · Havuz dolar → kazanan seçilir → USDT/BNB gönderilir!',rtl:'Biletleriniz',wl:'Ödül Cüzdanı (BSC)',yt:'SEN',day:'Gün',go:'Git →',you:'SEN',
-ioTitle:'Reklam İzle & Kazan!',ioRewardLbl:'🎁 Ödül',ioTicketLbl:'🎟 Bilet',cvBalLbl:'Mevcut SANS',cvTickLbl:'Biletleriniz',cvRate:'100 SANS = 1 bilet',cvHint:'100un katlari girin',cvBtn:'Dönüştür',joinBtn2:'Bu Çekilişe Katıl',noWallet:'Önce BSC cüzdanını kaydet',noTickets:'Bilet yok! Önce SANS dönüştür',joinSuccess:'Katıldınız! Bol şans! 🍀',joinSucMsg:'🎟 Çekilişe eklendi!',walletSaveOk:'✅ Cüzdan kaydedildi!',walletSaveFail:'❌ Geçersiz BSC adresi',adInstr:'<b style="color:#fff">15 saniyelik reklam</b> gösterilecek<br>✅ 15 saniye sonra <b style="color:#00ff9d">✕</b> ile kapat<br>🏆 <b style="color:#00ff9d">Ödülü Al ✓</b> butonuna bas<br>🚫 <b style="color:#ff6666">Reklam sırasında hiçbir şeye dokunma</b>',winTitle:'KAZANDINIZ',winSub:'Bakiyenize eklendi!',winTotalLbl:'Toplam SANS',joinBtn:'🎟 Bu Çekilişe Katıl',poolLbl:'Ödül Havuzu',poolSize:'Havuz büyüklüğü',poolFull:'daha lazım',
-tasks:[{id:'tg',i:'📱',t:'Telegram Kanalına Katıl',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:"YouTube'a Abone Ol",d:'Çekiliş bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'YouTube Videomuzu İzle',d:'SANS nasıl çalışır?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]},
-ru:{tabs:['👆 Тап','🎡 Спин','📅 Вход','✅ Задачи','🏆 Рейтинг','🎰 Розыгрыш'],ms:'Зарабатывай & Выигрывай призы',et:'Заработать SANS',ed:'Смотри рекламу и выполняй задания',bt:'Купить SANS',bd:'Купи токены на пресейле — больше билетов',rt:'Розыгрыши',rd:'Выигрывай USDT/BNB своими билетами',bll:'Ваш баланс',tl:'билетов',tapI:'Нажми → смотри рекламу → получи +10 SANS · 100 SANS = 1 🎟',tapR:'+10 SANS за нажатие',sb:'🎁 1 Бесплатный спин!',sbu:'Бесплатный спин использован',srl:'Осталось:',sw:'Ты выиграл!',sl:'Дней подряд!',ss:'Продолжай для больших наград!',ci:'Получить дневной бонус',cid:'✅ Уже получено',tt:'Задания',ts:'Выполняй задания — зарабатывай SANS',rd2:'Пригласи друга: ты +30, он +20 SANS!',lt:'Топ-3 недели — бонусные билеты',rh:'100 SANS = 1 🎟 · Пул заполнен → выбирается победитель → USDT/BNB отправляется!',rtl:'Ваши билеты',wl:'Кошелёк для призов (BSC)',yt:'ТЫ',day:'День',go:'Перейти →',you:'ТЫ',
-ioTitle:'Смотри рекламу и зарабатывай!',ioRewardLbl:'🎁 Награда',ioTicketLbl:'🎟 Билеты',cvBalLbl:'Доступно SANS',cvTickLbl:'Ваши билеты',cvRate:'100 SANS = 1 билет',cvHint:'Введите кратное 100',cvBtn:'Конвертировать',joinBtn2:'Участвовать',noWallet:'Сначала сохрани кошелёк',noTickets:'Нет билетов! Конвертируй SANS',joinSuccess:'Ты участвуешь! Удачи! 🍀',joinSucMsg:'🎟 Добавлен в розыгрыш!',walletSaveOk:'✅ Кошелёк сохранён!',walletSaveFail:'❌ Неверный BSC адрес',adInstr:'Появится <b style="color:#fff">реклама на 15 секунд</b><br>✅ Через 15с закрой с <b style="color:#00ff9d">✕</b><br>🏆 Нажми <b style="color:#00ff9d">Получить награду ✓</b><br>🚫 <b style="color:#ff6666">Не трогай ничего во время рекламы</b>',winTitle:'ВЫ ВЫИГРАЛИ',winSub:'Добавлено к балансу!',winTotalLbl:'Всего SANS',joinBtn:'🎟 Участвовать',poolLbl:'Призовой пул',poolSize:'Размер пула',poolFull:'ещё нужно',
-tasks:[{id:'tg',i:'📱',t:'Вступить в Telegram канал',d:'Официальные объявления',r:25,u:'https://t.me/sanslicekilisduyuru'},{id:'tw',i:'🐦',t:'Подписаться в Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},{id:'ig',i:'📸',t:'Подписаться в Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},{id:'ys',i:'🔔',t:'Подписаться на YouTube',d:'Уведомления о розыгрышах',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'yv',i:'▶️',t:'Посмотреть наше видео',d:'Как работает SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},{id:'web',i:'🌐',t:'Посетить сайт',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}]}
+en:{
+  lsub:'Earn Crypto \u00b7 Win Real Prizes \uD83C\uDFC6',
+  lbtn:'Continue \u2192',
+  mlang:'\uD83C\uDF0D Language',msub:'Earn & Win Real Prizes',mbll:'YOUR BALANCE',mticklbl:'raffle tickets',
+  met:'Earn SANS',med:'Watch ads & complete tasks to earn free tokens',
+  mbt:'Buy SANS',mbd:'Purchase tokens in presale for more tickets',
+  mrt:'Prize Draws',mrd:'Win USDT/BNB with your tickets',
+  back:'\u2190 Menu',
+  tabs:['\uD83D\uDC46 Tap','\uD83C\uDF61 Spin','\uD83D\uDCC5 Daily','\u2705 Tasks','\uD83C\uDFC6 Rank','\uD83C\uDFB0 Draw'],
+  ticklbl:'tickets',
+  tapballl:'SANS',taptickl:'TICKETS',
+  tapinfo:'Tap below \u2192 watch short ad \u2192 earn <b>+10 SANS</b> \u00b7 100 SANS = 1 \uD83C\uDF9F',
+  taplbl:'TAP TO EARN',taprew:'+10 SANS per tap',
+  spbadge:'\uD83C\uDF81 1 Free Spin!',spbadgeu:'Free spin used today',sprl:'Remaining:',spwon:'You won!',spbtn:'\uD83C\uDF61 SPIN',
+  stl:'Day Streak!',sts:'Keep going for bigger rewards!',
+  cibtn:'\uD83C\uDF81 Claim Daily Reward',cidone:'\u2705 Already claimed today',day:'Day',
+  refdesc:'Invite friends: you +30, they +20 SANS!',refph:'Enter referral code...',refuse:'Use',
+  lbw:'Weekly Top 3 Bonus Tickets',you:'YOU',
+  raffhow:'100 SANS = 1 \uD83C\uDF9F \u00b7 Pool fills \u2192 winner drawn \u2192 USDT/BNB sent!',
+  wlbl:'\uD83D\uDCBC BSC Wallet',wph:'0x... your BSC wallet address',wsave:'Save',
+  wok:'\u2705 Wallet saved!',wfail:'\u274C Invalid BSC address',wmsg:'',
+  cvbl:'Available SANS',cvtl:'Your Tickets',cvrate:'100 SANS = 1 ticket',cvhint:'Enter multiples of 100',cvbtn:'Convert',
+  plbl:'PRIZE POOL',psz:'Pool size',pfull:'more needed',
+  join:'\uD83C\uDF9F Join This Draw',nowallet:'Save your BSC wallet first',notick:'No tickets! Convert SANS first',joinok:'\uD83C\uDF9F Joined! Good luck!',
+  iot:'Watch Ad & Earn!',iorl:'\uD83C\uDF81 Reward',iotl:'\uD83C\uDF9F Tickets',
+  ioinstr:'<b style="color:#fff">15-second ad</b> will appear<br>\u2705 After 15s close with <b style="color:#00ff9d">\u2715</b><br>\uD83C\uDFC6 Then tap <b style="color:#00ff9d">Claim \u2713</b><br>\uD83D\uDEAB <b style="color:#ff6666">Do NOT touch anything during the ad</b>',
+  cancel:'\u2715 Cancel',ibtn:'\u25BA Starting in',
+  adw:'\uD83D\uDCFA Watching Ad...',adl:'\uD83D\uDCE2 Ad Loading...',adnext:'\u23ED Next',adclaim:'\u2713 Claim Reward',
+  wtitle:'YOU EARNED',wsub:'Added to your balance!',wtl:'Total SANS',wtickl:'Tickets',wclose:'\u2713 Awesome!',
+  notsans:'Not enough SANS!',convok:'+{n} tickets added!',
+  go:'Go \u2192',
+  tasks:[
+    {id:'tg',i:'\uD83D\uDCF1',t:'Join Telegram Channel',d:'Official announcements',r:25,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',i:'\uD83D\uDC26',t:'Follow on Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',i:'\uD83D\uDCF8',t:'Follow on Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'ys',i:'\uD83D\uDD14',t:'Subscribe on YouTube',d:'Get draw notifications',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yv',i:'\u25B6\uFE0F',t:'Watch Our Video',d:'Learn how SANS works',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',i:'\uD83C\uDF10',t:'Visit Our Website',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}
+  ]
+},
+tr:{
+  lsub:'Kripto Kazan \u00b7 Gercek Oduller Kazan \uD83C\uDFC6',
+  lbtn:'Devam Et \u2192',
+  mlang:'\uD83C\uDF0D Dil',msub:'Kazan & Gercek Oduller Kazan',mbll:'BAKIYENiZ',mticklbl:'cekilis bileti',
+  met:'SANS Kazan',med:'Reklam izle, gorev tamamla, ucretsiz SANS token kazan',
+  mbt:'SANS Satin Al',mbd:'Presale den token satin al, daha fazla bilet kazan',
+  mrt:'Cekilisler',mrd:'Biletlerinle USDT/BNB kazan',
+  back:'\u2190 Menu',
+  tabs:['\uD83D\uDC46 Tikla','\uD83C\uDF61 Cevir','\uD83D\uDCC5 Gunluk','\u2705 Gorevler','\uD83C\uDFC6 Sira','\uD83C\uDFB0 Cekilis'],
+  ticklbl:'cekilis bileti',
+  tapballl:'SANS',taptickl:'BiLET',
+  tapinfo:'Tikla \u2192 kisa reklam izle \u2192 <b>+10 SANS</b> kazan \u00b7 100 SANS = 1 \uD83C\uDF9F',
+  taplbl:'DOKUNARAK KAZAN',taprew:'+10 SANS / dokunusu',
+  spbadge:'\uD83C\uDF81 1 Ucretsiz Cevirme!',spbadgeu:'Ucretsiz cevirme kullanildi',sprl:'Kalan:',spwon:'Kazandin!',spbtn:'\uD83C\uDF61 CEViR',
+  stl:'Gun Serisi!',sts:'Devam et, daha buyuk oduller bekliyor!',
+  cibtn:'\uD83C\uDF81 Gunluk Odulu Al',cidone:'\u2705 Bugun alindi',day:'Gun',
+  refdesc:'Arkadasini davet et: sen +30, o +20 SANS!',refph:'Referral kodu gir...',refuse:'Kullan',
+  lbw:'Haftalik ilk 3 Bonus Bilet',you:'SEN',
+  raffhow:'100 SANS = 1 \uD83C\uDF9F \u00b7 Havuz dolar \u2192 kazanan secilir \u2192 USDT/BNB gonderilir!',
+  wlbl:'\uD83D\uDCBC BSC Cuzdani',wph:'0x... BSC cuzdan adresiniz',wsave:'Kaydet',
+  wok:'\u2705 Cuzdan kaydedildi!',wfail:'\u274C Gecersiz BSC adresi',wmsg:'',
+  cvbl:'Mevcut SANS',cvtl:'Biletleriniz',cvrate:'100 SANS = 1 bilet',cvhint:'100un katlari girin',cvbtn:'Donustur',
+  plbl:'ODUL HAVUZU',psz:'Havuz buyuklugu',pfull:'daha lazim',
+  join:'\uD83C\uDF9F Bu Cekilise Katil',nowallet:'Once BSC cuzdanini kaydet',notick:'Bilet yok! Once SANS donustur',joinok:'\uD83C\uDF9F Katildin! Bol sans!',
+  iot:'Reklam izle & Kazan!',iorl:'\uD83C\uDF81 Odul',iotl:'\uD83C\uDF9F Bilet',
+  ioinstr:'<b style="color:#fff">15 saniyelik reklam</b> gosterilecek<br>\u2705 15s sonra <b style="color:#00ff9d">\u2715</b> ile kapat<br>\uD83C\uDFC6 Ardindan <b style="color:#00ff9d">Odulu Al \u2713</b> butonuna bas<br>\uD83D\uDEAB <b style="color:#ff6666">Reklam sirasinda HiCBiRSEYiNE dokunma!</b>',
+  cancel:'\u2715 iptal',ibtn:'\u25BA Basliyacak',
+  adw:'\uD83D\uDCFA Reklam izleniyor...',adl:'\uD83D\uDCE2 Reklam yukleniyor...',adnext:'\u23ED Sonraki',adclaim:'\u2713 Odulu Al',
+  wtitle:'KAZANDINIZ',wsub:'Bakiyenize eklendi!',wtl:'Toplam SANS',wtickl:'Bilet',wclose:'\u2713 Harika!',
+  notsans:'Yeterli SANS yok!',convok:'+{n} bilet eklendi!',
+  go:'Git \u2192',
+  tasks:[
+    {id:'tg',i:'\uD83D\uDCF1',t:'Telegram Kanalina Katil',d:'Resmi duyurular',r:25,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',i:'\uD83D\uDC26',t:"Twitter/X'te Takip Et",d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',i:'\uD83D\uDCF8',t:"Instagram'da Takip Et",d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'ys',i:'\uD83D\uDD14',t:"YouTube'a Abone Ol",d:'Cekilis bildirimlerini al',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yv',i:'\u25B6\uFE0F',t:'YouTube Videomuzu izle',d:'SANS nasil calisir?',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',i:'\uD83C\uDF10',t:'Sitemizi Ziyaret Et',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}
+  ]
+},
+ru:{
+  lsub:'Zarabatyvaj \u00b7 Vyigryvaj prizy \uD83C\uDFC6',
+  lbtn:'Prodolzhit \u2192',
+  mlang:'\uD83C\uDF0D Yazyk',msub:'Zarabatyvaj i vyigryvaj',mbll:'VAS BALANS',mticklbl:'biletov',
+  met:'Zarabotat SANS',med:'Smotre reklamu i vypolnyaj zadaniya',
+  mbt:'Kupit SANS',mbd:'Kup tokeny na presejle dlya bolshe biletov',
+  mrt:'Rozygryshi',mrd:'Vyigryvaj USDT/BNB svoimi biletami',
+  back:'\u2190 Menu',
+  tabs:['\uD83D\uDC46 Tap','\uD83C\uDF61 Spin','\uD83D\uDCC5 Vhod','\u2705 Zadachi','\uD83C\uDFC6 Rejting','\uD83C\uDFB0 Rozygrysh'],
+  ticklbl:'biletov',
+  tapballl:'SANS',taptickl:'BILETY',
+  tapinfo:'Nazhmni \u2192 smotre reklamu \u2192 <b>+10 SANS</b> \u00b7 100 SANS = 1 \uD83C\uDF9F',
+  taplbl:'NAZHMNI CHTOBY ZARABOTAT',taprew:'+10 SANS za nazhatiye',
+  spbadge:'\uD83C\uDF81 1 Besplatnyj spin!',spbadgeu:'Besplatnyj spin ispolzovan',sprl:'Ostalos:',spwon:'Ty vyigral!',spbtn:'\uD83C\uDF61 KRUTIL',
+  stl:'Dnej podryad!',sts:'Prodolzhaj dlya bolshih nagrad!',
+  cibtn:'\uD83C\uDF81 Poluchit dnevnoj bonus',cidone:'\u2705 Uzhe polucheno',day:'Den',
+  refdesc:'Priglasi druga: ty +30, on +20 SANS!',refph:'Vvedi referalnyj kod...',refuse:'Primenit',
+  lbw:'Top-3 nedeli - bonusnye bilety',you:'TY',
+  raffhow:'100 SANS = 1 \uD83C\uDF9F \u00b7 Pul zapolnyaetsya \u2192 pobeditel vybraetsya \u2192 USDT/BNB!',
+  wlbl:'\uD83D\uDCBC BSC Koshelek',wph:'0x... vash BSC koshelek',wsave:'Sohranit',
+  wok:'\u2705 Koshelek sokhranyon!',wfail:'\u274C Nepravilnyj BSC adres',wmsg:'',
+  cvbl:'Dostupno SANS',cvtl:'Vashi bilety',cvrate:'100 SANS = 1 bilet',cvhint:'Vvedite kratnoe 100',cvbtn:'Konvertirovat',
+  plbl:'PRIZOVOJ PUL',psz:'Razmer pula',pfull:'eshhe nuzhno',
+  join:'\uD83C\uDF9F Uchastvovat',nowallet:'Snachala sohrani koshelek',notick:'Net biletov! Konvertiruj SANS',joinok:'\uD83C\uDF9F Uchastvuesh! Udachi!',
+  iot:'Smotre reklamu i zarabatyvaj!',iorl:'\uD83C\uDF81 Nagrada',iotl:'\uD83C\uDF9F Bilety',
+  ioinstr:'Poyavitsya <b style="color:#fff">reklama na 15 sekund</b><br>\u2705 Cherez 15s zakroj s <b style="color:#00ff9d">\u2715</b><br>\uD83C\uDFC6 Nazhmni <b style="color:#00ff9d">Poluchit nagradu \u2713</b><br>\uD83D\uDEAB <b style="color:#ff6666">Ne trogaj nichego vo vremya reklamy!</b>',
+  cancel:'\u2715 Otmena',ibtn:'\u25BA Cherez',
+  adw:'\uD83D\uDCFA Prosmotr reklamy...',adl:'\uD83D\uDCE2 Zagruzka...',adnext:'\u23ED Dalee',adclaim:'\u2713 Poluchit nagradu',
+  wtitle:'VY VYIGRALI',wsub:'Dobavleno k balansu!',wtl:'Vsego SANS',wtickl:'Bilety',wclose:'\u2713 Otlichno!',
+  notsans:'Nedostatochno SANS!',convok:'+{n} biletov dobavleno!',
+  go:'Perejti \u2192',
+  tasks:[
+    {id:'tg',i:'\uD83D\uDCF1',t:'Vstupite v Telegram kanal',d:'Ofitsialnye obyavleniya',r:25,u:'https://t.me/sanslicekilisduyuru'},
+    {id:'tw',i:'\uD83D\uDC26',t:'Podpisatsya v Twitter/X',d:'@sanslioffical',r:25,u:'https://twitter.com/sanslioffical'},
+    {id:'ig',i:'\uD83D\uDCF8',t:'Podpisatsya v Instagram',d:'sanslicekilisofficial',r:25,u:'https://instagram.com/sanslicekilisofficial'},
+    {id:'ys',i:'\uD83D\uDD14',t:'Podpisatsya na YouTube',d:'Uvedomleniya o rozygryshah',r:30,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'yv',i:'\u25B6\uFE0F',t:'Posmotret nashe video',d:'Kak rabotaet SANS',r:20,u:'https://youtube.com/@SansliCekilisOfficial'},
+    {id:'web',i:'\uD83C\uDF10',t:'Posetit sajt',d:'sanslicekilis.com',r:10,u:'https://sanslicekilis.com'}
+  ]
+}
 };
-// Other langs default to EN
 ['ar','es','pt','fr','de','id','uk'].forEach(function(k){L[k]=L.en;});
 
 var tg=window.Telegram&&window.Telegram.WebApp;
 if(tg)tg.expand();
 var db=window.supabase.createClient(SB_URL,SB_KEY);
-var user=null,ud={balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null,tickets:0};
-var spinning=false,lang=L.en,selLang='en';
-var adCb=null,adTimerInt=null,infoCb=null,infoCountInt=null,curR={s:10,l:'+10 SANS'};
+var user=null;
+var ud={balance:0,streak:0,spin_left:3,free_spin:1,last_checkin:null,last_spin_date:null,tasks_done:[],referral_code:null,referred_by:null,referral_count:0,wallet:null,tickets:0};
+var spinning=false,lang=L.en,selL='en';
+var adCb=null,adTI=null,infoCb=null,infoCI=null,curR={s:10,l:'+10 SANS'};
+var cParts=[],cAI=null;
 
-function tk(b){return Math.floor((b||0)/TICK);}
-function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
-function floatEl(e,t){var el=document.createElement('div');el.className='float';el.textContent=t;el.style.left=(e.clientX-15)+'px';el.style.top=(e.clientY-35)+'px';document.body.appendChild(el);setTimeout(function(){el.remove();},900);}
+function gid(id){return document.getElementById(id);}
+function st(id,val){var el=gid(id);if(el)el.textContent=val;}
+function si(id,val){var el=gid(id);if(el)el.innerHTML=val;}
+function sv(id,val){var el=gid(id);if(el)el.value=val;}
+function sp(id,val){var el=gid(id);if(el)el.placeholder=val;}
+function tk(){return parseInt(ud.tickets)||0;}
 
-// LANG
-function pickLang(l,el){selLang=l;document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
-function confirmLang(){
-  lang=L[selLang]||L.en;
-  document.getElementById('sLang').classList.add('hidden');
-  document.getElementById('sMenu').classList.remove('hidden');
-  applyMenuLang();
-}
-function applyMenuLang(){
-  document.getElementById('m-sub').textContent=lang.ms;
-  document.getElementById('m-earn-t').textContent=lang.et;
-  document.getElementById('m-earn-d').textContent=lang.ed;
-  document.getElementById('m-buy-t').textContent=lang.bt;
-  document.getElementById('m-buy-d').textContent=lang.bd;
-  document.getElementById('m-raffle-t').textContent=lang.rt;
-  document.getElementById('m-raffle-d').textContent=lang.rd;
-  document.getElementById('m-bal-lbl').textContent=lang.bll;
-  document.getElementById('m-tickets-lbl').textContent=lang.tl;
-  document.getElementById('mBal').textContent=(ud.balance||0).toLocaleString();
-  document.getElementById('mTickets').textContent=tk(ud.balance);
-}
+function toast(m){var t=gid('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
+function floatEl(e,t){var el=document.createElement('div');el.className='floatel';el.textContent=t;el.style.left=(e.clientX-15)+'px';el.style.top=(e.clientY-35)+'px';document.body.appendChild(el);setTimeout(function(){el.remove();},900);}
 
-// MENU
-function goEarn(){
-  document.getElementById('sMenu').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  applyLang();updateUI();
-}
-function goBuy(){window.open('https://sanslicekilis.com/#presale','_blank');}
-function changeLang(){
-  document.getElementById('sMenu').classList.add('hidden');
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('sLang').classList.remove('hidden');
-}
-function backToMenu(){
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('sMenu').classList.remove('hidden');
-  applyMenuLang();
-}
-
-// PANES
-function goPane(name){
-  var all={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
-  var tabs={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
-  Object.keys(all).forEach(function(k){
-    var p=document.getElementById(all[k]);
-    var t=document.getElementById(tabs[k]);
-    if(p){p.classList.toggle('on',k===name);}
-    if(t){t.classList.toggle('on',k===name);}
-  });
-  if(name==='spin')drawWheel();
-  if(name==='lb')loadLB();
-  if(name==='raffle'){
-    var cvS=document.getElementById('cvSans');if(cvS)cvS.textContent=(ud.balance||0).toLocaleString();
-    var cvT=document.getElementById('cvTickets');if(cvT)cvT.textContent=parseInt(ud.tickets)||0;
-    renderPools();
-  }
-}
-
-// LANG APPLY
+// Tüm metinleri seçilen dile göre güncelle
 function applyLang(){
-  var tabIds=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
-  for(var i=0;i<tabIds.length;i++){var el=document.getElementById(tabIds[i]);if(el)el.textContent=lang.tabs[i];}
+  var l=lang;
+  // Lang screen
+  si('xLsub',l.lsub); st('xLbtn',l.lbtn);
+  // Menu
+  st('xMLang',l.mlang); st('xMSub',l.msub); st('xMBalLbl',l.mbll);
+  st('xMTickLbl',l.mticklbl); st('xMET',l.met); st('xMED',l.med);
+  st('xMBT',l.mbt); st('xMBD',l.mbd); st('xMRT',l.mrt); st('xMRD',l.mrd);
   // Topbar
-  var bb=document.getElementById('btn-back');if(bb)bb.textContent=lang.btnBack||'← Menu';
-  var bl=document.getElementById('btn-lang');if(bl)bl.textContent=lang.btnLang||'Language';
-  var ttl=document.getElementById('tb-tick-lbl');if(ttl)ttl.textContent=lang.tl;
+  st('xBack',l.back); st('xTickLbl',l.ticklbl);
+  // Tabs
+  var tids=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
+  for(var i=0;i<tids.length;i++){var te=gid(tids[i]);if(te)te.textContent=l.tabs[i];}
   // Tap
-  var ti=document.getElementById('tap-info');if(ti)ti.innerHTML=lang.tapI;
-  var tr2=document.getElementById('tap-r');if(tr2)tr2.textContent=lang.tapR;
-  var tli=document.getElementById('tap-lbl-inner');if(tli)tli.textContent=lang.tapLbl||'TAP TO EARN';
+  st('xTpBalLbl',l.tapballl); st('xTpTickLbl',l.taptickl);
+  si('xTapInfo',l.tapinfo); st('xTapLbl',l.taplbl); st('xTapRew',l.taprew);
   // Spin
-  var sil=document.getElementById('spinIL');if(sil)sil.textContent=lang.srl;
-  var sb2=document.getElementById('spinBadge');if(sb2)sb2.textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
+  var sb=gid('xSpBadge');if(sb)sb.textContent=(ud.free_spin||0)>0?l.spbadge:l.spbadgeu;
+  st('xSpRL',l.sprl);
+  var spb=gid('xSpBtn');if(spb&&!spb.disabled)spb.textContent=l.spbtn;
   // Checkin
-  var sl2=document.getElementById('streakL');if(sl2)sl2.textContent=lang.sl;
-  var ss2=document.getElementById('streakS');if(ss2)ss2.textContent=lang.ss;
-  var cb=document.getElementById('ciBtn');if(cb&&!cb.disabled)cb.textContent=lang.ci;
+  st('xStL',l.stl); st('xStS',l.sts);
+  var cib=gid('xCiBtn');if(cib&&!cib.disabled)cib.textContent=l.cibtn;
   // Tasks
-  var rdd=document.getElementById('ref-desc');if(rdd)rdd.textContent=lang.rd2;
+  st('xRefDesc',l.refdesc); sp('xRefIn',l.refph); st('xRefUse',l.refuse);
   // Rank
-  var lbw=document.getElementById('lb-weekly');if(lbw)lbw.textContent=lang.lt;
-  var mry=document.getElementById('myRY');if(mry)mry.textContent=lang.you;
+  st('xLbW',l.lbw); st('xMyRY',l.you);
   // Raffle
-  var rh2=document.getElementById('raffle-how');if(rh2)rh2.textContent=lang.rh;
-  var wll=document.getElementById('wallet-lbl');if(wll)wll.textContent=lang.wl;
-  var wi=document.getElementById('walletIn');if(wi)wi.placeholder=lang.walletPh||'0x...';
-  var cvbl=document.getElementById('cv-bal-lbl');if(cvbl)cvbl.textContent=lang.cvBalLbl;
-  var cvtl=document.getElementById('cv-tick-lbl');if(cvtl)cvtl.textContent=lang.cvTickLbl;
-  var cvr=document.getElementById('cv-rate');if(cvr)cvr.textContent=lang.cvRate;
-  var cvh=document.getElementById('cv-hint');if(cvh)cvh.textContent=lang.cvHint;
-  var cvb=document.getElementById('convertBtn');if(cvb)cvb.textContent=lang.cvBtn;
+  st('xRaffleHow',l.raffhow); st('xWalletLbl',l.wlbl);
+  sp('xWalletIn',l.wph); st('xWSave',l.wsave);
+  st('xCvBL',l.cvbl); st('xCvTL',l.cvtl);
+  st('xCvRate',l.cvrate); st('xCvHint',l.cvhint); st('xCvBtn',l.cvbtn);
   // Info overlay
-  var iot=document.getElementById('io-t');if(iot)iot.textContent=lang.ioTitle;
-  var iorl=document.getElementById('io-reward-lbl');if(iorl)iorl.textContent=lang.ioRewardLbl;
-  var iotl=document.getElementById('io-ticket-lbl');if(iotl)iotl.textContent=lang.ioTicketLbl;
-  var ioi=document.getElementById('io-instructions');if(ioi&&lang.adInstr)ioi.innerHTML=lang.adInstr;
+  st('xIoT',l.iot); st('xIoRL',l.iorl); st('xIoTL',l.iotl);
+  si('xIoInstr','⏱ '+l.ioinstr);
+  st('xBtnCancel',l.cancel);
   // Ad overlay
-  var aw=document.getElementById('ad-watching');if(aw)aw.textContent=lang.adWatching;
-  var al=document.getElementById('ad-loading');if(al)al.textContent=lang.adLoading;
-  var an=document.getElementById('btn-next-ad');if(an)an.textContent=lang.adNext;
-  var ac=document.getElementById('btn-claim');if(ac&&ac.disabled==false)ac.textContent=lang.adClaim;
-  var bca=document.getElementById('btn-cancel');if(bca)bca.textContent=(lang.btnCancel||'Cancel');
+  st('xAdW',l.adw); st('xAdLoad',l.adl);
+  st('xBtnNext',l.adnext);
+  var cc=gid('xClaimBtn');if(cc)cc.textContent=l.adclaim;
   // Win overlay
-  var wt=document.getElementById('w-title');if(wt)wt.textContent=lang.winTitle;
-  var wsb=document.getElementById('w-sub');if(wsb)wsb.textContent=lang.winSub;
-  var wtl=document.getElementById('w-total-lbl');if(wtl)wtl.textContent=lang.winTotalLbl;
-  var wtk=document.getElementById('w-tick-lbl');if(wtk)wtk.textContent=lang.tl;
-  var wc=document.getElementById('w-close');if(wc)wc.textContent=lang.winClose;
-  renderTasks();renderDays();renderPools();
+  st('xWTitle',l.wtitle); st('xWSub',l.wsub);
+  st('xWTL',l.wtl); st('xWTickL',l.wtickl); st('xWClose',l.wclose);
+  // Re-render dynamic content
+  renderTasks(); renderDays(); renderPools();
 }
 
-function applyMenuLang(){
-  document.getElementById('m-sub').textContent=lang.ms;
-  document.getElementById('m-earn-t').textContent=lang.et;
-  document.getElementById('m-earn-d').textContent=lang.ed;
-  document.getElementById('m-buy-t').textContent=lang.bt;
-  document.getElementById('m-buy-d').textContent=lang.bd;
-  document.getElementById('m-raffle-t').textContent=lang.rt;
-  document.getElementById('m-raffle-d').textContent=lang.rd;
-  document.getElementById('m-bal-lbl').textContent=lang.bll;
-  document.getElementById('m-tickets-lbl').textContent=lang.tl;
-  document.getElementById('mBal').textContent=(ud.balance||0).toLocaleString();
-  document.getElementById('mTickets').textContent=tk(ud.balance);
+// Tüm dinamik değerleri güncelle
+function updateUI(){
+  var b=ud.balance||0, t=tk();
+  // Topbar
+  st('xBal',b.toLocaleString()+' SANS'); st('xTick',t);
+  // Tap stats
+  st('xTpBal',b.toLocaleString()); st('xTpTick',t);
+  // Spin
+  st('xSpLeft',ud.spin_left||0);
+  var sb2=gid('xSpBadge');if(sb2)sb2.textContent=(ud.free_spin||0)>0?lang.spbadge:lang.spbadgeu;
+  // Streak
+  st('xStN',ud.streak||0);
+  // Referral link
+  if(ud.referral_code){st('xRefLink','https://t.me/sanslicekilisbot?startapp='+ud.referral_code);}
+  // Menu
+  st('xMBal',b.toLocaleString()); st('xMTick',t);
+  // Raffle convert
+  st('xCvSans',b.toLocaleString()); st('xCvTick',t);
+  // Win overlay
+  st('xWTot',b.toLocaleString()+' SANS'); st('xWTick',t+' \uD83C\uDF9F');
 }
 
-// MENU
-function goEarn(){
-  document.getElementById('sMenu').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  applyLang();updateUI();
+// NAV
+function pickL(l,el){selL=l;document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
+
+function goMenu(){
+  lang=L[selL]||L.en;
+  gid('sLang').classList.add('h');
+  gid('app').classList.add('h');
+  gid('sMenu').classList.remove('h');
+  applyLang(); updateUI();
+}
+function goLang(){
+  gid('sMenu').classList.add('h');
+  gid('app').classList.add('h');
+  gid('sLang').classList.remove('h');
+}
+function goApp(tab){
+  gid('sMenu').classList.add('h');
+  gid('app').classList.remove('h');
+  goPane(tab||'tap');
+  applyLang(); updateUI();
 }
 function goBuy(){window.open('https://sanslicekilis.com/#presale','_blank');}
-function changeLang(){
-  document.getElementById('sMenu').classList.add('hidden');
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('sLang').classList.remove('hidden');
-}
-function backToMenu(){
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('sMenu').classList.remove('hidden');
-  applyMenuLang();
-}
 
-// PANES
 function goPane(name){
-  var all={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
-  var tabs={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
-  Object.keys(all).forEach(function(k){
-    var p=document.getElementById(all[k]);
-    var t=document.getElementById(tabs[k]);
-    if(p){p.classList.toggle('on',k===name);}
-    if(t){t.classList.toggle('on',k===name);}
+  var ps={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
+  var ts={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
+  Object.keys(ps).forEach(function(k){
+    var p=gid(ps[k]);if(p)p.classList.toggle('on',k===name);
+    var t=gid(ts[k]);if(t)t.classList.toggle('on',k===name);
   });
   if(name==='spin')drawWheel();
   if(name==='lb')loadLB();
-  if(name==='raffle'){
-    var cvS=document.getElementById('cvSans');if(cvS)cvS.textContent=(ud.balance||0).toLocaleString();
-    var cvT=document.getElementById('cvTickets');if(cvT)cvT.textContent=parseInt(ud.tickets)||0;
-    renderPools();
-  }
-}
-
-// LANG APPLY
-function applyLang(){
-  var tabs=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
-  for(var i=0;i<tabs.length;i++) document.getElementById(tabs[i]).textContent=lang.tabs[i];
-  // TAP
-  document.getElementById('tap-info').innerHTML=lang.tapI;
-  document.getElementById('tap-r').textContent=lang.tapR;
-  document.getElementById('ts-sans').textContent='SANS';
-  document.getElementById('ts-tick').textContent=lang.tl;
-  // SPIN
-  document.getElementById('spinIL').textContent=lang.srl;
-  document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
-  var sb=document.getElementById('spinBtn');
-  if(sb&&!sb.disabled) sb.textContent=lang.spinBtnTxt||'🎡 SPIN';
-  // CHECKIN
-  document.getElementById('streakL').textContent=lang.sl;
-  document.getElementById('streakS').textContent=lang.ss;
-  var cb=document.getElementById('ciBtn');
-  if(cb&&!cb.disabled) cb.textContent=lang.ci;
-  // TASKS
-  document.getElementById('ref-desc').textContent=lang.rd2;
-  // RANK
-  document.getElementById('lb-weekly').textContent=lang.lt;
-  var myRY=document.getElementById('myRY');
-  if(myRY) myRY.textContent=lang.you;
-  // RAFFLE
-  document.getElementById('raffle-how').textContent=lang.rh;
-  document.getElementById('rt-lbl').textContent=lang.rtl;
-  document.getElementById('wallet-lbl').textContent=lang.wl;
-  // NAV
-  document.getElementById('tb-tick-lbl').textContent=lang.tl;
-  // INFO OVERLAY
-  document.getElementById('io-t').textContent=lang.ioTitle||'Watch Ad & Earn!';
-  var ioInstr=document.getElementById('io-instructions');
-  if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
-  var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
-  var ioTL=document.getElementById('io-ticket-lbl'); if(ioTL) ioTL.textContent=lang.ioTicketLbl||'🎟 Tickets';
-  // WIN OVERLAY
-  var wt=document.getElementById('w-title'); if(wt) wt.textContent=lang.winTitle||'YOU EARNED';
-  var ws=document.getElementById('w-sub'); if(ws) ws.textContent=lang.winSub||'Added to your balance!';
-  var wtl=document.getElementById('w-total-lbl'); if(wtl) wtl.textContent=lang.winTotalLbl||'Total SANS';
-  var wtkl=document.getElementById('w-tick-lbl'); if(wtkl) wtkl.textContent=lang.tl;
-  // AD OVERLAY
-  var adJoinBtn=document.getElementById('joinRaffleBtn');
-  // RAFFLE join
-  renderTasks();renderDays();renderPools();
-}
-
-// UI
-function updateUI(){
-  var b=ud.balance||0,t=parseInt(ud.tickets)||0;
-  document.getElementById('balEl').textContent=b.toLocaleString()+' SANS';
-  document.getElementById('tickEl').textContent=t;
-  document.getElementById('tTotal').textContent=b.toLocaleString();
-  document.getElementById('tTickets').textContent=t;
-  document.getElementById('spinLeft').textContent=ud.spin_left||0;
-  document.getElementById('streakN').textContent=ud.streak||0;
-  document.getElementById('spinBadge').textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
-  document.getElementById('mBal').textContent=b.toLocaleString();
-  document.getElementById('mTickets').textContent=t;
-  var cvS=document.getElementById('cvSans'); if(cvS) cvS.textContent=b.toLocaleString();
-  var cvT=document.getElementById('cvTickets'); if(cvT) cvT.textContent=ud.tickets||0;
-  if(ud.referral_code)document.getElementById('refLink').textContent='https://t.me/sanslicekilisbot?startapp='+ud.referral_code;
-  renderDays();renderTasks();renderPools();
+  if(name==='raffle'){st('xCvSans',(ud.balance||0).toLocaleString());st('xCvTick',tk());renderPools();}
 }
 
 // SUPABASE
@@ -722,6 +634,7 @@ async function loadUser(){
     if(ins.data)ud=ins.data;
   } else {
     ud=res.data;
+    if(!ud.tickets)ud.tickets=0;
     var today=new Date().toDateString();
     if(ud.last_spin_date!==today){
       var upd={spin_left:3,free_spin:1,last_spin_date:today};
@@ -731,170 +644,153 @@ async function loadUser(){
   }
   user={id:tid,uname:uname};
   if(!ud.referral_code){var c='SANS'+tid.slice(-6).toUpperCase();await db.from('users').update({referral_code:c}).eq('telegram_id',tid);ud.referral_code=c;}
-  var sp=(tg&&tg.initDataUnsafe)?tg.initDataUnsafe.start_param:null;
-  if(sp&&!ud.referred_by)await applyRef(sp);
-  if(ud.last_checkin===new Date().toDateString()){var cb=document.getElementById('ciBtn');if(cb){cb.disabled=true;cb.textContent=lang.cid;}}
-  if(ud.referred_by){var rb=document.getElementById('refBox');if(rb)rb.style.display='none';}
-  if(ud.wallet){var wi=document.getElementById('walletIn');if(wi)wi.value=ud.wallet;}
+  var sp2=(tg&&tg.initDataUnsafe)?tg.initDataUnsafe.start_param:null;
+  if(sp2&&!ud.referred_by)await applyRef(sp2);
+  if(ud.last_checkin===new Date().toDateString()){var cb2=gid('xCiBtn');if(cb2){cb2.disabled=true;cb2.textContent=lang.cidone;}}
+  if(ud.referred_by){var rb=gid('xRefBox');if(rb)rb.style.display='none';}
+  if(ud.wallet){var wi=gid('xWalletIn');if(wi)wi.value=ud.wallet;}
+  applyLang(); updateUI();
 }
-async function save(upd){Object.assign(ud,upd);if(user)await db.from('users').update(upd).eq('telegram_id',user.id);updateUI();}
 
-// INFO
+async function save(upd){
+  Object.assign(ud,upd);
+  if(user)await db.from('users').update(upd).eq('telegram_id',user.id);
+  updateUI();
+}
+
+// INFO OVERLAY
 function showInfo(s,l,cb){
-  curR={s:s,l:l};infoCb=cb;
-  document.getElementById('io-r').textContent=l;
-  document.getElementById('io-t2').textContent='+'+(s/TICK).toFixed(2)+' 🎟';
-  document.getElementById('ovInfo').classList.add('on');
-  var iot=document.getElementById('io-t');if(iot)iot.textContent=lang.ioTitle||'Watch Ad & Earn!';
-  var iorl=document.getElementById('io-reward-lbl');if(iorl)iorl.textContent=lang.ioRewardLbl||'Reward';
-  var iotl=document.getElementById('io-ticket-lbl');if(iotl)iotl.textContent=lang.ioTicketLbl||'Tickets';
-  var ioInstr=document.getElementById('io-instructions');
-  if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
-  var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
-  var ioTL=document.getElementById('io-ticket-lbl'); if(ioTL) ioTL.textContent=lang.ioTicketLbl||'🎟 Tickets';
-  var ioT=document.getElementById('io-t');
-  if(ioT) ioT.textContent=lang.ioTitle||'Watch Ad & Earn!';
+  curR={s:s,l:l}; infoCb=cb;
+  st('xIoR',l);
+  var t2=gid('xIoT2');if(t2)t2.textContent='+'+(s/100).toFixed(2)+' \uD83C\uDF9F';
+  st('xIoT',lang.iot); st('xIoRL',lang.iorl); st('xIoTL',lang.iotl);
+  si('xIoInstr','\u23F1 '+lang.ioinstr);
+  st('xBtnCancel',lang.cancel);
+  gid('ovInfo').classList.add('on');
   var c=5;
-  var iBtn=document.getElementById('iBtn');
-  if(iBtn) iBtn.textContent='▶ (5s)';
-  clearInterval(infoCountInt);
-  infoCountInt=setInterval(function(){
+  var ib=gid('xIBtn');if(ib)ib.textContent=lang.ibtn+' 5s';
+  clearInterval(infoCI);
+  infoCI=setInterval(function(){
     c--;
-    var btn2=document.getElementById('iBtn');
-    if(c>0){ if(btn2) btn2.textContent='▶ ('+c+'s)'; }
-    else{ clearInterval(infoCountInt); closeInfo(); if(infoCb){var f=infoCb;infoCb=null;f();} }
+    var ib2=gid('xIBtn');
+    if(c>0){if(ib2)ib2.textContent=lang.ibtn+' '+c+'s';}
+    else{clearInterval(infoCI);closeInfo();if(infoCb){var f=infoCb;infoCb=null;f();}}
   },1000);
 }
-function closeInfo(){clearInterval(infoCountInt);document.getElementById('ovInfo').classList.remove('on');}
-function startAd(){clearInterval(infoCountInt);document.getElementById('ovInfo').classList.remove('on');if(infoCb){var f=infoCb;infoCb=null;f();}}
+function closeInfo(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');}
+function startAd(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');if(infoCb){var f=infoCb;infoCb=null;f();}}
 
-// AD
+// AD OVERLAY
 function showAd(s,l,cb){
-  adCb=cb;curR={s:s,l:l};
-  document.getElementById('claimBtn').disabled=true;
-  document.getElementById('ovAd').classList.add('on');
-  try{if(typeof show_10975774==='function'){show_10975774().then(function(){enableClaim();}).catch(function(){enableClaim();});}}catch(e){}
-  var t=15;document.getElementById('adTimer').textContent=t+'s';
-  clearInterval(adTimerInt);
-  adTimerInt=setInterval(function(){t--;document.getElementById('adTimer').textContent=t+'s';if(t<=0){clearInterval(adTimerInt);enableClaim();}},1000);
+  adCb=cb; curR={s:s,l:l};
+  var cc=gid('xClaimBtn');if(cc){cc.disabled=true;cc.textContent=lang.adclaim;}
+  st('xAdW',lang.adw); st('xAdLoad',lang.adl); st('xBtnNext',lang.adnext);
+  gid('ovAd').classList.add('on');
+  try{if(typeof show_10975774==='function'){show_10975774().then(enableClaim).catch(enableClaim);}}catch(e){}
+  var t=15;st('xAdTimer',t+'s');
+  clearInterval(adTI);
+  adTI=setInterval(function(){t--;st('xAdTimer',t+'s');if(t<=0){clearInterval(adTI);enableClaim();}},1000);
 }
-function enableClaim(){document.getElementById('claimBtn').disabled=false;}
-function claimAd(){clearInterval(adTimerInt);document.getElementById('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
+function enableClaim(){var cc=gid('xClaimBtn');if(cc){cc.disabled=false;cc.textContent=lang.adclaim;}}
+function claimAd(){clearInterval(adTI);gid('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
 function nextAd(){
-  clearInterval(adTimerInt);document.getElementById('ovAd').classList.remove('on');
+  clearInterval(adTI);gid('ovAd').classList.remove('on');
   if(adCb){var f=adCb;adCb=null;f();}
   setTimeout(function(){showInfo(curR.s,curR.l,function(){showAd(curR.s,curR.l,async function(){await save({balance:ud.balance+curR.s});showWin(curR.s,curR.l);});});},400);
 }
 
-// WIN
+// WIN OVERLAY
 function showWin(s,l){
-  document.getElementById('w-amt').textContent=l;
-  document.getElementById('w-total').textContent=(ud.balance||0).toLocaleString()+' SANS';
-  document.getElementById('w-tick').textContent=tk(ud.balance)+' 🎟';
-  document.getElementById('ovWin').classList.add('on');
-  playWinSound(s);startConfetti(s);
+  st('xWAmt',l); st('xWTitle',lang.wtitle); st('xWSub',lang.wsub);
+  st('xWTL',lang.wtl); st('xWTickL',lang.wtickl); st('xWClose',lang.wclose);
+  st('xWTot',(ud.balance||0).toLocaleString()+' SANS');
+  st('xWTick',tk()+' \uD83C\uDF9F');
+  gid('ovWin').classList.add('on');
+  playWin(s); startConfetti(s);
   setTimeout(function(){closeWin();},4000);
 }
-function closeWin(){document.getElementById('ovWin').classList.remove('on');stopConfetti();}
+function closeWin(){gid('ovWin').classList.remove('on');stopConfetti();}
 
-// SOUND
-function playWinSound(amt){
+function playWin(amt){
   try{
     var ctx=new(window.AudioContext||window.webkitAudioContext)();
     var notes=amt>=50?[523,659,784,1047,1319]:amt>=20?[523,659,784,1047]:[523,659,784];
-    notes.forEach(function(f,i){
-      var o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*0.12;
-      o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';
-      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.2,t+0.05);g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-      o.start(t);o.stop(t+0.35);
-    });
+    notes.forEach(function(f,i){var o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.12;o.connect(g);g.connect(ctx.destination);o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.2,t+.05);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.35);});
   }catch(e){}
 }
-
-// CONFETTI
-var cParts=[],cAnimId=null;
-var cColors=['#00ff9d','#0099ff','#ffaa00','#ff4488','#aa44ff','#fff'];
+var CC=['#00ff9d','#0099ff','#ffaa00','#ff4488','#aa44ff','#fff'];
 function startConfetti(amt){
-  var cv=document.getElementById('confetti');
-  cv.width=window.innerWidth;cv.height=window.innerHeight;
-  cParts=[];
-  var n=amt>=50?100:amt>=20?65:40;
-  for(var i=0;i<n;i++)cParts.push({x:Math.random()*cv.width,y:-10,w:Math.random()*8+4,h:Math.random()*5+2,color:cColors[Math.floor(Math.random()*cColors.length)],r:Math.random()*360,rs:(Math.random()-0.5)*7,vx:(Math.random()-0.5)*3.5,vy:Math.random()*3.5+2,op:1});
+  var cv=gid('confetti');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  cParts=[];var n=amt>=50?100:amt>=20?65:40;
+  for(var i=0;i<n;i++)cParts.push({x:Math.random()*cv.width,y:-10,w:Math.random()*8+4,h:Math.random()*5+2,color:CC[Math.floor(Math.random()*CC.length)],r:Math.random()*360,rs:(Math.random()-.5)*7,vx:(Math.random()-.5)*3.5,vy:Math.random()*3.5+2,op:1});
   animC();
 }
 function animC(){
-  var cv=document.getElementById('confetti');if(!cv)return;
-  var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);
-  var alive=false;
-  cParts.forEach(function(p){
-    if(p.y<cv.height+10){alive=true;p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.r+=p.rs;
-    if(p.y>cv.height*0.55)p.op=Math.max(0,p.op-0.025);
-    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r*Math.PI/180);ctx.globalAlpha=p.op;ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();}
-  });
-  if(alive)cAnimId=requestAnimationFrame(animC);
+  var cv=gid('confetti');if(!cv)return;
+  var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);var alive=false;
+  cParts.forEach(function(p){if(p.y<cv.height+10){alive=true;p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.r+=p.rs;if(p.y>cv.height*.55)p.op=Math.max(0,p.op-.025);ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r*Math.PI/180);ctx.globalAlpha=p.op;ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();}});
+  if(alive)cAI=requestAnimationFrame(animC);
 }
-function stopConfetti(){if(cAnimId)cancelAnimationFrame(cAnimId);cParts=[];var cv=document.getElementById('confetti');if(cv){var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);}}
+function stopConfetti(){if(cAI)cancelAnimationFrame(cAI);cParts=[];var cv=gid('confetti');if(cv){var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);}}
 
 // TAP
 function onTap(e){
   showInfo(10,'+10 SANS',function(){
     showAd(10,'+10 SANS',async function(){
       await save({balance:ud.balance+10});
-      floatEl(e,'+10 SANS');
-      showWin(10,'+10 SANS');
+      floatEl(e,'+10 SANS');showWin(10,'+10 SANS');
     });
   });
 }
 
 // WHEEL
 function drawWheel(rot){
-  rot=rot||0;
-  var c=document.getElementById('wheel');if(!c)return;
+  rot=rot||0;var c=gid('wheel');if(!c)return;
   var ctx=c.getContext('2d'),cx=110,cy=110,r=107;
   var arc=(2*Math.PI)/PRIZES.length,off=-Math.PI/2;
   ctx.clearRect(0,0,220,220);
   PRIZES.forEach(function(p,i){
     var s=off+rot+i*arc;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,s+arc);
-    ctx.fillStyle=p.c;ctx.fill();
-    ctx.strokeStyle='rgba(0,255,157,0.15)';ctx.lineWidth=1.5;ctx.stroke();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(s+arc/2);
-    ctx.textAlign='right';ctx.fillStyle='#00ff9d';ctx.font='bold 12px sans-serif';
-    ctx.fillText(p.l+' S',r-8,4);ctx.restore();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,s+arc);ctx.fillStyle=p.c;ctx.fill();
+    ctx.strokeStyle='rgba(0,255,157,.15)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(s+arc/2);ctx.textAlign='right';
+    ctx.fillStyle='#00ff9d';ctx.font='bold 12px sans-serif';ctx.fillText(p.l+' S',r-8,4);ctx.restore();
   });
-  ctx.beginPath();ctx.arc(cx,cy,18,0,2*Math.PI);ctx.fillStyle='#07071a';ctx.fill();ctx.strokeStyle='#00ff9d';ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,18,0,2*Math.PI);ctx.fillStyle='#07071a';ctx.fill();
+  ctx.strokeStyle='#00ff9d';ctx.lineWidth=2;ctx.stroke();
 }
 drawWheel();
 
 function onSpin(){
   if(spinning)return;
   var isFree=(ud.free_spin||0)>0;
-  if(!isFree&&ud.spin_left<=0){toast('No spins left!');return;}
+  if(!isFree&&ud.spin_left<=0){toast(lang.sprl+' 0');return;}
   var idx=Math.floor(Math.random()*PRIZES.length),prize=PRIZES[idx];
   if(isFree){
-    showInfo(prize.v,'Up to 50 SANS FREE!',function(){doSpinAnim(idx,true);});
+    showInfo(prize.v,'+'+prize.v+' SANS',function(){doSpin(idx,true);});
   } else {
     showInfo(prize.v,'+'+prize.v+' SANS',function(){
       showAd(prize.v,'+'+prize.v+' SANS',async function(){
-        await save({balance:ud.balance+prize.v,spin_left:ud.spin_left-1,last_spin_date:new Date().toDateString()});
+        await save({balance:ud.balance+prize.v,spin_left:(ud.spin_left||1)-1,last_spin_date:new Date().toDateString()});
         showWin(prize.v,'+'+prize.v+' SANS');
       });
-      doSpinAnim(idx,false,true);
+      doSpin(idx,false,true);
     });
   }
 }
-function doSpinAnim(idx,free,skip){
-  spinning=true;document.getElementById('spinBtn').disabled=true;document.getElementById('spinRes').textContent='';
+function doSpin(idx,free,skip){
+  spinning=true;var sb=gid('xSpBtn');if(sb)sb.disabled=true;
+  st('xSpRes','');
   var arc=(2*Math.PI)/PRIZES.length,target=2*Math.PI*5+(PRIZES.length-idx)*arc-arc/2,dur=4000,start=performance.now();
   function anim(now){
     var el=now-start,p=Math.min(el/dur,1),ease=1-Math.pow(1-p,4);
     drawWheel(ease*target);
     if(p<1){requestAnimationFrame(anim);}
     else{
-      spinning=false;document.getElementById('spinBtn').disabled=false;
+      spinning=false;if(sb)sb.disabled=false;
       var prize=PRIZES[idx];
-      document.getElementById('spinRes').textContent='🎉 '+prize.l+' SANS — '+lang.sw;
-      if(!skip){var upd={balance:ud.balance+prize.v,last_spin_date:new Date().toDateString()};if(free)upd.free_spin=0;else upd.spin_left=ud.spin_left-1;save(upd);showWin(prize.v,'+'+prize.v+' SANS');}
+      st('xSpRes','\uD83C\uDF89 '+prize.l+' SANS \u2014 '+lang.spwon);
+      if(!skip){var upd={balance:ud.balance+prize.v,last_spin_date:new Date().toDateString()};if(free)upd.free_spin=0;else upd.spin_left=(ud.spin_left||1)-1;save(upd);showWin(prize.v,'+'+prize.v+' SANS');}
       else if(free)save({free_spin:0,last_spin_date:new Date().toDateString()});
     }
   }
@@ -904,20 +800,20 @@ function doSpinAnim(idx,free,skip){
 // CHECKIN
 function renderDays(){
   var today=new Date().toDateString(),streak=ud.streak||0;
-  var g=document.getElementById('daysGrid');if(!g)return;
+  var g=gid('daysGrid');if(!g)return;
   g.innerHTML=CI_R.map(function(r,i){
     var done=i<streak,isT=i===streak&&ud.last_checkin!==today;
-    return '<div class="day-box '+(done?'done':'')+(isT?' today':'')+'"><div class="day-num">'+lang.day+' '+(i+1)+'</div><div class="day-ico">'+(done?'✅':isT?'🎁':'🔒')+'</div><div class="day-amt">'+r+'</div></div>';
+    return '<div class="dayb '+(done?'done':'')+(isT?' today':'')+'"><div class="dayn">'+lang.day+' '+(i+1)+'</div><div class="dayi">'+(done?'\u2705':isT?'\uD83C\uDF81':'\uD83D\uDD12')+'</div><div class="daya">'+r+'</div></div>';
   }).join('');
 }
-function onCheckin(){
+function onCi(){
   var today=new Date().toDateString();
-  if(ud.last_checkin===today){toast(lang.cid);return;}
+  if(ud.last_checkin===today){toast(lang.cidone);return;}
   var streak=(ud.streak||0)%7,reward=CI_R[streak];
   showInfo(reward,'+'+reward+' SANS',function(){
     showAd(reward,'+'+reward+' SANS',async function(){
       await save({balance:ud.balance+reward,streak:streak+1,last_checkin:today});
-      var cb=document.getElementById('ciBtn');if(cb){cb.disabled=true;cb.textContent=lang.cid;}
+      var cb=gid('xCiBtn');if(cb){cb.disabled=true;cb.textContent=lang.cidone;}
       renderDays();showWin(reward,'+'+reward+' SANS');
     });
   });
@@ -925,15 +821,15 @@ function onCheckin(){
 
 // TASKS
 function renderTasks(){
-  var done=ud.tasks_done||[],tl=document.getElementById('taskList');if(!tl)return;
+  var done=ud.tasks_done||[],tl=gid('taskList');if(!tl)return;
   tl.innerHTML=lang.tasks.map(function(t){
     var isDone=done.indexOf(t.id)>=0;
-    return '<div class="task-item '+(isDone?'done':'')+'" onclick="'+(isDone?'':'onTask(\''+t.id+'\',\''+t.u+'\','+t.r+')')+'">'+
-      '<div class="task-ico">'+t.i+'</div>'+
-      '<div class="task-info"><div class="task-title">'+t.t+'</div><div class="task-desc">'+t.d+'</div></div>'+
-      '<div class="task-r">'+(isDone?'<span style="font-size:18px">✅</span>':'<div class="task-sans">+'+t.r+'</div><div style="font-size:9px;color:#8888aa">'+lang.go+'</div>')+'</div>'+
+    return '<div class="taskitem '+(isDone?'done':'')+'" onclick="'+(isDone?'':'onTask(\''+t.id+'\',\''+t.u+'\','+t.r+')')+'">'+
+      '<div class="taskico">'+t.i+'</div>'+
+      '<div style="flex:1"><div class="taskttl">'+t.t+'</div><div class="taskdsc">'+t.d+'</div></div>'+
+      '<div style="text-align:right">'+(isDone?'<span style="font-size:18px">\u2705</span>':'<div class="taskrew">+'+t.r+' SANS</div><div style="font-size:9px;color:#8888aa;margin-top:2px">'+lang.go+'</div>')+'</div>'+
       '</div>';
-  }).join('');
+  }).join('')+'<div style="height:6px"></div>';
 }
 function onTask(id,url,reward){
   window.open(url,'_blank');
@@ -952,24 +848,22 @@ function copyRef(){
   var link='https://t.me/sanslicekilisbot?startapp='+(ud.referral_code||'');
   if(navigator.clipboard)navigator.clipboard.writeText(link);
   else{var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
-  toast('📋 Copied!');
+  toast('\uD83D\uDCCB Copied!');
 }
 function useRef(){
-  var code=document.getElementById('refIn').value.trim().toUpperCase();
+  var code=gid('xRefIn').value.trim().toUpperCase();
   if(!code)return;
-  if(code===ud.referral_code){setRefMsg('❌ Cannot use own code','#ff4444');return;}
-  if(ud.referred_by){setRefMsg('❌ Already used','#ff4444');return;}
+  if(code===ud.referral_code||ud.referred_by){setRM('\u274C','#ff4444');return;}
   applyRef(code);
 }
-function setRefMsg(m,c){var el=document.getElementById('refMsg');if(el){el.textContent=m;el.style.color=c;}}
+function setRM(m,c){var el=gid('xRefMsg');if(el){el.textContent=m;el.style.color=c;}}
 async function applyRef(code){
-  var res=await db.from('users').select('*').eq('referral_code',code.toUpperCase()).maybeSingle();
-  if(!res.data){setRefMsg('❌ Invalid code','#ff4444');return;}
-  if(res.data.telegram_id===user.id){setRefMsg('❌ Cannot use own code','#ff4444');return;}
-  await save({referred_by:code.toUpperCase(),balance:ud.balance+20});
+  var res=await db.from('users').select('*').eq('referral_code',code).maybeSingle();
+  if(!res.data||res.data.telegram_id===user.id){setRM('\u274C Invalid','#ff4444');return;}
+  await save({referred_by:code,balance:ud.balance+20});
   await db.from('users').update({balance:(res.data.balance||0)+30,referral_count:(res.data.referral_count||0)+1}).eq('telegram_id',res.data.telegram_id);
-  setRefMsg('🎉 +20 SANS!','#00ff9d');
-  var rb=document.getElementById('refBox');if(rb)rb.style.display='none';
+  setRM('\uD83C\uDF89 +20 SANS!','#00ff9d');
+  var rb=gid('xRefBox');if(rb)rb.style.display='none';
   showWin(20,'+20 SANS');
 }
 
@@ -980,108 +874,93 @@ async function loadLB(){
   var data=res.data.filter(function(u){return (u.balance||0)>0;});
   var myRank=-1,myData=null;
   data.forEach(function(u,i){if(user&&u.telegram_id===user.id){myRank=i+1;myData=u;}});
-  var mrBox=document.getElementById('myRankBox');
-  if(myRank>0&&myData){
+  var mrBox=gid('xMyRank');
+  if(myRank>0&&myData&&mrBox){
     mrBox.style.display='flex';
-    document.getElementById('myRN').textContent=myRank;
-    document.getElementById('myRName').textContent=myData.username||'Player';
-    document.getElementById('myRS').textContent=(myData.balance||0).toLocaleString()+' SANS';
-    document.getElementById('myRTick').textContent=tk(myData.balance);
-  } else mrBox.style.display='none';
+    st('xMyRN',myRank); st('xMyRNm',myData.username||'Player');
+    st('xMyRS',(myData.balance||0).toLocaleString()+' SANS');
+    st('xMyRT',tk()+' \uD83C\uDF9F');
+  } else if(mrBox){mrBox.style.display='none';}
+  var medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
   var filtered=data.filter(function(u){return u.telegram_id!==user.id;});
-  var medals=['🥇','🥈','🥉'];
-  var lbEl=document.getElementById('lbList');
-  lbEl.innerHTML=filtered.slice(0,20).map(function(u,i){
-    return '<div class="rank-item">'+
+  gid('lbList').innerHTML=filtered.slice(0,20).map(function(u,i){
+    return '<div class="rankitem">'+
       '<div style="font-size:15px;font-weight:900;width:22px;text-align:center;color:'+(i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'#888')+'">'+(medals[i]||(i+1))+'</div>'+
-      '<div style="flex:1"><div style="font-size:12px;font-weight:600">'+(u.username||'Player')+'</div>'+
-      '<div style="font-size:9px;color:#8888aa">🎟 '+tk(u.balance)+' tickets</div></div>'+
-      '<div style="font-size:12px;font-weight:800;color:var(--g)">'+(u.balance||0).toLocaleString()+'</div></div>';
-  }).join('')||'<div style="text-align:center;color:#8888aa;padding:20px;font-size:12px">No players yet. Be the first! 🚀</div>';
+      '<div style="flex:1"><div style="font-size:12px;font-weight:600">'+(u.username||'Player')+'</div></div>'+
+      '<div style="font-size:12px;font-weight:800;color:#00ff9d">'+(u.balance||0).toLocaleString()+' SANS</div></div>';
+  }).join('')||'<div style="text-align:center;color:#8888aa;padding:20px;font-size:12px">No players yet \uD83D\uDE80</div>';
 }
 
 // RAFFLE POOLS
 function renderPools(){
-  var b=ud.balance||0,t=tk(b);
-  var el=document.getElementById('rafflePools');if(!el)return;
-  var poolLbl=lang.poolLbl||'Prize Pool';
-  var poolSize=lang.poolSize||'Pool size';
-  var poolFull=lang.poolFull||'more needed';
-  var joinBtn=lang.joinBtn2||lang.joinBtn||'Join Draw';
+  var t=tk(),b=ud.balance||0;
+  var el=gid('rafflePools');if(!el)return;
   var html='';
-  for(var pi=0;pi<POOLS.length;pi++){
-    var pool=POOLS[pi];
-    var pct=Math.min(100,Math.round((t/pool.target)*100));
+  for(var i=0;i<POOLS.length;i++){
+    var pool=POOLS[i];
+    var pct=Math.min(100,Math.round((t/pool.tgt)*100));
     var canJoin=t>=1&&!!ud.wallet;
-    var myT=Math.min(t,pool.target);
-    html+='<div class="pool-card">';
-    html+='<div class="pool-top">';
-    html+='<div><div style="font-size:9px;color:#8888aa;text-transform:uppercase;letter-spacing:1px">'+poolLbl+'</div>';
-    html+='<div class="pool-prize">'+pool.prize+'</div></div>';
-    html+='<div style="text-align:right"><div style="font-size:9px;color:#8888aa">'+poolSize+'</div>';
-    html+='<div style="font-size:12px;font-weight:700">'+pool.target+' tickets</div></div></div>';
-    html+='<div class="pool-pb"><div class="pool-pf" style="width:'+pct+'%;background:linear-gradient(90deg,'+pool.color+',#0099ff)"></div></div>';
-    html+='<div class="pool-info" style="margin-bottom:8px">';
-    html+='<span>'+pct+'% &middot; '+myT+'/'+pool.target+'</span>';
-    html+='<span style="color:'+pool.color+'">'+Math.max(0,pool.target-t)+' '+poolFull+'</span></div>';
+    html+='<div class="poolcard">';
+    html+='<div class="pooltop">';
+    html+='<div><div style="font-size:9px;color:#8888aa;text-transform:uppercase;letter-spacing:1px">'+lang.plbl+'</div><div class="poolprize">'+pool.prize+'</div></div>';
+    html+='<div style="text-align:right"><div style="font-size:9px;color:#8888aa">'+lang.psz+'</div><div style="font-size:12px;font-weight:700">'+pool.tgt+' \uD83C\uDF9F</div></div>';
+    html+='</div>';
+    html+='<div class="poolpb"><div class="poolpf" style="width:'+pct+'%"></div></div>';
+    html+='<div class="poolinfo"><span>'+pct+'% \u00b7 '+Math.min(t,pool.tgt)+'/'+pool.tgt+'</span><span>'+Math.max(0,pool.tgt-t)+' '+lang.pfull+'</span></div>';
     if(canJoin){
-      html+='<button class="pool-join-btn" data-id="'+pool.id+'" style="width:100%;background:linear-gradient(135deg,'+pool.color+',#0099ff);color:#000;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer">'+joinBtn+'</button>';
+      html+='<button class="pjbtn" data-pid="'+i+'" style="width:100%;background:linear-gradient(135deg,#ffaa00,#ff6400);color:#000;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer">'+lang.join+'</button>';
     } else if(!ud.wallet){
-      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+( lang.saveWalletFirst||'Save your BSC wallet address first')+'</div>';
+      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">\u26A0\uFE0F '+lang.nowallet+'</div>';
     } else {
-      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">⚠️ '+(lang.needTickets||'Need at least 1 ticket (100 SANS)')+'</div>';
+      html+='<div style="text-align:center;font-size:11px;color:#8888aa;padding:6px">\u26A0\uFE0F '+lang.notick+'</div>';
     }
     html+='</div>';
   }
   el.innerHTML=html;
-  // Event listener ekle
-  var btns=el.querySelectorAll('.pool-join-btn');
-  for(var bi=0;bi<btns.length;bi++){
-    btns[bi].onclick=function(){ joinPool(this.dataset.id); };
+  // Event listener
+  var btns=el.querySelectorAll('.pjbtn');
+  for(var j=0;j<btns.length;j++){
+    btns[j].addEventListener('click',function(){
+      var idx=parseInt(this.dataset.pid);
+      joinPool(idx);
+    });
   }
 }
-function joinPool(poolId){
-  if(!ud.wallet){ toast('⚠️ '+(lang.noWallet||'Save BSC wallet first')); return; }
-  var t=ud.tickets||0;
-  if(t<1){ toast('⚠️ '+(lang.noTickets||'No tickets! Convert SANS first')); return; }
-  // 1 bilet harca
+function joinPool(idx){
+  if(!ud.wallet){toast('\u26A0\uFE0F '+lang.nowallet);return;}
+  var t=tk();
+  if(t<1){toast('\u26A0\uFE0F '+lang.notick);return;}
   save({tickets:t-1});
-  document.getElementById('cvTickets').textContent=ud.tickets||0;
-  toast((lang.joinSucMsg||'🎟 Added to draw!'));
+  toast(lang.joinok);
   renderPools();
 }
 
 // WALLET
-function convertToTickets(){
-  var amt=parseInt(document.getElementById('convertAmt').value)||0;
-  if(amt<100||amt%100!==0){ toast(lang.cvHint||'Enter multiples of 100'); return; }
-  if(ud.balance<amt){ toast('Not enough SANS!'); return; }
-  var newTickets=Math.floor(amt/100);
-  save({balance:ud.balance-amt,tickets:(ud.tickets||0)+newTickets});
-  document.getElementById('cvSans').textContent=(ud.balance||0).toLocaleString();
-  document.getElementById('cvTickets').textContent=ud.tickets||0;
-  document.getElementById('convertAmt').value='';
-  toast('🎟 +'+newTickets+' '+(lang.cvTickLbl||'tickets')+'!');
+function saveWallet(){
+  var w=gid('xWalletIn').value.trim();
+  var msg=gid('xWalletMsg');
+  if(!w.startsWith('0x')||w.length!==42){
+    if(msg){msg.textContent=lang.wfail;msg.style.color='#ff4444';}return;
+  }
+  save({wallet:w});
+  if(msg){msg.textContent=lang.wok;msg.style.color='#00ff9d';}
   renderPools();
 }
 
-function saveWallet(){
-  var w=document.getElementById('walletIn').value.trim();
-  var msg=document.getElementById('walletMsg');
-  if(!w.startsWith('0x')||w.length!==42){
-    msg.textContent=lang.walletSaveFail||'❌ Invalid BSC address';
-    msg.style.color='#ff4444';return;
-  }
-  save({wallet:w});
-  msg.textContent=lang.walletSaveOk||'✅ Wallet saved!';
-  msg.style.color='#00ff9d';
+// CONVERT
+function convertSans(){
+  var amt=parseInt(gid('xCvAmt').value)||0;
+  if(amt<100||amt%100!==0){toast(lang.cvhint);return;}
+  if(ud.balance<amt){toast(lang.notsans);return;}
+  var n=Math.floor(amt/100);
+  save({balance:ud.balance-amt,tickets:(ud.tickets||0)+n});
+  gid('xCvAmt').value='';
+  toast((lang.convok||'+{n} tickets!').replace('{n}',n));
   renderPools();
 }
 
 // START
-loadUser().then(function(){
-  document.getElementById('sLang').classList.remove('hidden');
-});
+loadUser();
 </script>
 </body>
 </html>
