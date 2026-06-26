@@ -241,7 +241,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="tb-left">
-      <button class="tb-back" onclick="backToMenu()">← Menu</button>
+      <button class="tb-back" id="btn-back" onclick="backToMenu()">← Menu</button>
       <div class="tb-logo">SANS</div>
     </div>
     <div class="tb-bal">
@@ -410,13 +410,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
   <div class="sheet">
     <div class="sh"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-size:14px;font-weight:800">📺 Watching Ad...</div>
+      <div style="font-size:14px;font-weight:800" id="ad-watching">📺 Watching Ad...</div>
       <div style="background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.25);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--g)" id="adTimer">15s</div>
     </div>
-    <div style="background:rgba(255,255,255,0.03);border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;margin-bottom:12px">📢 Ad Loading...</div>
+    <div style="background:rgba(255,255,255,0.03);border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;margin-bottom:12px" id="ad-loading">📢 Ad Loading...</div>
     <div style="display:flex;gap:8px">
-      <button class="btn-s" style="flex:1" onclick="nextAd()">⏭ Next</button>
-      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="claimBtn" disabled onclick="claimAd()">✓ Claim Reward</button>
+      <button class="btn-s" style="flex:1" onclick="nextAd()" id="btn-next-ad">⏭ Next</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="claimBtn" disabled onclick="claimAd()" id="btn-claim">✓ Claim Reward</button>
     </div>
   </div>
 </div>
@@ -432,7 +432,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
       <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-total-lbl">Total SANS</span><span style="font-size:12px;font-weight:700;color:var(--g)" id="w-total">0</span></div>
       <div class="win-row"><span style="font-size:11px;color:#8888aa" id="w-tick-lbl">Raffle Tickets</span><span style="font-size:12px;font-weight:700;color:var(--gold)" id="w-tick">0 🎟</span></div>
     </div>
-    <button class="btn-g" onclick="closeWin()">✓ Awesome!</button>
+    <button class="btn-g" onclick="closeWin()" id="w-close">✓ Awesome!</button>
   </div>
 </div>
 
@@ -491,6 +491,104 @@ function confirmLang(){
   document.getElementById('sMenu').classList.remove('hidden');
   applyMenuLang();
 }
+function applyMenuLang(){
+  document.getElementById('m-sub').textContent=lang.ms;
+  document.getElementById('m-earn-t').textContent=lang.et;
+  document.getElementById('m-earn-d').textContent=lang.ed;
+  document.getElementById('m-buy-t').textContent=lang.bt;
+  document.getElementById('m-buy-d').textContent=lang.bd;
+  document.getElementById('m-raffle-t').textContent=lang.rt;
+  document.getElementById('m-raffle-d').textContent=lang.rd;
+  document.getElementById('m-bal-lbl').textContent=lang.bll;
+  document.getElementById('m-tickets-lbl').textContent=lang.tl;
+  document.getElementById('mBal').textContent=(ud.balance||0).toLocaleString();
+  document.getElementById('mTickets').textContent=tk(ud.balance);
+}
+
+// MENU
+function goEarn(){
+  document.getElementById('sMenu').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  applyLang();updateUI();
+}
+function goBuy(){window.open('https://sanslicekilis.com/#presale','_blank');}
+function changeLang(){
+  document.getElementById('sMenu').classList.add('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('sLang').classList.remove('hidden');
+}
+function backToMenu(){
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('sMenu').classList.remove('hidden');
+  applyMenuLang();
+}
+
+// PANES
+function goPane(name){
+  var all={tap:'pTap',spin:'pSpin',ci:'pCi',task:'pTask',lb:'pLb',raffle:'pRaffle'};
+  var tabs={tap:'tTap',spin:'tSpin',ci:'tCi',task:'tTask',lb:'tLb',raffle:'tRaffle'};
+  Object.keys(all).forEach(function(k){
+    var p=document.getElementById(all[k]);
+    var t=document.getElementById(tabs[k]);
+    if(p){p.classList.toggle('on',k===name);}
+    if(t){t.classList.toggle('on',k===name);}
+  });
+  if(name==='spin')drawWheel();
+  if(name==='lb')loadLB();
+  if(name==='raffle')renderPools();
+}
+
+// LANG APPLY
+function applyLang(){
+  var tabIds=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
+  for(var i=0;i<tabIds.length;i++){var el=document.getElementById(tabIds[i]);if(el)el.textContent=lang.tabs[i];}
+  // Topbar
+  var bb=document.getElementById('btn-back');if(bb)bb.textContent=lang.btnBack||'← Menu';
+  var bl=document.getElementById('btn-lang');if(bl)bl.textContent=lang.btnLang||'Language';
+  var ttl=document.getElementById('tb-tick-lbl');if(ttl)ttl.textContent=lang.tl;
+  // Tap
+  var ti=document.getElementById('tap-info');if(ti)ti.innerHTML=lang.tapI;
+  var tr2=document.getElementById('tap-r');if(tr2)tr2.textContent=lang.tapR;
+  // Spin
+  var sil=document.getElementById('spinIL');if(sil)sil.textContent=lang.srl;
+  var sb2=document.getElementById('spinBadge');if(sb2)sb2.textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
+  // Checkin
+  var sl2=document.getElementById('streakL');if(sl2)sl2.textContent=lang.sl;
+  var ss2=document.getElementById('streakS');if(ss2)ss2.textContent=lang.ss;
+  var cb=document.getElementById('ciBtn');if(cb&&!cb.disabled)cb.textContent=lang.ci;
+  // Tasks
+  var rdd=document.getElementById('ref-desc');if(rdd)rdd.textContent=lang.rd2;
+  // Rank
+  var lbw=document.getElementById('lb-weekly');if(lbw)lbw.textContent=lang.lt;
+  var mry=document.getElementById('myRY');if(mry)mry.textContent=lang.you;
+  // Raffle
+  var rh2=document.getElementById('raffle-how');if(rh2)rh2.textContent=lang.rh;
+  var wll=document.getElementById('wallet-lbl');if(wll)wll.textContent=lang.wl;
+  var wi=document.getElementById('walletIn');if(wi)wi.placeholder=lang.walletPh||'0x...';
+  var cvbl=document.getElementById('cv-bal-lbl');if(cvbl)cvbl.textContent=lang.cvBalLbl;
+  var cvtl=document.getElementById('cv-tick-lbl');if(cvtl)cvtl.textContent=lang.cvTickLbl;
+  var cvr=document.getElementById('cv-rate');if(cvr)cvr.textContent=lang.cvRate;
+  var cvh=document.getElementById('cv-hint');if(cvh)cvh.textContent=lang.cvHint;
+  var cvb=document.getElementById('convertBtn');if(cvb)cvb.textContent=lang.cvBtn;
+  // Info overlay
+  var iot=document.getElementById('io-t');if(iot)iot.textContent=lang.ioTitle;
+  var iorl=document.getElementById('io-reward-lbl');if(iorl)iorl.textContent=lang.ioRewardLbl;
+  var iotl=document.getElementById('io-ticket-lbl');if(iotl)iotl.textContent=lang.ioTicketLbl;
+  var ioi=document.getElementById('io-instructions');if(ioi&&lang.adInstr)ioi.innerHTML=lang.adInstr;
+  // Ad overlay
+  var aw=document.getElementById('ad-watching');if(aw)aw.textContent=lang.adWatching;
+  var al=document.getElementById('ad-loading');if(al)al.textContent=lang.adLoading;
+  var an=document.getElementById('btn-next-ad');if(an)an.textContent=lang.adNext;
+  var ac=document.getElementById('btn-claim');if(ac&&ac.disabled==false)ac.textContent=lang.adClaim;
+  // Win overlay
+  var wt=document.getElementById('w-title');if(wt)wt.textContent=lang.winTitle;
+  var wsb=document.getElementById('w-sub');if(wsb)wsb.textContent=lang.winSub;
+  var wtl=document.getElementById('w-total-lbl');if(wtl)wtl.textContent=lang.winTotalLbl;
+  var wtk=document.getElementById('w-tick-lbl');if(wtk)wtk.textContent=lang.tl;
+  var wc=document.getElementById('w-close');if(wc)wc.textContent=lang.winClose;
+  renderTasks();renderDays();renderPools();
+}
+
 function applyMenuLang(){
   document.getElementById('m-sub').textContent=lang.ms;
   document.getElementById('m-earn-t').textContent=lang.et;
@@ -637,6 +735,7 @@ function showInfo(s,l,cb){
   document.getElementById('io-r').textContent=l;
   document.getElementById('io-t2').textContent='+'+(s/TICK).toFixed(2)+' 🎟';
   document.getElementById('ovInfo').classList.add('on');
+  applyLang();
   var ioInstr=document.getElementById('io-instructions');
   if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
   var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
