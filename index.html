@@ -269,7 +269,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
       <div class="info-strip" id="tap-info">Tap → watch short ad → earn <b>+10 SANS</b> · 100 SANS = 1 🎟</div>
       <div class="tap-btn" onclick="onTap(event)">
         <div class="tap-logo">SANS</div>
-        <div class="tap-lbl">TAP TO EARN</div>
+        <div class="tap-lbl" id="tap-lbl-inner">TAP TO EARN</div>
       </div>
       <div class="tap-reward" id="tap-r">+10 SANS per tap</div>
     </div>
@@ -399,7 +399,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
       🚫 <b style="color:#ff6666">Do NOT touch anything during the ad</b>
     </div>
     <div style="display:flex;gap:8px">
-      <button class="btn-s" style="flex:1" onclick="closeInfo()">✕ Cancel</button>
+      <button class="btn-s" style="flex:1" onclick="closeInfo()" id="btn-cancel">✕ Cancel</button>
       <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="iBtn" onclick="startAd()">▶ Starting in 5s</button>
     </div>
   </div>
@@ -535,7 +535,11 @@ function goPane(name){
   });
   if(name==='spin')drawWheel();
   if(name==='lb')loadLB();
-  if(name==='raffle')renderPools();
+  if(name==='raffle'){
+    var cvS=document.getElementById('cvSans');if(cvS)cvS.textContent=(ud.balance||0).toLocaleString();
+    var cvT=document.getElementById('cvTickets');if(cvT)cvT.textContent=parseInt(ud.tickets)||0;
+    renderPools();
+  }
 }
 
 // LANG APPLY
@@ -549,6 +553,7 @@ function applyLang(){
   // Tap
   var ti=document.getElementById('tap-info');if(ti)ti.innerHTML=lang.tapI;
   var tr2=document.getElementById('tap-r');if(tr2)tr2.textContent=lang.tapR;
+  var tli=document.getElementById('tap-lbl-inner');if(tli)tli.textContent=lang.tapLbl||'TAP TO EARN';
   // Spin
   var sil=document.getElementById('spinIL');if(sil)sil.textContent=lang.srl;
   var sb2=document.getElementById('spinBadge');if(sb2)sb2.textContent=(ud.free_spin||0)>0?lang.sb:lang.sbu;
@@ -580,6 +585,7 @@ function applyLang(){
   var al=document.getElementById('ad-loading');if(al)al.textContent=lang.adLoading;
   var an=document.getElementById('btn-next-ad');if(an)an.textContent=lang.adNext;
   var ac=document.getElementById('btn-claim');if(ac&&ac.disabled==false)ac.textContent=lang.adClaim;
+  var bca=document.getElementById('btn-cancel');if(bca)bca.textContent=(lang.btnCancel||'Cancel');
   // Win overlay
   var wt=document.getElementById('w-title');if(wt)wt.textContent=lang.winTitle;
   var wsb=document.getElementById('w-sub');if(wsb)wsb.textContent=lang.winSub;
@@ -633,7 +639,11 @@ function goPane(name){
   });
   if(name==='spin')drawWheel();
   if(name==='lb')loadLB();
-  if(name==='raffle')renderPools();
+  if(name==='raffle'){
+    var cvS=document.getElementById('cvSans');if(cvS)cvS.textContent=(ud.balance||0).toLocaleString();
+    var cvT=document.getElementById('cvTickets');if(cvT)cvT.textContent=parseInt(ud.tickets)||0;
+    renderPools();
+  }
 }
 
 // LANG APPLY
@@ -686,7 +696,7 @@ function applyLang(){
 
 // UI
 function updateUI(){
-  var b=ud.balance||0,t=ud.tickets||0;
+  var b=ud.balance||0,t=parseInt(ud.tickets)||0;
   document.getElementById('balEl').textContent=b.toLocaleString()+' SANS';
   document.getElementById('tickEl').textContent=t;
   document.getElementById('tTotal').textContent=b.toLocaleString();
@@ -735,20 +745,24 @@ function showInfo(s,l,cb){
   document.getElementById('io-r').textContent=l;
   document.getElementById('io-t2').textContent='+'+(s/TICK).toFixed(2)+' 🎟';
   document.getElementById('ovInfo').classList.add('on');
-  applyLang();
+  var iot=document.getElementById('io-t');if(iot)iot.textContent=lang.ioTitle||'Watch Ad & Earn!';
+  var iorl=document.getElementById('io-reward-lbl');if(iorl)iorl.textContent=lang.ioRewardLbl||'Reward';
+  var iotl=document.getElementById('io-ticket-lbl');if(iotl)iotl.textContent=lang.ioTicketLbl||'Tickets';
   var ioInstr=document.getElementById('io-instructions');
   if(ioInstr&&lang.adInstr) ioInstr.innerHTML='⏱ '+lang.adInstr;
   var ioRL=document.getElementById('io-reward-lbl'); if(ioRL) ioRL.textContent=lang.ioRewardLbl||'🎁 Reward';
   var ioTL=document.getElementById('io-ticket-lbl'); if(ioTL) ioTL.textContent=lang.ioTicketLbl||'🎟 Tickets';
   var ioT=document.getElementById('io-t');
   if(ioT) ioT.textContent=lang.ioTitle||'Watch Ad & Earn!';
-  var c=5,btn=document.getElementById('iBtn');
-  btn.textContent='▶ Starting in 5s';
+  var c=5;
+  var iBtn=document.getElementById('iBtn');
+  if(iBtn) iBtn.textContent='▶ (5s)';
   clearInterval(infoCountInt);
   infoCountInt=setInterval(function(){
     c--;
-    if(c>0){btn.textContent='▶ Starting in '+c+'s';}
-    else{clearInterval(infoCountInt);closeInfo();if(infoCb){var f=infoCb;infoCb=null;f();}}
+    var btn2=document.getElementById('iBtn');
+    if(c>0){ if(btn2) btn2.textContent='▶ ('+c+'s)'; }
+    else{ clearInterval(infoCountInt); closeInfo(); if(infoCb){var f=infoCb;infoCb=null;f();} }
   },1000);
 }
 function closeInfo(){clearInterval(infoCountInt);document.getElementById('ovInfo').classList.remove('on');}
