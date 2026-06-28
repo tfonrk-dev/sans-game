@@ -718,39 +718,70 @@ function onCi(){
 
 function renderTasks(){
   var done=ud.tasks_done||[],tl=gid('taskList');if(!tl)return;
+  if(!ud._taskPending)ud._taskPending={};
   tl.innerHTML=lang.tasks.map(function(t){
     var isDone=done.indexOf(t.id)>=0;
-    return '<div class="taskitem '+(isDone?'done':'')+'" onclick="'+(isDone?'':'onTask(\''+t.id+'\',\''+t.u+'\','+t.r+')')+'">'+
+    var isPending=!!ud._taskPending[t.id];
+    var right='';
+    if(isDone){
+      right='<span style="font-size:18px">✅</span>';
+    }else if(isPending){
+      // Goreve gidildi, odulu bekliyor
+      right='<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">'+
+        '<div class="taskrew">+'+t.r+' SANS</div>'+
+        '<button onclick="event.stopPropagation();claimTask(\''+t.id+'\','+t.r+')" style="background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:8px;padding:5px 10px;font-size:10px;font-weight:800;cursor:pointer">✅ '+(lang.claimbtn||'Claim')+'</button>'+
+      '</div>';
+    }else{
+      right='<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">'+
+        '<div class="taskrew">+'+t.r+' SANS</div>'+
+        '<button onclick="event.stopPropagation();goTask(\''+t.id+'\',\''+t.u+'\')" style="background:rgba(0,153,255,.15);border:1px solid rgba(0,153,255,.3);color:#0099ff;border-radius:8px;padding:5px 10px;font-size:10px;font-weight:800;cursor:pointer">'+(lang.go||'Go →')+'</button>'+
+      '</div>';
+    }
+    return '<div class="taskitem '+(isDone?'done':'')+'" style="'+(isDone?'opacity:.5':'')+'">'+
       '<div class="taskico">'+t.i+'</div>'+
       '<div style="flex:1"><div class="taskttl">'+t.t+'</div><div class="taskdsc">'+t.d+'</div></div>'+
-      '<div style="text-align:right">'+(isDone?'<span style="font-size:18px">✅</span>':'<div class="taskrew">+'+t.r+' SANS</div><div style="font-size:9px;color:#8888aa;margin-top:2px">'+lang.go+'</div>')+'</div>'+
+      '<div style="text-align:right">'+right+'</div>'+
       '</div>';
   }).join('')+'<div style="height:6px"></div>';
 }
 
-function onTask(id,url,reward){
-  // Zaten yapildiysa hicbir sey yapma
+// ADIM 1: Goreve git butonu
+function goTask(id,url){
   var done=ud.tasks_done||[];
   if(done.indexOf(id)>=0)return;
-  // Yapiliyor olarak isaretle (double-click onleme)
   if(!ud._taskPending)ud._taskPending={};
-  if(ud._taskPending[id])return;
+  // Pending olarak isaretleyip linki ac
   ud._taskPending[id]=true;
-  window.open(url,'_blank');
-  setTimeout(function(){
-    showInfo(reward,'+'+reward+' SANS',function(){
-      showAd(reward,'+'+reward+' SANS',async function(){
-        var d2=[].concat(ud.tasks_done||[]);
-        if(d2.indexOf(id)<0){
-          d2.push(id);
-          await save({balance:ud.balance+reward,tasks_done:d2});
-          showWin(reward,'+'+reward+' SANS');
-          renderTasks();
-        }
-        ud._taskPending[id]=false;
-      });
+  renderTasks(); // Claim butonu goster
+  // Telegram linkleri
+  if(url.indexOf('t.me/')>=0&&tg&&tg.openTelegramLink){
+    tg.openTelegramLink(url);
+  }else{
+    window.open(url,'_blank');
+  }
+}
+
+// ADIM 2: Odulu al butonu (kullanici geri donunce basar)
+function claimTask(id,reward){
+  var done=ud.tasks_done||[];
+  if(done.indexOf(id)>=0)return;
+  showInfo(reward,'+'+reward+' SANS',function(){
+    showAd(reward,'+'+reward+' SANS',async function(){
+      var d2=[].concat(ud.tasks_done||[]);
+      if(d2.indexOf(id)<0){
+        d2.push(id);
+        await save({balance:ud.balance+reward,tasks_done:d2});
+        if(ud._taskPending)ud._taskPending[id]=false;
+        showWin(reward,'+'+reward+' SANS');
+        renderTasks();
+      }
     });
-  },3000);
+  });
+}
+
+// Eski onTask - artik kullanilmiyor ama kalsin
+function onTask(id,url,reward){
+  goTask(id,url);
 }
 
 function copyRef(){
