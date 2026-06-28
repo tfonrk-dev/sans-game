@@ -311,6 +311,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
     </div>
   </div>
 </div>
+<div class="ov" id="ovClaim">
+  <div class="sheet" style="text-align:center">
+    <div class="shdl"></div>
+    <div style="font-size:48px;margin-bottom:10px">🎁</div>
+    <div style="font-size:18px;font-weight:900;color:var(--g);margin-bottom:6px" id="xClaimAmt">+10 SANS</div>
+    <div style="font-size:12px;color:#8888aa;margin-bottom:20px" id="xClaimSub">Ad finished! Tap to claim.</div>
+    <button class="btnp" onclick="doClaim()" style="font-size:16px;padding:16px;margin-bottom:10px" id="xClaimBtn">✅ Claim Reward</button>
+    <div style="font-size:10px;color:#555" id="xClaimTimer">Auto-claim in 30s</div>
+  </div>
+</div>
 <div class="winov" id="ovWin">
   <div class="wincard">
     <div class="wincoin">🪙</div>
@@ -504,89 +514,56 @@ function showInfo(s,l,cb){
 function closeInfo(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');}
 function startAd(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');if(infoCb){var f=infoCb;infoCb=null;f();}}
 
-// ============================================================
-// showAd — iOS + Android + PC hepsinde calisan universal fix
-// ============================================================
-var claimCb=null,claimAutoTimer=null,claimCountdown=null;
 
-function showClaim(amt,label,cb){
+
+
+
+
+var claimCb=null,claimTimer=null,claimTick=null;
+
+function showClaim(s,label,cb){
   claimCb=cb;
-  // Dil destegi
-  var sub=lang.claimsub||'Ad finished! Tap to claim your reward.';
-  var auto=lang.claimauto||'Auto-claim in';
-  var btnTxt=lang.claimbtn||'✅ Claim Reward';
   var el=document.getElementById('xClaimAmt');if(el)el.textContent=label;
-  var el2=document.getElementById('xClaimSub');if(el2)el2.textContent=sub;
-  var el3=document.getElementById('xClaimBtn');if(el3)el3.textContent=btnTxt;
-  document.getElementById('ovClaim').classList.add('on');
+  var sub=document.getElementById('xClaimSub');if(sub)sub.textContent=(lang.claimsub||'Ad finished! Tap to claim.');
+  var btn=document.getElementById('xClaimBtn');if(btn)btn.textContent=(lang.claimbtn||'\u2705 Claim Reward');
+  var ov=document.getElementById('ovClaim');if(ov)ov.classList.add('on');
   var sec=30;
   var tel=document.getElementById('xClaimTimer');
+  var auto=lang.claimauto||'Auto-claim in';
   if(tel)tel.textContent=auto+' '+sec+'s';
-  claimAutoTimer=setTimeout(function(){doClaim();},30000);
-  claimCountdown=setInterval(function(){
-    sec--;
-    if(tel)tel.textContent=auto+' '+sec+'s';
-    if(sec<=0)clearInterval(claimCountdown);
-  },1000);
+  clearTimeout(claimTimer);clearInterval(claimTick);
+  claimTimer=setTimeout(function(){doClaim();},30000);
+  claimTick=setInterval(function(){sec--;if(tel)tel.textContent=auto+' '+sec+'s';if(sec<=0)clearInterval(claimTick);},1000);
 }
 
 function doClaim(){
-  clearTimeout(claimAutoTimer);
-  clearInterval(claimCountdown);
-  document.getElementById('ovClaim').classList.remove('on');
+  clearTimeout(claimTimer);clearInterval(claimTick);
+  var ov=document.getElementById('ovClaim');if(ov)ov.classList.remove('on');
   if(claimCb){var f=claimCb;claimCb=null;f();}
 }
 
 function showAd(s,l,cb){
   adCb=cb;
-  var called=false;
+  var done=false;
   function adDone(){
-    if(called)return;
-    called=true;
-    // Reklam bitti -> Claim ekrani goster
-    showClaim(s,l,function(){
-      if(adCb){var f=adCb;adCb=null;f();}
-    });
+    if(done)return;done=true;
+    showClaim(s,l,function(){if(adCb){var f=adCb;adCb=null;f();}});
   }
   try{
     var fn=window['show_10975774'];
-    if(typeof fn==='function'){
-      var result;
-      try{result=fn();}
-      catch(e){
-        console.log('Ad fn error:',e);
-        setTimeout(function(){adDone();},1000);
-        return;
-      }
-      if(result&&typeof result.then==='function'){
-        // iOS: Promise resolve olunca claim goster
-        result.then(function(){
-          adDone();
-        }).catch(function(e){
-          console.log('Ad catch:',e);
-          setTimeout(function(){adDone();},500);
-        });
-        // iOS safety: 20s sonra hala bitmemisse claim goster
-        setTimeout(function(){
-          if(!called){
-            console.log('iOS 20s safety');
-            adDone();
-          }
-        },20000);
-      }else{
-        // Android/PC: promise donmuyor, 16s sonra claim goster
-        setTimeout(function(){adDone();},16000);
-      }
+    if(typeof fn!=='function'){setTimeout(function(){adDone();},500);return;}
+    var result;
+    try{result=fn();}catch(e){setTimeout(function(){adDone();},500);return;}
+    if(result&&typeof result.then==='function'){
+      result.then(function(){adDone();}).catch(function(){adDone();});
+      setTimeout(function(){adDone();},25000);
     }else{
-      // SDK yok - direkt claim goster
-      setTimeout(function(){adDone();},1000);
+      // Android/PC/Windows: 16s sonra claim goster
+      setTimeout(function(){adDone();},16000);
     }
-  }catch(e){
-    console.log('showAd error:',e);
-    setTimeout(function(){adDone();},1000);
-  }
+  }catch(e){setTimeout(function(){adDone();},500);}
 }
-// ============================================================
+
 
 function showWin(s,l){
   st('xWAmt',l);st('xWTitle',lang.wtitle);st('xWSub',lang.wsub);
