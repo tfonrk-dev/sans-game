@@ -519,77 +519,52 @@ function tk(){return parseInt(ud.tickets)||0;}
 function toast(m){var t=gid('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
 function floatEl(e,t){var el=document.createElement('div');el.className='floatel';el.textContent=t;el.style.left=(e.clientX-15)+'px';el.style.top=(e.clientY-35)+'px';document.body.appendChild(el);setTimeout(function(){el.remove();},900);}
 
-// Tüm metinleri seçilen dile göre güncelle
 function applyLang(){
   var l=lang;
-  // Lang screen
   si('xLsub',l.lsub); st('xLbtn',l.lbtn);
-  // Menu
   st('xMLang',l.mlang); st('xMSub',l.msub); st('xMBalLbl',l.mbll);
   st('xMTickLbl',l.mticklbl); st('xMET',l.met); st('xMED',l.med);
   st('xMBT',l.mbt); st('xMBD',l.mbd); st('xMRT',l.mrt); st('xMRD',l.mrd);
-  // Topbar
   st('xBack',l.back); st('xTickLbl',l.ticklbl);
-  // Tabs
   var tids=['tTap','tSpin','tCi','tTask','tLb','tRaffle'];
   for(var i=0;i<tids.length;i++){var te=gid(tids[i]);if(te)te.textContent=l.tabs[i];}
-  // Tap
   st('xTpBalLbl',l.tapballl); st('xTpTickLbl',l.taptickl);
   si('xTapInfo',l.tapinfo); st('xTapLbl',l.taplbl); st('xTapRew',l.taprew);
-  // Spin
   var sb=gid('xSpBadge');if(sb)sb.textContent=(ud.free_spin||0)>0?l.spbadge:l.spbadgeu;
   st('xSpRL',l.sprl);
   var spb=gid('xSpBtn');if(spb&&!spb.disabled)spb.textContent=l.spbtn;
-  // Checkin
   st('xStL',l.stl); st('xStS',l.sts);
   var cib=gid('xCiBtn');if(cib&&!cib.disabled)cib.textContent=l.cibtn;
-  // Tasks
   st('xRefDesc',l.refdesc); sp('xRefIn',l.refph); st('xRefUse',l.refuse);
-  // Rank
   st('xLbW',l.lbw); st('xMyRY',l.you);
-  // Raffle
   st('xRaffleHow',l.raffhow); st('xWalletLbl',l.wlbl);
   sp('xWalletIn',l.wph); st('xWSave',l.wsave);
   st('xCvBL',l.cvbl); st('xCvTL',l.cvtl);
   st('xCvRate',l.cvrate); st('xCvHint',l.cvhint); st('xCvBtn',l.cvbtn);
-  // Info overlay
   st('xIoT',l.iot); st('xIoRL',l.iorl); st('xIoTL',l.iotl);
-  si('xIoInstr','⏱ '+l.ioinstr);
+  si('xIoInstr','\u23F1 '+l.ioinstr);
   st('xBtnCancel',l.cancel);
-  // Ad overlay
   st('xAdW',l.adw); st('xAdLoad',l.adl);
   st('xBtnNext',l.adnext);
   var cc=gid('xClaimBtn');if(cc)cc.textContent=l.adclaim;
-  // Win overlay
   st('xWTitle',l.wtitle); st('xWSub',l.wsub);
   st('xWTL',l.wtl); st('xWTickL',l.wtickl); st('xWClose',l.wclose);
-  // Re-render dynamic content
   renderTasks(); renderDays(); renderPools();
 }
 
-// Tüm dinamik değerleri güncelle
 function updateUI(){
   var b=ud.balance||0, t=tk();
-  // Topbar
   st('xBal',b.toLocaleString()+' SANS'); st('xTick',t);
-  // Tap stats
   st('xTpBal',b.toLocaleString()); st('xTpTick',t);
-  // Spin
   st('xSpLeft',ud.spin_left||0);
   var sb2=gid('xSpBadge');if(sb2)sb2.textContent=(ud.free_spin||0)>0?lang.spbadge:lang.spbadgeu;
-  // Streak
   st('xStN',ud.streak||0);
-  // Referral link
   if(ud.referral_code){st('xRefLink','https://t.me/sanslicekilisbot?startapp='+ud.referral_code);}
-  // Menu
   st('xMBal',b.toLocaleString()); st('xMTick',t);
-  // Raffle convert
   st('xCvSans',b.toLocaleString()); st('xCvTick',t);
-  // Win overlay
   st('xWTot',b.toLocaleString()+' SANS'); st('xWTick',t+' \uD83C\uDF9F');
 }
 
-// NAV
 function pickL(l,el){selL=l;document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
 
 function goMenu(){
@@ -624,7 +599,6 @@ function goPane(name){
   if(name==='raffle'){st('xCvSans',(ud.balance||0).toLocaleString());st('xCvTick',tk());renderPools();}
 }
 
-// SUPABASE
 async function loadUser(){
   var tid=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)?String(tg.initDataUnsafe.user.id):'guest_'+Math.random().toString(36).substr(2,8);
   var uname=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)?(tg.initDataUnsafe.user.username||'Player'):'Player';
@@ -680,30 +654,59 @@ function showInfo(s,l,cb){
 function closeInfo(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');}
 function startAd(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');if(infoCb){var f=infoCb;infoCb=null;f();}}
 
-// AD OVERLAY
+// =============================================
+// SHOW AD - PC / Android / iOS hepsinde çalışır
+// =============================================
 function showAd(s,l,cb){
   adCb=cb; curR={s:s,l:l};
-  // Rewarded Interstitial - iOS dahil tum platformlarda calisir
-  // Reklam bittikten sonra otomatik odul verir
+
+  var called=false;
+  function giveReward(){
+    if(called)return;
+    called=true;
+    if(adCb){var f=adCb;adCb=null;f();}
+  }
+
+  // Güvenlik: her koşulda maksimum 20 saniyede ödülü ver
+  var safetyTimer=setTimeout(function(){giveReward();},20000);
+
   try{
-    if(typeof show_10975774==='function'){
-      show_10975774().then(function(){
-        // Reklam basariyla izlendi - odul ver
-        if(adCb){var f=adCb;adCb=null;f();}
-      }).catch(function(){
-        // Reklam yuklenemedi
-        toast('Ad could not load. Try again!');
-        adCb=null;
-      });
+    var fn=window['show_10975774'];
+    if(typeof fn==='function'){
+      var result;
+      try{result=fn();}catch(e){console.log('Ad fn error:',e);clearTimeout(safetyTimer);setTimeout(function(){giveReward();},1000);return;}
+
+      if(result&&typeof result.then==='function'){
+        // Promise döndü (iOS ve bazı Android) — then/catch ile yakala
+        result.then(function(){
+          clearTimeout(safetyTimer);
+          giveReward();
+        }).catch(function(e){
+          console.log('Ad promise catch:',e);
+          clearTimeout(safetyTimer);
+          // Reklam yüklenemedi ama yine de ödül ver
+          setTimeout(function(){giveReward();},500);
+        });
+      } else {
+        // Promise döndürmedi (PC / eski Android SDK)
+        // SDK reklamı kendisi gösterir, biz 3 saniye sonra ödül veririz
+        clearTimeout(safetyTimer);
+        setTimeout(function(){giveReward();},3000);
+      }
     } else {
-      toast('Ad service unavailable. Try again!');
-      adCb=null;
+      // show_10975774 fonksiyonu hiç yüklenmedi
+      console.log('Ad SDK not loaded');
+      clearTimeout(safetyTimer);
+      setTimeout(function(){giveReward();},1500);
     }
   }catch(e){
-    toast('Ad error. Try again!');
-    adCb=null;
+    console.log('showAd outer error:',e);
+    clearTimeout(safetyTimer);
+    setTimeout(function(){giveReward();},1500);
   }
 }
+// =============================================
+
 function enableClaim(){var cc=gid('xClaimBtn');if(cc){cc.disabled=false;cc.textContent=lang.adclaim;}}
 function claimAd(){clearInterval(adTI);gid('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
 function nextAd(){
@@ -930,7 +933,6 @@ function renderPools(){
     html+='</div>';
   }
   el.innerHTML=html;
-  // Event listener
   var btns=el.querySelectorAll('.pjbtn');
   for(var j=0;j<btns.length;j++){
     btns[j].addEventListener('click',function(){
