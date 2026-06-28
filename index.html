@@ -321,7 +321,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:#fff
     <div style="background:rgba(255,170,0,.06);border:1px solid rgba(255,170,0,.15);border-radius:10px;padding:10px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.8" id="xIoInstr"></div>
     <div style="display:flex;gap:8px">
       <button class="btns" style="flex:1" onclick="closeInfo()" id="xBtnCancel">Cancel</button>
-      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="xIBtn" onclick="startAd()">▶ 5s</button>
+      <button style="flex:2;background:linear-gradient(135deg,var(--g),var(--gb));color:#000;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer" id="xIBtn" onclick="startAd()">▶ Watch Ad</button>
     </div>
   </div>
 </div>
@@ -683,50 +683,26 @@ function startAd(){clearInterval(infoCI);gid('ovInfo').classList.remove('on');if
 // AD OVERLAY
 function showAd(s,l,cb){
   adCb=cb; curR={s:s,l:l};
-  var cc=gid('xClaimBtn');if(cc){cc.disabled=true;cc.textContent=lang.adclaim;}
-  st('xAdW',lang.adw); st('xAdLoad',lang.adl); st('xBtnNext',lang.adnext);
-  gid('ovAd').classList.add('on');
-  var adShown=false;
+  // Rewarded Interstitial - iOS dahil tum platformlarda calisir
+  // Reklam bittikten sonra otomatik odul verir
   try{
     if(typeof show_10975774==='function'){
       show_10975774().then(function(){
-        adShown=true;
-        enableClaim();
+        // Reklam basariyla izlendi - odul ver
+        if(adCb){var f=adCb;adCb=null;f();}
       }).catch(function(){
-        // iOS/adblock - reklam gosterilemedi, odul yok
-        adShown=false;
-        clearInterval(adTI);
-        gid('ovAd').classList.remove('on');
+        // Reklam yuklenemedi
         toast('Ad could not load. Try again!');
         adCb=null;
       });
     } else {
-      // SDK yok
-      clearInterval(adTI);
-      gid('ovAd').classList.remove('on');
       toast('Ad service unavailable. Try again!');
       adCb=null;
     }
   }catch(e){
-    clearInterval(adTI);
-    gid('ovAd').classList.remove('on');
     toast('Ad error. Try again!');
     adCb=null;
   }
-  var t=15;st('xAdTimer',t+'s');
-  clearInterval(adTI);
-  adTI=setInterval(function(){
-    t--;st('xAdTimer',t+'s');
-    if(t<=0){
-      clearInterval(adTI);
-      if(adShown){enableClaim();}
-      else{
-        gid('ovAd').classList.remove('on');
-        toast('Ad did not load. Try again!');
-        adCb=null;
-      }
-    }
-  },1000);
 }
 function enableClaim(){var cc=gid('xClaimBtn');if(cc){cc.disabled=false;cc.textContent=lang.adclaim;}}
 function claimAd(){clearInterval(adTI);gid('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
