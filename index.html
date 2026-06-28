@@ -686,10 +686,47 @@ function showAd(s,l,cb){
   var cc=gid('xClaimBtn');if(cc){cc.disabled=true;cc.textContent=lang.adclaim;}
   st('xAdW',lang.adw); st('xAdLoad',lang.adl); st('xBtnNext',lang.adnext);
   gid('ovAd').classList.add('on');
-  try{if(typeof show_10975774==='function'){show_10975774().then(enableClaim).catch(enableClaim);}}catch(e){}
+  var adShown=false;
+  try{
+    if(typeof show_10975774==='function'){
+      show_10975774().then(function(){
+        adShown=true;
+        enableClaim();
+      }).catch(function(){
+        // iOS/adblock - reklam gosterilemedi, odul yok
+        adShown=false;
+        clearInterval(adTI);
+        gid('ovAd').classList.remove('on');
+        toast('Ad could not load. Try again!');
+        adCb=null;
+      });
+    } else {
+      // SDK yok
+      clearInterval(adTI);
+      gid('ovAd').classList.remove('on');
+      toast('Ad service unavailable. Try again!');
+      adCb=null;
+    }
+  }catch(e){
+    clearInterval(adTI);
+    gid('ovAd').classList.remove('on');
+    toast('Ad error. Try again!');
+    adCb=null;
+  }
   var t=15;st('xAdTimer',t+'s');
   clearInterval(adTI);
-  adTI=setInterval(function(){t--;st('xAdTimer',t+'s');if(t<=0){clearInterval(adTI);enableClaim();}},1000);
+  adTI=setInterval(function(){
+    t--;st('xAdTimer',t+'s');
+    if(t<=0){
+      clearInterval(adTI);
+      if(adShown){enableClaim();}
+      else{
+        gid('ovAd').classList.remove('on');
+        toast('Ad did not load. Try again!');
+        adCb=null;
+      }
+    }
+  },1000);
 }
 function enableClaim(){var cc=gid('xClaimBtn');if(cc){cc.disabled=false;cc.textContent=lang.adclaim;}}
 function claimAd(){clearInterval(adTI);gid('ovAd').classList.remove('on');if(adCb){var f=adCb;adCb=null;f();}}
